@@ -1,0 +1,6 @@
+site_name: GSoC Ip Media Streaming Overview
+nav: 
+  - Home: index.md
+  - Documentation: documentation.md
+  - Timeline: timeline.md
+
