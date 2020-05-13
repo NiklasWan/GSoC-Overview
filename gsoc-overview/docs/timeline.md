@@ -7,6 +7,10 @@
 - However Davinci SoC Drivers for newer kernel versions (>4.14) can be found at [TI git](https://git.kernel.org/pub/scm/linux/kernel/git/nsekhar/linux-davinci.git/refs/tags)
 - Created Dev Branch for proting CTAG Face to [kernel 5.4-rt for Beaglebone AI](https://github.com/NiklasWan/linux/tree/dev_ctag_5.4-rt)
 - Problem?: TI version of Davinci drivers still in debug for kernel 5.4
+- Found out that Davinci and Omap Drivers moved to /sound/soc/ti, so no need to ask jason about that...
+- Question now is mkdir ctag under sound/soc for ctag driver module?
+- Edited eLinux page to include links to this site and updated timeline regarding changes from Google
+
 ### Helpfull links from Jason regarding kernel 5.4-rt:
 - http://repos.rcn-ee.com/latest/buster-armhf/LATEST-ti-rt
 - Headers: repos.rcn-ee.net/debian/pool/main/l/linux-upstream/linux-headers-5.4.28-ti-rt-r7_1buster_armhf.deb
