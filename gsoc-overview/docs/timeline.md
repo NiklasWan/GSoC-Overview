@@ -17,3 +17,7 @@
 Kernel Image: repos.rcn-ee.net/debian/pool/main/l/linux-upstream/linux-image-5.4.28-ti-rt-r7_1buster_armhf.deb
 - https://github.com/beagleboard/linux/tree/5.4-rt
 - Kernel Log: https://github.com/beagleboard/linux/commit/42e00287293c09d0863688e965b20ed48a280888
+
+## Week 2: May, 13 - May, 20
+- Research on AVB subprotocols
+- Port of CTAG Face to kernel 4.19-rt continued
