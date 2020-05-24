@@ -1,0 +1,2915 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Problem Description: - GSoC Ip Media Streaming Overview</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">GSoC Ip Media Streaming Overview</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../documentation/" class="nav-link">Documentation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../timeline/" class="nav-link">Timeline</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#problem-description" class="nav-link">Problem Description:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#steps-on-development-machine" class="nav-link">Steps on development machine</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#next-steps-need-to-be-done-directly-on-bbb" class="nav-link">Next steps need to be done directly on BBB:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#u-boot-error-log" class="nav-link">U-Boot Error Log:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#fdtdump-outputs" class="nav-link">Fdtdump Outputs:</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#output-for-bb-ctag-sw-8ch-00a0dtbo" class="nav-link">Output for BB-CTAG-SW-8CH-00A0.dtbo</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#output-for-am335x-boneblack-ctag-facedtb" class="nav-link">Output for am335x-boneblack-ctag-face.dtb:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="problem-description">Problem Description:</h1>
+<p>I try to port CTAG Face drivers from kernel v 4.4 to 4.19 but got a problem while loading the device tree overlays. When loading the .dtbo with U-boot I get the FDT_ERR_NOTFOUND error. The complete error log can be found in this document.</p>
+<p>Steps taken to compile and start kernel 4.19-rt on BBB:</p>
+<ul>
+<li>Modified kernel source can be found here: https://github.com/NiklasWan/linux/tree/dev_ctag_4.19-rt</li>
+</ul>
+<h1 id="steps-on-development-machine">Steps on development machine</h1>
+<ul>
+<li>
+<p>Flash current image to microsd card (AM3358 Debian 10.3 2020-04-06 4GB SD IoT)</p>
+</li>
+<li>
+<p>Generate BeagleBone Kernelconfiguration:</p>
+</li>
+</ul>
+<pre><code class="bash">    make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconifg
+</code></pre>
+
+<ul>
+<li>Set CTAG SoundCard Compilation Flag in Menuconfig:</li>
+</ul>
+<pre><code class="bash">    make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
+</code></pre>
+
+<ul>
+<li>Build Kernel:</li>
+</ul>
+<pre><code class="bash">    make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -j8
+</code></pre>
+
+<ul>
+<li>Build uImage and DTBs:</li>
+</ul>
+<pre><code class="bash">    make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- uImage dtbs LOADADDR=0x80008000 -j8
+</code></pre>
+
+<ul>
+<li>Compile Modules:</li>
+</ul>
+<pre><code class="bash">    make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules -j8
+</code></pre>
+
+<ul>
+<li>Install Modules to tmp folder:</li>
+</ul>
+<pre><code class="bash">    make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=modules_tmp modules_install
+</code></pre>
+
+<ul>
+<li>Copy kernel to sd card:</li>
+</ul>
+<pre><code class="bash">    sudo cp arch/arm/boot/zImage /media/dev/rootfs/boot/vmlinuz-4.19.94+
+</code></pre>
+
+<ul>
+<li>Copy modules to sd card:</li>
+</ul>
+<pre><code class="bash">    sudo cp -r modules_tmp/lib /media/dev/rootfs/
+</code></pre>
+
+<ul>
+<li>Copy generated Device Tree Blobs to sd card:</li>
+</ul>
+<pre><code class="bash">    sudo cp -r arch/arm/boot/dts/*.dtb /media/dev/rootfs/boot/dtbs/4.19.94+/
+</code></pre>
+
+<ul>
+<li>Copy kernel config to sd card:</li>
+</ul>
+<pre><code class="bash">    sudo cp .config /media/dev/rootfs/boot/config-4.19.94+
+</code></pre>
+
+<ul>
+<li>Open /media/dev/rootfs/boot/uEnv.txt in your favourite editor and change name_r=4.19.94-ti-r42 to uname_r=4.19.94+</li>
+</ul>
+<h1 id="next-steps-need-to-be-done-directly-on-bbb">Next steps need to be done directly on BBB:</h1>
+<ul>
+<li>Clone Overlay Repository:</li>
+</ul>
+<pre><code class="bash">    git clone https://github.com/beagleboard/bb.org-overlays.git
+</code></pre>
+
+<ul>
+<li>Install DTC and DTBOs to /lib/firmware:</li>
+</ul>
+<pre><code class="bash">    cd ./bb.org_overlays
+    ./dtc-overlay.sh
+    ./install.sh
+</code></pre>
+
+<ul>
+<li>Reboot</li>
+<li>Change /boot/uEnv.txt to the following:</li>
+</ul>
+<pre><code>    #Docs: http://elinux.org/Beagleboard:U-boot_partitioning_layout_2.0
+
+    uname_r=4.19.94+
+    #uuid=
+    dtb=/boot/dtbs/4.19.94+/am335x-boneblack-ctag-face.dtb
+
+    ###U-Boot Overlays###
+    ###Documentation: http://elinux.org/Beagleboard:BeagleBoneBlack_Debian#U-Boot_Overlays
+    ###Master Enable
+    enable_uboot_overlays=1
+    ###
+    ###Overide capes with eeprom
+    #uboot_overlay_addr0=/lib/firmware/&lt;file0&gt;.dtbo
+    #uboot_overlay_addr1=/lib/firmware/&lt;file1&gt;.dtbo
+    #uboot_overlay_addr2=/lib/firmware/&lt;file2&gt;.dtbo
+    #uboot_overlay_addr3=/lib/firmware/&lt;file3&gt;.dtbo
+    ###
+    ###Additional custom capes
+    #uboot_overlay_addr4=/lib/firmware/&lt;file4&gt;.dtbo
+    #uboot_overlay_addr5=/lib/firmware/&lt;file5&gt;.dtbo
+    #uboot_overlay_addr6=/lib/firmware/&lt;file6&gt;.dtbo
+    #uboot_overlay_addr7=/lib/firmware/&lt;file7&gt;.dtbo
+    ###
+    ###Custom Cape
+    dtb_overlay=/lib/firmware/BB-CTAG-SW-8CH-00A0.dtbo
+    ###
+    ###Disable auto loading of virtual capes (emmc/video/wireless/adc)
+    #disable_uboot_overlay_emmc=1
+    #disable_uboot_overlay_video=1
+    #disable_uboot_overlay_audio=1
+    #disable_uboot_overlay_wireless=1
+    #disable_uboot_overlay_adc=1
+    ###
+    ###PRUSS OPTIONS
+    ###pru_rproc (4.14.x-ti kernel)
+    #uboot_overlay_pru=/lib/firmware/AM335X-PRU-RPROC-4-14-TI-00A0.dtbo
+    ###pru_rproc (4.19.x-ti kernel)
+    uboot_overlay_pru=/lib/firmware/AM335X-PRU-RPROC-4-19-TI-00A0.dtbo
+    ###pru_uio (4.14.x-ti, 4.19.x-ti &amp; mainline/bone kernel)
+    #uboot_overlay_pru=/lib/firmware/AM335X-PRU-UIO-00A0.dtbo
+    ###
+    ###Cape Universal Enable
+    enable_uboot_cape_universal=1
+    ###
+    ###Debug: disable uboot autoload of Cape
+    #disable_uboot_overlay_addr0=1
+    #disable_uboot_overlay_addr1=1
+    #disable_uboot_overlay_addr2=1
+    #disable_uboot_overlay_addr3=1
+    ###
+    ###U-Boot fdt tweaks... (60000 = 384KB)
+    #uboot_fdt_buffer=0x60000
+    ###U-Boot Overlays###
+
+    cmdline=coherent_pool=1M net.ifnames=0 lpj=1990656 rng_core.default_quality=100 quiet
+
+    #In the event of edid real failures, uncomment this next line:
+    #cmdline=coherent_pool=1M net.ifnames=0 lpj=1990656 rng_core.default_quality=100 quiet video=HDMI-A-1:1024x768@60e
+
+    ##enable Generic eMMC Flasher:
+    ##make sure, these tools are installed: dosfstools rsync
+    #cmdline=init=/opt/scripts/tools/eMMC/init-eMMC-flasher-v3.sh
+</code></pre>
+
+<ul>
+<li>Reboot</li>
+</ul>
+<h1 id="u-boot-error-log">U-Boot Error Log:</h1>
+<pre><code>Board: BeagleBone Black                                                         
+&lt;ethaddr&gt; not set. Validating first E-fuse MAC                                  
+BeagleBone Black:                                                               
+BeagleBone: cape eeprom: i2c_probe: 0x54:                                       
+BeagleBone: cape eeprom: i2c_probe: 0x55:                                       
+BeagleBone: cape eeprom: i2c_probe: 0x56:                                       
+BeagleBone: cape eeprom: i2c_probe: 0x57:                                       
+Net:   eth0: MII MODE                                                           
+cpsw, usb_ether                                                                 
+Press SPACE to abort autoboot in 0 seconds                                      
+board_name=[A335BNLT] ...                                                       
+board_rev=[00C0] ...                                                            
+switch to partitions #0, OK                                                     
+mmc0 is current device                                                          
+SD/MMC found on device 0
+switch to partitions #0, OK                                                     
+mmc0 is current device                                                          
+Scanning mmc 0:1...                                                             
+gpio: pin 56 (gpio 56) value is 0                                               
+gpio: pin 55 (gpio 55) value is 0                                               
+gpio: pin 54 (gpio 54) value is 0                                               
+gpio: pin 53 (gpio 53) value is 1                                               
+switch to partitions #0, OK                                                     
+mmc0 is current device                                                          
+gpio: pin 54 (gpio 54) value is 1                                               
+Checking for: /uEnv.txt ...                                                     
+Checking for: /boot.scr ...                                                     
+Checking for: /boot/boot.scr ...                                                
+Checking for: /boot/uEnv.txt ...                                                
+gpio: pin 55 (gpio 55) value is 1                                               
+2116 bytes read in 51 ms (40 KiB/s)                                             
+Loaded environment from /boot/uEnv.txt                                          
+debug: [dtb=/boot/dtbs/4.19.94+/am335x-boneblack-ctag-face.dtb] ...             
+Using: dtb=/boot/dtbs/4.19.94+/am335x-boneblack-ctag-face.dtb ...               
+Checking if uname_r is set in /boot/uEnv.txt...                                 
+gpio: pin 56 (gpio 56) value is 1                                               
+Running uname_boot ...                                                          
+loading /boot/vmlinuz-4.19.94+ ...
+10141736 bytes read in 938 ms (10.3 MiB/s)                                      
+debug: [enable_uboot_overlays=1] ...                                            
+debug: [enable_uboot_cape_universal=1] ...                                      
+debug: [uboot_base_dtb_univ=am335x-boneblack-uboot-univ.dtb] ...                
+uboot_overlays: [uboot_base_dtb=am335x-boneblack-uboot-univ.dtb] ...            
+uboot_overlays: Switching too: dtb=am335x-boneblack-uboot-univ.dtb ...          
+loading /boot/dtbs/4.19.94+/am335x-boneblack-uboot-univ.dtb ...                 
+162266 bytes read in 117 ms (1.3 MiB/s)                                         
+uboot_overlays: [fdt_buffer=0x60000] ...                                        
+uboot_overlays: loading /lib/firmware/BB-ADC-00A0.dtbo ...                      
+867 bytes read in 281 ms (2.9 KiB/s)                                            
+uboot_overlays: loading /lib/firmware/BB-BONE-eMMC1-01-00A0.dtbo ...            
+1584 bytes read in 572 ms (2 KiB/s)                                             
+uboot_overlays: loading /lib/firmware/BB-HDMI-TDA998x-00A0.dtbo ...             
+4915 bytes read in 440 ms (10.7 KiB/s)                                          
+uboot_overlays: loading /lib/firmware/AM335X-PRU-RPROC-4-19-TI-00A0.dtbo ...    
+3801 bytes read in 784 ms (3.9 KiB/s)                                           
+uboot_overlays: [dtb_overlay=/lib/firmware/BB-CTAG-SW-8CH-00A0.dtbo] ...        
+uboot_overlays: loading /lib/firmware/BB-CTAG-SW-8CH-00A0.dtbo ...              
+3393 bytes read in 856 ms (2.9 KiB/s)                                           
+failed on fdt_overlay_apply(): FDT_ERR_NOTFOUND                                 
+loading /boot/initrd.img-4.19.94+ ...
+5302052 bytes read in 522 ms (9.7 MiB/s)                                        
+debug: [console=ttyO0,115200n8 bone_capemgr.uboot_capemgr_enabled=1 root=/dev/m.
+debug: [bootz 0x82000000 0x88080000:50e724 88000000] ...                        
+ERROR: Did not find a cmdline Flattened Device Tree                             
+Could not find a valid device tree                                              
+** Invalid partition 2 **                                                       
+** Invalid partition 3 **                                                       
+** Invalid partition 4 **                                                       
+** Invalid partition 5 **                                                       
+** Invalid partition 6 **                                                       
+** Invalid partition 7 **
+</code></pre>
+
+<h1 id="fdtdump-outputs">Fdtdump Outputs:</h1>
+<h2 id="output-for-bb-ctag-sw-8ch-00a0dtbo">Output for BB-CTAG-SW-8CH-00A0.dtbo</h2>
+<pre><code>    /dts-v1/;
+    // magic:       0xd00dfeed
+    // totalsize:       0xd41 (3393)
+    // off_dt_struct:   0x38
+    // off_dt_strings:  0xb18
+    // off_mem_rsvmap:  0x28
+    // version:     17
+    // last_comp_version:   16
+    // boot_cpuid_phys: 0x0
+    // size_dt_strings: 0x229
+    // size_dt_struct:  0xae0
+
+    / {
+        compatible = &quot;ti,beaglebone&quot;, &quot;ti,beaglebone-black&quot;, &quot;ti,beaglebone-green&quot;;
+        part-number = &quot;BB-CTAG-SW-8CH&quot;;
+        version = &quot;00A0&quot;, &quot;A0&quot;;
+        exclusive-use = &quot;P9.30&quot;, &quot;P9.28&quot;, &quot;P9.31&quot;, &quot;P9.29&quot;, &quot;P9.12&quot;, &quot;P9.27&quot;, &quot;P9.25&quot;, &quot;P8.32&quot;, &quot;P8.33&quot;, &quot;P8.14&quot;, &quot;P8.17&quot;, &quot;mcasp0&quot;, &quot;spi_gpio&quot;;
+        fragment@0 {
+            target-path = &quot;/&quot;;
+            __overlay__ {
+                chosen {
+                    overlays {
+                        BB-CTAG-SW-8CH-00A0 = &quot;Sat May 23 15:11:32 2020&quot;;
+                    };
+                };
+            };
+        };
+        fragment@1 {
+            target = &lt;0xffffffff&gt;;
+            __overlay__ {
+                P9_30_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+                P9_28_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+                P9_31_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+                P9_29_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+                P9_12_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+                P9_27_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+                P9_25_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+                P8_32_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+                P8_33_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+                P8_14_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+                P8_17_pinmux {
+                    status = &quot;disabled&quot;;
+                };
+            };
+        };
+        fragment@2 {
+            target = &lt;0xffffffff&gt;;
+            __overlay__ {
+                pinmix_mcasp0_pins {
+                    pinctrl-single,pins = &lt;0x000001ac 0x00000194 0x000001a4 0x00000198 0x0000006f 0x70696e6d 0x5f737069 0x00000020 0x00000028 0x0000002c 0x0000006f 0x00000002 0x40330000 0xffffffff&gt;;
+                    phandle = &lt;0x00000002&gt;;
+                };
+                pinmux_audiocard_spi_pins {
+                    pinctrl-single,pins = &lt;0x000000dc 0x000000d4 0x00000003 0x00000002 0x66726167 0x00000004 0x5f5f6f76 0x00000008&gt;;
+                    phandle = &lt;0x00000001&gt;;
+                };
+            };
+        };
+        fragment@3 {
+            target = &lt;0xffffffff&gt;;
+            __overlay__ {
+                pinctrl-names = &quot;default&quot;;
+                pinctrl-0 = &lt;0x00000001&gt;;
+                status = &quot;okay&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000000&gt;;
+                ad193x@0 {
+                    #address-cells = &lt;0x00000001&gt;;
+                    #size-cells = &lt;0x00000000&gt;;
+                    compatible = &quot;analog,ad1938&quot;;
+                    reg = &lt;0x00000000&gt;;
+                    spi-max-frequency = &lt;0x000186a0&gt;;
+                    phandle = &lt;0x00000003&gt;;
+                };
+            };
+        };
+        fragment@4 {
+            target = &lt;0xffffffff&gt;;
+            __overlay__ {
+                pinctrl-names = &quot;default&quot;;
+                pinctrl-0 = &lt;0x00000002&gt;;
+                status = &quot;okay&quot;;
+                op-mode = &lt;0x00000000&gt;;
+                tdm-slots = &lt;0x00000008&gt;;
+                num-serializer = &lt;0x00000010&gt;;
+                serial-dir = &lt;0x00000002 0x00000000 0x00000000 0x00000000 0x00000003 0x00000003 0x00000002 0x6d656e74 0x0000004d 0x65726c61 0x64000000 0x63746167 0x00000003 0x20666163 0x00000003 0x00000003&gt;;
+                tx-num-evt = &lt;0x00000001&gt;;
+                rx-num-evt = &lt;0x00000001&gt;;
+            };
+        };
+        fragment@5 {
+            target = &lt;0xffffffff&gt;;
+            __overlay__ {
+                sound {
+                    compatible = &quot;ctag,face-2-4&quot;;
+                    model = &quot;CTAG face-2-4 8CH&quot;;
+                    audio-codec = &lt;0x00000003&gt;;
+                    mcasp-controller = &lt;0xffffffff&gt;;
+                    audiocard-tdm-slots = &lt;0x00000008&gt;;
+                    codec-clock-rate = &lt;0x01770000&gt;;
+                    cpu-clock-rate = &lt;0x01770000&gt;;
+                    audio-codec-bit-delay-dac = &lt;0x00000001&gt;;
+                    audio-codec-bit-delay-adc = &lt;0x00000001&gt;;
+                    mcasp-controller-bit-delay-tx = &lt;0x00000001&gt;;
+                    mcasp-controller-bit-delay-rx = &lt;0x00000001&gt;;
+                    bb-device = &lt;0x00000000&gt;;
+                    audio-routing = &quot;Line Out&quot;, &quot;DAC1OUT&quot;, &quot;Line Out&quot;, &quot;DAC2OUT&quot;, &quot;Line Out&quot;, &quot;DAC3OUT&quot;, &quot;Line Out&quot;, &quot;DAC4OUT&quot;, &quot;ADC1IN&quot;, &quot;Line In&quot;, &quot;ADC2IN&quot;, &quot;Line In&quot;;
+                };
+            };
+        };
+        __symbols__ {
+            mcasp0_pins = &quot;/fragment@2/__overlay__/pinmix_mcasp0_pins&quot;;
+            audiocard_spi_pins = &quot;/fragment@2/__overlay__/pinmux_audiocard_spi_pins&quot;;
+            ad193x = &quot;/fragment@3/__overlay__/ad193x@0&quot;;
+        };
+        __fixups__ {
+            ocp = &quot;/fragment@1:target:0&quot;, &quot;/fragment@5:target:0&quot;;
+            am33xx_pinmux = &quot;/fragment@2:target:0&quot;;
+            spi_gpio = &quot;/fragment@3:target:0&quot;;
+            mcasp0 = &quot;/fragment@4:target:0&quot;, &quot;/fragment@5/__overlay__/sound:mcasp-controller:0&quot;;
+        };
+        __local_fixups__ {
+            fragment@3 {
+                __overlay__ {
+                    pinctrl-0 = &lt;0x00000000&gt;;
+                };
+            };
+            fragment@4 {
+                __overlay__ {
+                    pinctrl-0 = &lt;0x00000000&gt;;
+                };
+            };
+            fragment@5 {
+                __overlay__ {
+                    sound {
+                        audio-codec = &lt;0x00000000&gt;;
+                    };
+                };
+            };
+        };
+    };
+</code></pre>
+
+<h2 id="output-for-am335x-boneblack-ctag-facedtb">Output for am335x-boneblack-ctag-face.dtb:</h2>
+<pre><code>    /dts-v1/;
+    // magic:       0xd00dfeed
+    // totalsize:       0xe5ac (58796)
+    // off_dt_struct:   0x38
+    // off_dt_strings:  0xd364
+    // off_mem_rsvmap:  0x28
+    // version:     17
+    // last_comp_version:   16
+    // boot_cpuid_phys: 0x0
+    // size_dt_strings: 0x1248
+    // size_dt_struct:  0xd32c
+
+    / {
+        compatible = &quot;ti,am335x-bone-black&quot;, &quot;ti,am335x-bone&quot;, &quot;ti,am33xx&quot;;
+        interrupt-parent = &lt;0x00000001&gt;;
+        #address-cells = &lt;0x00000001&gt;;
+        #size-cells = &lt;0x00000001&gt;;
+        model = &quot;TI AM335x BeagleBone Black AudioCard&quot;;
+        chosen {
+            stdout-path = &quot;/ocp/serial@44e09000&quot;;
+            base_dtb = &quot;am335x-boneblack-ctag-face.dts&quot;;
+            base_dtb_timestamp = &quot;Sun May 24 10:47:52 2020&quot;;
+        };
+        aliases {
+            i2c0 = &quot;/ocp/i2c@44e0b000&quot;;
+            i2c1 = &quot;/ocp/i2c@4802a000&quot;;
+            i2c2 = &quot;/ocp/i2c@4819c000&quot;;
+            serial0 = &quot;/ocp/serial@44e09000&quot;;
+            serial1 = &quot;/ocp/serial@48022000&quot;;
+            serial2 = &quot;/ocp/serial@48024000&quot;;
+            serial3 = &quot;/ocp/serial@481a6000&quot;;
+            serial4 = &quot;/ocp/serial@481a8000&quot;;
+            serial5 = &quot;/ocp/serial@481aa000&quot;;
+            d-can0 = &quot;/ocp/can@481cc000&quot;;
+            d-can1 = &quot;/ocp/can@481d0000&quot;;
+            usb0 = &quot;/ocp/usb@47400000/usb@47401000&quot;;
+            usb1 = &quot;/ocp/usb@47400000/usb@47401800&quot;;
+            phy0 = &quot;/ocp/usb@47400000/usb-phy@47401300&quot;;
+            phy1 = &quot;/ocp/usb@47400000/usb-phy@47401b00&quot;;
+            ethernet0 = &quot;/ocp/ethernet@4a100000/slave@4a100200&quot;;
+            ethernet1 = &quot;/ocp/ethernet@4a100000/slave@4a100300&quot;;
+            spi0 = &quot;/ocp/spi@48030000&quot;;
+            spi1 = &quot;/ocp/spi@481a0000&quot;;
+            phandle = &lt;0x00000060&gt;;
+        };
+        cpus {
+            #address-cells = &lt;0x00000001&gt;;
+            #size-cells = &lt;0x00000000&gt;;
+            cpu@0 {
+                compatible = &quot;arm,cortex-a8&quot;;
+                enable-method = &quot;ti,am3352&quot;;
+                device_type = &quot;cpu&quot;;
+                reg = &lt;0x00000000&gt;;
+                operating-points-v2 = &lt;0x00000002&gt;;
+                clocks = &lt;0x00000003&gt;;
+                clock-names = &quot;cpu&quot;;
+                clock-latency = &lt;0x000493e0&gt;;
+                cpu-idle-states = &lt;0x00000004&gt;;
+                cpu0-supply = &lt;0x00000005&gt;;
+            };
+            idle-states {
+                mpu_gate {
+                    compatible = &quot;arm,idle-state&quot;;
+                    entry-latency-us = &lt;0x00000028&gt;;
+                    exit-latency-us = &lt;0x0000005a&gt;;
+                    min-residency-us = &lt;0x0000012c&gt;;
+                    ti,idle-wkup-m3;
+                    phandle = &lt;0x00000004&gt;;
+                };
+            };
+        };
+        opp-table {
+            compatible = &quot;operating-points-v2-ti-cpu&quot;;
+            syscon = &lt;0x00000006&gt;;
+            phandle = &lt;0x00000002&gt;;
+            opp50-300000000 {
+                opp-hz = &lt;0x00000000 0x000001ab&gt;;
+                opp-microvolt = &lt;0x000e7ef0 0x00000008 0x00000003&gt;;
+                opp-supported-hw = &lt;0x00000006 0x000001ca&gt;;
+                opp-suspend;
+            };
+            opp100-275000000 {
+                opp-hz = &lt;0x00000000 0x000001ab&gt;;
+                opp-microvolt = &lt;0x0010c8e0 0x00000008 0x00000003&gt;;
+                opp-supported-hw = &lt;0x00000001 0x000001ca&gt;;
+                opp-suspend;
+            };
+            opp100-300000000 {
+                opp-hz = &lt;0x00000000 0x000001ab&gt;;
+                opp-microvolt = &lt;0x0010c8e0 0x00000008 0x00000003&gt;;
+                opp-supported-hw = &lt;0x00000006 0x000001ca&gt;;
+                opp-suspend;
+            };
+            opp100-500000000 {
+                opp-hz = &lt;0x00000000 0x000001ab&gt;;
+                opp-microvolt = &lt;0x0010c8e0 0x00000008 0x00000002&gt;;
+                opp-supported-hw = &lt;0x00000001 0x6f707031&gt;;
+            };
+            opp100-600000000 {
+                opp-hz = &lt;0x00000000 0x000001ab&gt;;
+                opp-microvolt = &lt;0x0010c8e0 0x00000008 0x00000002&gt;;
+                opp-supported-hw = &lt;0x00000006 0x6f707031&gt;;
+            };
+            opp120-600000000 {
+                opp-hz = &lt;0x00000000 0x000001ab&gt;;
+                opp-microvolt = &lt;0x00124f80 0x00000008 0x00000002&gt;;
+                opp-supported-hw = &lt;0x00000001 0x6f707031&gt;;
+            };
+            opp120-720000000 {
+                opp-hz = &lt;0x00000000 0x000001ab&gt;;
+                opp-microvolt = &lt;0x00124f80 0x00000008 0x00000002&gt;;
+                opp-supported-hw = &lt;0x00000006 0x6f707074&gt;;
+            };
+            oppturbo-720000000 {
+                opp-hz = &lt;0x00000000 0x000001ab&gt;;
+                opp-microvolt = &lt;0x001339e0 0x00000008 0x00000002&gt;;
+                opp-supported-hw = &lt;0x00000001 0x6f707074&gt;;
+            };
+            oppturbo-800000000 {
+                opp-hz = &lt;0x00000000 0x000001ab&gt;;
+                opp-microvolt = &lt;0x001339e0 0x00000008 0x00000002&gt;;
+                opp-supported-hw = &lt;0x00000006 0x6f70706e&gt;;
+            };
+            oppnitro-1000000000 {
+                opp-hz = &lt;0x00000000 0x000001ab&gt;;
+                opp-microvolt = &lt;0x001437c8 0x00000008 0x00000002&gt;;
+                opp-supported-hw = &lt;0x00000004 0x6f70706e&gt;;
+            };
+            oppnitro@1000000000 {
+                opp-supported-hw = &lt;0x00000006 0x00000001&gt;;
+            };
+        };
+        pmu@4b000000 {
+            compatible = &quot;arm,cortex-a8-pmu&quot;;
+            interrupts = &lt;0x00000003&gt;;
+            reg = &lt;0x4b000000 0x000001e1&gt;;
+            ti,hwmods = &quot;debugss&quot;;
+        };
+        soc {
+            compatible = &quot;ti,omap-infra&quot;;
+            mpu {
+                compatible = &quot;ti,omap3-mpu&quot;;
+                ti,hwmods = &quot;mpu&quot;;
+                pm-sram = &lt;0x00000007 0x00000001&gt;;
+            };
+        };
+        ocp {
+            compatible = &quot;simple-bus&quot;;
+            #address-cells = &lt;0x00000001&gt;;
+            #size-cells = &lt;0x00000001&gt;;
+            ranges;
+            ti,hwmods = &quot;l3_main&quot;;
+            phandle = &lt;0x00000061&gt;;
+            l4_wkup@44c00000 {
+                compatible = &quot;ti,am3-l4-wkup&quot;, &quot;simple-bus&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000001&gt;;
+                ranges = &lt;0x00000000 0x00000004 0x776b7570&gt;;
+                phandle = &lt;0x00000062&gt;;
+                wkup_m3@100000 {
+                    compatible = &quot;ti,am3352-wkup-m3&quot;;
+                    reg = &lt;0x00100000 0x00000003 0x00646d65 0x000001e1&gt;;
+                    reg-names = &quot;umem&quot;, &quot;dmem&quot;;
+                    ti,hwmods = &quot;wkup_m3&quot;;
+                    ti,pm-firmware = &quot;am335x-pm-firmware.elf&quot;;
+                    phandle = &lt;0x00000024&gt;;
+                };
+                prcm@200000 {
+                    compatible = &quot;ti,am3-prcm&quot;, &quot;simple-bus&quot;;
+                    reg = &lt;0x00200000 0x0000001c&gt;;
+                    #address-cells = &lt;0x00000001&gt;;
+                    #size-cells = &lt;0x00000001&gt;;
+                    ranges = &lt;0x00000000 0x00000004 0x636c6f63&gt;;
+                    phandle = &lt;0x00000063&gt;;
+                    clocks {
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000000&gt;;
+                        phandle = &lt;0x00000064&gt;;
+                        clk_32768_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-clock&quot;;
+                            clock-frequency = &lt;0x00008000&gt;;
+                            phandle = &lt;0x00000018&gt;;
+                        };
+                        clk_rc32k_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-clock&quot;;
+                            clock-frequency = &lt;0x00007d00&gt;;
+                            phandle = &lt;0x00000017&gt;;
+                        };
+                        virt_19200000_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-clock&quot;;
+                            clock-frequency = &lt;0x0124f800&gt;;
+                            phandle = &lt;0x0000001f&gt;;
+                        };
+                        virt_24000000_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-clock&quot;;
+                            clock-frequency = &lt;0x016e3600&gt;;
+                            phandle = &lt;0x00000020&gt;;
+                        };
+                        virt_25000000_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-clock&quot;;
+                            clock-frequency = &lt;0x017d7840&gt;;
+                            phandle = &lt;0x00000021&gt;;
+                        };
+                        virt_26000000_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-clock&quot;;
+                            clock-frequency = &lt;0x018cba80&gt;;
+                            phandle = &lt;0x00000022&gt;;
+                        };
+                        tclkin_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-clock&quot;;
+                            clock-frequency = &lt;0x00b71b00&gt;;
+                            phandle = &lt;0x00000016&gt;;
+                        };
+                        dpll_core_ck@490 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,am3-dpll-core-clock&quot;;
+                            clocks = &lt;0x00000009 0x00000106&gt;;
+                            reg = &lt;0x00000490 0x00000004 0x00000001&gt;;
+                            phandle = &lt;0x0000000a&gt;;
+                        };
+                        dpll_core_x2_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,am3-dpll-x2-clock&quot;;
+                            clocks = &lt;0x0000000a&gt;;
+                            phandle = &lt;0x0000000b&gt;;
+                        };
+                        dpll_core_m4_ck@480 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,divider-clock&quot;;
+                            clocks = &lt;0x0000000b&gt;;
+                            ti,max-div = &lt;0x0000001f&gt;;
+                            reg = &lt;0x00000480&gt;;
+                            ti,index-starts-at-one;
+                            phandle = &lt;0x00000012&gt;;
+                        };
+                        dpll_core_m5_ck@484 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,divider-clock&quot;;
+                            clocks = &lt;0x0000000b&gt;;
+                            ti,max-div = &lt;0x0000001f&gt;;
+                            reg = &lt;0x00000484&gt;;
+                            ti,index-starts-at-one;
+                            phandle = &lt;0x0000001a&gt;;
+                        };
+                        dpll_core_m6_ck@4d8 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,divider-clock&quot;;
+                            clocks = &lt;0x0000000b&gt;;
+                            ti,max-div = &lt;0x0000001f&gt;;
+                            reg = &lt;0x000004d8&gt;;
+                            ti,index-starts-at-one;
+                            phandle = &lt;0x00000065&gt;;
+                        };
+                        dpll_mpu_ck@488 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,am3-dpll-clock&quot;;
+                            clocks = &lt;0x00000009 0x00000106&gt;;
+                            reg = &lt;0x00000488 0x00000004 0x00000001&gt;;
+                            phandle = &lt;0x00000003&gt;;
+                        };
+                        dpll_mpu_m2_ck@4a8 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,divider-clock&quot;;
+                            clocks = &lt;0x00000003&gt;;
+                            ti,max-div = &lt;0x0000001f&gt;;
+                            reg = &lt;0x000004a8&gt;;
+                            ti,index-starts-at-one;
+                            phandle = &lt;0x00000066&gt;;
+                        };
+                        dpll_ddr_ck@494 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,am3-dpll-no-gate-clock&quot;;
+                            clocks = &lt;0x00000009 0x00000106&gt;;
+                            reg = &lt;0x00000494 0x00000004 0x00000001&gt;;
+                            phandle = &lt;0x0000000c&gt;;
+                        };
+                        dpll_ddr_m2_ck@4a0 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,divider-clock&quot;;
+                            clocks = &lt;0x0000000c&gt;;
+                            ti,max-div = &lt;0x0000001f&gt;;
+                            reg = &lt;0x000004a0&gt;;
+                            ti,index-starts-at-one;
+                            phandle = &lt;0x0000000d&gt;;
+                        };
+                        dpll_ddr_m2_div2_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x0000000d&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000002&gt;;
+                            phandle = &lt;0x00000067&gt;;
+                        };
+                        dpll_disp_ck@498 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,am3-dpll-no-gate-clock&quot;;
+                            clocks = &lt;0x00000009 0x00000106&gt;;
+                            reg = &lt;0x00000498 0x00000004 0x00000001&gt;;
+                            phandle = &lt;0x0000000e&gt;;
+                        };
+                        dpll_disp_m2_ck@4a4 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,divider-clock&quot;;
+                            clocks = &lt;0x0000000e&gt;;
+                            ti,max-div = &lt;0x0000001f&gt;;
+                            reg = &lt;0x000004a4&gt;;
+                            ti,index-starts-at-one;
+                            ti,set-rate-parent;
+                            phandle = &lt;0x00000014&gt;;
+                        };
+                        dpll_per_ck@48c {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,am3-dpll-no-gate-j-type-clock&quot;;
+                            clocks = &lt;0x00000009 0x00000106&gt;;
+                            reg = &lt;0x0000048c 0x00000004 0x00000001&gt;;
+                            phandle = &lt;0x0000000f&gt;;
+                        };
+                        dpll_per_m2_ck@4ac {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,divider-clock&quot;;
+                            clocks = &lt;0x0000000f&gt;;
+                            ti,max-div = &lt;0x0000001f&gt;;
+                            reg = &lt;0x000004ac&gt;;
+                            ti,index-starts-at-one;
+                            phandle = &lt;0x00000010&gt;;
+                        };
+                        dpll_per_m2_div4_wkupdm_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000010&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000004&gt;;
+                            phandle = &lt;0x00000068&gt;;
+                        };
+                        dpll_per_m2_div4_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000010&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000004&gt;;
+                            phandle = &lt;0x00000069&gt;;
+                        };
+                        clk_24mhz {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000010&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000008&gt;;
+                            phandle = &lt;0x00000011&gt;;
+                        };
+                        clkdiv32k_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000011&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x000002dc&gt;;
+                            phandle = &lt;0x0000006a&gt;;
+                        };
+                        l3_gclk {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000012&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000001&gt;;
+                            phandle = &lt;0x00000013&gt;;
+                        };
+                        pruss_ocp_gclk@530 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000013 0x00000106&gt;;
+                            reg = &lt;0x00000530&gt;;
+                            phandle = &lt;0x0000006b&gt;;
+                        };
+                        mmu_fck@914 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,gate-clock&quot;;
+                            clocks = &lt;0x00000012&gt;;
+                            ti,bit-shift = &lt;0x00000001&gt;;
+                            reg = &lt;0x00000914&gt;;
+                            phandle = &lt;0x0000006c&gt;;
+                        };
+                        timer1_fck@528 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000009 0x00000016 0x00000004 0x00000004 0x00000001 0x30380000 0x00000000&gt;;
+                            reg = &lt;0x00000528&gt;;
+                            phandle = &lt;0x00000034&gt;;
+                        };
+                        timer2_fck@508 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000016 0x00000000 0x00000508 0x00000035 0x72335f66&gt;;
+                            reg = &lt;0x00000508&gt;;
+                            phandle = &lt;0x00000035&gt;;
+                        };
+                        timer3_fck@50c {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000016 0x00000000 0x0000050c 0x0000006d 0x72345f66&gt;;
+                            reg = &lt;0x0000050c&gt;;
+                            phandle = &lt;0x0000006d&gt;;
+                        };
+                        timer4_fck@510 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000016 0x00000000 0x00000510 0x0000006e 0x72355f66&gt;;
+                            reg = &lt;0x00000510&gt;;
+                            phandle = &lt;0x0000006e&gt;;
+                        };
+                        timer5_fck@518 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000016 0x00000000 0x00000518 0x0000006f 0x72365f66&gt;;
+                            reg = &lt;0x00000518&gt;;
+                            phandle = &lt;0x0000006f&gt;;
+                        };
+                        timer6_fck@51c {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000016 0x00000000 0x0000051c 0x00000070 0x72375f66&gt;;
+                            reg = &lt;0x0000051c&gt;;
+                            phandle = &lt;0x00000070&gt;;
+                        };
+                        timer7_fck@504 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000016 0x00000000 0x00000504 0x00000071 0x74675f66&gt;;
+                            reg = &lt;0x00000504&gt;;
+                            phandle = &lt;0x00000071&gt;;
+                        };
+                        usbotg_fck@47c {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,gate-clock&quot;;
+                            clocks = &lt;0x0000000f&gt;;
+                            ti,bit-shift = &lt;0x00000008&gt;;
+                            reg = &lt;0x0000047c&gt;;
+                            phandle = &lt;0x00000072&gt;;
+                        };
+                        dpll_core_m4_div2_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000012&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000002&gt;;
+                            phandle = &lt;0x00000019&gt;;
+                        };
+                        ieee5000_fck@e4 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,gate-clock&quot;;
+                            clocks = &lt;0x00000019&gt;;
+                            ti,bit-shift = &lt;0x00000001&gt;;
+                            reg = &lt;0x000000e4&gt;;
+                            phandle = &lt;0x00000073&gt;;
+                        };
+                        wdt1_fck@538 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000017 0x00000003 0x00000003 0x00000002&gt;;
+                            reg = &lt;0x00000538&gt;;
+                            phandle = &lt;0x00000074&gt;;
+                        };
+                        l4_rtc_gclk {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000012&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000002&gt;;
+                            phandle = &lt;0x00000075&gt;;
+                        };
+                        l4hs_gclk {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000012&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000001&gt;;
+                            phandle = &lt;0x00000076&gt;;
+                        };
+                        l3s_gclk {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000019&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000001&gt;;
+                            phandle = &lt;0x00000077&gt;;
+                        };
+                        l4fw_gclk {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000019&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000001&gt;;
+                            phandle = &lt;0x00000078&gt;;
+                        };
+                        l4ls_gclk {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000019&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000001&gt;;
+                            phandle = &lt;0x00000023&gt;;
+                        };
+                        sysclk_div_ck {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000012&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000001&gt;;
+                            phandle = &lt;0x00000079&gt;;
+                        };
+                        cpsw_125mhz_gclk {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x0000001a&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000002&gt;;
+                            phandle = &lt;0x0000003e&gt;;
+                        };
+                        cpsw_cpts_rft_clk@520 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x0000001a 0x00000106&gt;;
+                            reg = &lt;0x00000520&gt;;
+                            phandle = &lt;0x0000003f&gt;;
+                        };
+                        gpio0_dbclk_mux_ck@53c {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000017 0x00000000 0x0000053c 0x0000007a 0x67636c6b&gt;;
+                            reg = &lt;0x0000053c&gt;;
+                            phandle = &lt;0x0000007a&gt;;
+                        };
+                        lcd_gclk@534 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000014 0x00000004 0x00000000&gt;;
+                            reg = &lt;0x00000534&gt;;
+                            ti,set-rate-parent;
+                            phandle = &lt;0x0000001c&gt;;
+                        };
+                        mmc_clk {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;fixed-factor-clock&quot;;
+                            clocks = &lt;0x00000010&gt;;
+                            clock-mult = &lt;0x00000001&gt;;
+                            clock-div = &lt;0x00000002&gt;;
+                            phandle = &lt;0x0000007b&gt;;
+                        };
+                        gfx_fclk_clksel_ck@52c {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000012 0x0000027a&gt;;
+                            ti,bit-shift = &lt;0x00000001&gt;;
+                            reg = &lt;0x0000052c&gt;;
+                            phandle = &lt;0x0000001b&gt;;
+                        };
+                        gfx_fck_div_ck@52c {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,divider-clock&quot;;
+                            clocks = &lt;0x0000001b&gt;;
+                            reg = &lt;0x0000052c&gt;;
+                            ti,max-div = &lt;0x00000002&gt;;
+                            phandle = &lt;0x00000048&gt;;
+                        };
+                        sysclkout_pre_ck@700 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,mux-clock&quot;;
+                            clocks = &lt;0x00000018 0x0000001c 0x00000700 0x0000001d 0x7574325f&gt;;
+                            reg = &lt;0x00000700&gt;;
+                            phandle = &lt;0x0000001d&gt;;
+                        };
+                        clkout2_div_ck@700 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,divider-clock&quot;;
+                            clocks = &lt;0x0000001d&gt;;
+                            ti,bit-shift = &lt;0x00000003&gt;;
+                            ti,max-div = &lt;0x00000008&gt;;
+                            reg = &lt;0x00000700&gt;;
+                            phandle = &lt;0x0000001e&gt;;
+                        };
+                        clkout2_ck@700 {
+                            #clock-cells = &lt;0x00000000&gt;;
+                            compatible = &quot;ti,gate-clock&quot;;
+                            clocks = &lt;0x0000001e&gt;;
+                            ti,bit-shift = &lt;0x00000007&gt;;
+                            reg = &lt;0x00000700&gt;;
+                            phandle = &lt;0x0000007c&gt;;
+                        };
+                    };
+                    clockdomains {
+                        phandle = &lt;0x0000007d&gt;;
+                    };
+                    l4_per_cm@0 {
+                        compatible = &quot;ti,omap4-cm&quot;;
+                        reg = &lt;0x00000000 0x0000001c&gt;;
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000001&gt;;
+                        ranges = &lt;0x00000000 0x00000004 0x636c6b40&gt;;
+                        phandle = &lt;0x0000007e&gt;;
+                        clk@14 {
+                            compatible = &quot;ti,clkctrl&quot;;
+                            reg = &lt;0x00000014 0x00000213&gt;;
+                            #clock-cells = &lt;0x00000002&gt;;
+                            phandle = &lt;0x00000015&gt;;
+                        };
+                    };
+                    l4_wkup_cm@400 {
+                        compatible = &quot;ti,omap4-cm&quot;;
+                        reg = &lt;0x00000400 0x0000001c&gt;;
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000001&gt;;
+                        ranges = &lt;0x00000000 0x00000004 0x636c6b40&gt;;
+                        phandle = &lt;0x0000007f&gt;;
+                        clk@4 {
+                            compatible = &quot;ti,clkctrl&quot;;
+                            reg = &lt;0x00000004 0x00000213&gt;;
+                            #clock-cells = &lt;0x00000002&gt;;
+                            phandle = &lt;0x00000080&gt;;
+                        };
+                    };
+                    mpu_cm@600 {
+                        compatible = &quot;ti,omap4-cm&quot;;
+                        reg = &lt;0x00000600 0x0000001c&gt;;
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000001&gt;;
+                        ranges = &lt;0x00000000 0x00000004 0x636c6b40&gt;;
+                        phandle = &lt;0x00000081&gt;;
+                        clk@4 {
+                            compatible = &quot;ti,clkctrl&quot;;
+                            reg = &lt;0x00000004 0x00000213&gt;;
+                            #clock-cells = &lt;0x00000002&gt;;
+                            phandle = &lt;0x00000082&gt;;
+                        };
+                    };
+                    l4_rtc_cm@800 {
+                        compatible = &quot;ti,omap4-cm&quot;;
+                        reg = &lt;0x00000800 0x0000001c&gt;;
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000001&gt;;
+                        ranges = &lt;0x00000000 0x00000004 0x636c6b40&gt;;
+                        phandle = &lt;0x00000083&gt;;
+                        clk@0 {
+                            compatible = &quot;ti,clkctrl&quot;;
+                            reg = &lt;0x00000000 0x00000213&gt;;
+                            #clock-cells = &lt;0x00000002&gt;;
+                            phandle = &lt;0x00000084&gt;;
+                        };
+                    };
+                    gfx_l3_cm@900 {
+                        compatible = &quot;ti,omap4-cm&quot;;
+                        reg = &lt;0x00000900 0x0000001c&gt;;
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000001&gt;;
+                        ranges = &lt;0x00000000 0x00000004 0x636c6b40&gt;;
+                        phandle = &lt;0x00000085&gt;;
+                        clk@4 {
+                            compatible = &quot;ti,clkctrl&quot;;
+                            reg = &lt;0x00000004 0x00000213&gt;;
+                            #clock-cells = &lt;0x00000002&gt;;
+                            phandle = &lt;0x00000086&gt;;
+                        };
+                    };
+                    l4_cefuse_cm@a00 {
+                        compatible = &quot;ti,omap4-cm&quot;;
+                        reg = &lt;0x00000a00 0x0000001c&gt;;
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000001&gt;;
+                        ranges = &lt;0x00000000 0x00000004 0x636c6b40&gt;;
+                        phandle = &lt;0x00000087&gt;;
+                        clk@20 {
+                            compatible = &quot;ti,clkctrl&quot;;
+                            reg = &lt;0x00000020 0x00000213&gt;;
+                            #clock-cells = &lt;0x00000002&gt;;
+                            phandle = &lt;0x00000088&gt;;
+                        };
+                    };
+                };
+                scm@210000 {
+                    compatible = &quot;ti,am3-scm&quot;, &quot;simple-bus&quot;;
+                    reg = &lt;0x00210000 0x0000001c&gt;;
+                    #address-cells = &lt;0x00000001&gt;;
+                    #size-cells = &lt;0x00000001&gt;;
+                    #pinctrl-cells = &lt;0x00000001&gt;;
+                    ranges = &lt;0x00000000 0x00000004 0x70696e6d&gt;;
+                    phandle = &lt;0x00000089&gt;;
+                    pinmux@800 {
+                        compatible = &quot;pinctrl-single&quot;;
+                        reg = &lt;0x00000800 0x0000001c&gt;;
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000000&gt;;
+                        #pinctrl-cells = &lt;0x00000001&gt;;
+                        pinctrl-single,register-width = &lt;0x00000020&gt;;
+                        pinctrl-single,function-mask = &lt;0x0000007f&gt;;
+                        phandle = &lt;0x0000008a&gt;;
+                        user_leds_s0 {
+                            pinctrl-single,pins = &lt;0x00000054 0x0000005c 0x00000003 0x00000002 0x3263305f 0x00000010 0x0000018c 0x000000e4&gt;;
+                            phandle = &lt;0x0000005d&gt;;
+                        };
+                        pinmux_i2c0_pins {
+                            pinctrl-single,pins = &lt;0x00000188 0x00000003 0x00000002 0x61727430&gt;;
+                            phandle = &lt;0x0000002c&gt;;
+                        };
+                        pinmux_uart0_pins {
+                            pinctrl-single,pins = &lt;0x00000170 0x00000003 0x00000002 0x61756c74&gt;;
+                            phandle = &lt;0x0000002b&gt;;
+                        };
+                        cpsw_default {
+                            pinctrl-single,pins = &lt;0x00000110 0x00000118 0x00000120 0x00000128 0x00000130 0x00000138 0x00000140 0x000000e4 0x63707377 0x00000068 0x00000114 0x0000011c 0x00000124 0x0000012c 0x00000134 0x0000013c 0x00000003 0x00000002 0x6d64696f 0x00000003 0x00000030 0x00000004 0x00000001 0x5f736c65 0x000002d1 0x00000027&gt;;
+                            phandle = &lt;0x00000040&gt;;
+                        };
+                        cpsw_sleep {
+                            pinctrl-single,pins = &lt;0x00000110 0x00000118 0x00000120 0x00000128 0x00000130 0x00000138 0x00000140 0x000000e4 0x64617669 0x61756c74 0x000002d1 0x00000010 0x00000042 0x6e63695f 0x00000003 0x00000027 0x00000004 0x00000001 0x70696e73 0x000002d1 0x00000030 0x00000030 0x00000030 0x00000004 0x00000001 0x70696e73&gt;;
+                            phandle = &lt;0x00000041&gt;;
+                        };
+                        davinci_mdio_default {
+                            pinctrl-single,pins = &lt;0x00000148 0x00000003 0x00000002 0x6d64696f&gt;;
+                            phandle = &lt;0x00000042&gt;;
+                        };
+                        davinci_mdio_sleep {
+                            pinctrl-single,pins = &lt;0x00000148 0x00000003 0x00000002 0x6d63315f&gt;;
+                            phandle = &lt;0x00000043&gt;;
+                        };
+                        pinmux_mmc1_pins {
+                            pinctrl-single,pins = &lt;0x00000160 0x000000f8 0x000000f0 0x00000100 0x000000e4 0x70696e6d 0x00000000 0x00000080 0x00000000 0x00000008 0x00000010 0x00000018 0x00000003 0x00000002&gt;;
+                            phandle = &lt;0x0000002e&gt;;
+                        };
+                        pinmux_emmc_pins {
+                            pinctrl-single,pins = &lt;0x00000080 0x00000000 0x00000008 0x00000010 0x00000018 0x00000003 0x00000002 0x395f3139 0x00000000 0x0000017c 0x000000e4 0x70696e6d 0x6f5f7069 0x000002d1 0x00000004 0x00000001 0x5f677069 0x00000003 0x00000037 0x0000004b&gt;;
+                            phandle = &lt;0x00000031&gt;;
+                        };
+                        pinmux_P9_19_default_pin {
+                            pinctrl-single,pins = &lt;0x0000017c 0x000000e4&gt;;
+                            phandle = &lt;0x00000049&gt;;
+                        };
+                        pinmux_P9_19_gpio_pin {
+                            pinctrl-single,pins = &lt;0x0000017c 0x000000e4&gt;;
+                            phandle = &lt;0x0000004a&gt;;
+                        };
+                        pinmux_P9_19_gpio_pu_pin {
+                            pinctrl-single,pins = &lt;0x0000017c 0x000000e4&gt;;
+                            phandle = &lt;0x0000004b&gt;;
+                        };
+                        pinmux_P9_19_gpio_pd_pin {
+                            pinctrl-single,pins = &lt;0x0000017c 0x000000e4&gt;;
+                            phandle = &lt;0x0000004c&gt;;
+                        };
+                        pinmux_P9_19_gpio_input_pin {
+                            pinctrl-single,pins = &lt;0x0000017c 0x000000e4&gt;;
+                            phandle = &lt;0x0000004d&gt;;
+                        };
+                        pinmux_P9_19_timer_pin {
+                            pinctrl-single,pins = &lt;0x0000017c 0x000000e4&gt;;
+                            phandle = &lt;0x00000052&gt;;
+                        };
+                        pinmux_P9_19_can_pin {
+                            pinctrl-single,pins = &lt;0x0000017c 0x000000e4&gt;;
+                            phandle = &lt;0x0000004f&gt;;
+                        };
+                        pinmux_P9_19_i2c_pin {
+                            pinctrl-single,pins = &lt;0x0000017c 0x000000e4&gt;;
+                            phandle = &lt;0x00000050&gt;;
+                        };
+                        pinmux_P9_19_spi_cs_pin {
+                            pinctrl-single,pins = &lt;0x0000017c 0x000000e4&gt;;
+                            phandle = &lt;0x0000004e&gt;;
+                        };
+                        pinmux_P9_19_pru_uart_pin {
+                            pinctrl-single,pins = &lt;0x0000017c 0x000000e4&gt;;
+                            phandle = &lt;0x00000051&gt;;
+                        };
+                        pinmux_P9_20_default_pin {
+                            pinctrl-single,pins = &lt;0x00000178 0x000000e4&gt;;
+                            phandle = &lt;0x00000053&gt;;
+                        };
+                        pinmux_P9_20_gpio_pin {
+                            pinctrl-single,pins = &lt;0x00000178 0x000000e4&gt;;
+                            phandle = &lt;0x00000054&gt;;
+                        };
+                        pinmux_P9_20_gpio_pu_pin {
+                            pinctrl-single,pins = &lt;0x00000178 0x000000e4&gt;;
+                            phandle = &lt;0x00000055&gt;;
+                        };
+                        pinmux_P9_20_gpio_pd_pin {
+                            pinctrl-single,pins = &lt;0x00000178 0x000000e4&gt;;
+                            phandle = &lt;0x00000056&gt;;
+                        };
+                        pinmux_P9_20_gpio_input_pin {
+                            pinctrl-single,pins = &lt;0x00000178 0x000000e4&gt;;
+                            phandle = &lt;0x00000057&gt;;
+                        };
+                        pinmux_P9_20_timer_pin {
+                            pinctrl-single,pins = &lt;0x00000178 0x000000e4&gt;;
+                            phandle = &lt;0x0000005c&gt;;
+                        };
+                        pinmux_P9_20_can_pin {
+                            pinctrl-single,pins = &lt;0x00000178 0x000000e4&gt;;
+                            phandle = &lt;0x00000059&gt;;
+                        };
+                        pinmux_P9_20_i2c_pin {
+                            pinctrl-single,pins = &lt;0x00000178 0x000000e4&gt;;
+                            phandle = &lt;0x0000005a&gt;;
+                        };
+                        pinmux_P9_20_spi_cs_pin {
+                            pinctrl-single,pins = &lt;0x00000178 0x000000e4&gt;;
+                            phandle = &lt;0x00000058&gt;;
+                        };
+                        pinmux_P9_20_pru_uart_pin {
+                            pinctrl-single,pins = &lt;0x00000178 0x000000e4&gt;;
+                            phandle = &lt;0x0000005b&gt;;
+                        };
+                        mcasp0_pins {
+                            pinctrl-single,pins = &lt;0x000001ac 0x00000194 0x000001a4 0x00000198 0x00000003 0x00000002 0x696e735f 0x00000040 0x0000019c 0x00000190 0x00000078 0x0000006c 0x000000e4 0x00000001 0x00000003 0x6f6e0073&gt;;
+                            phandle = &lt;0x00000046&gt;;
+                        };
+                        mcasp0_pins_sleep {
+                            pinctrl-single,pins = &lt;0x000001ac 0x00000194 0x000001a4 0x00000198 0x00000003 0x00000002 0x636f6e66 0x00000000 0x652d6275 0x00000106 0x00000004 0x00000004 0x0000000c 0x00000800 0x00000006 0x00000003&gt;;
+                            phandle = &lt;0x00000047&gt;;
+                        };
+                    };
+                    scm_conf@0 {
+                        compatible = &quot;syscon&quot;, &quot;simple-bus&quot;;
+                        reg = &lt;0x00000000 0x0000001c&gt;;
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000001&gt;;
+                        ranges = &lt;0x00000000 0x00000004 0x636c6f63&gt;;
+                        phandle = &lt;0x00000006&gt;;
+                        clocks {
+                            #address-cells = &lt;0x00000001&gt;;
+                            #size-cells = &lt;0x00000000&gt;;
+                            phandle = &lt;0x0000008b&gt;;
+                            sys_clkin_ck@40 {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;ti,mux-clock&quot;;
+                                clocks = &lt;0x0000001f 0x00000003 0x00000003 0x00000003&gt;;
+                                ti,bit-shift = &lt;0x00000016&gt;;
+                                reg = &lt;0x00000040&gt;;
+                                phandle = &lt;0x00000009&gt;;
+                            };
+                            adc_tsc_fck {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;fixed-factor-clock&quot;;
+                                clocks = &lt;0x00000009&gt;;
+                                clock-mult = &lt;0x00000001&gt;;
+                                clock-div = &lt;0x00000001&gt;;
+                                phandle = &lt;0x0000008c&gt;;
+                            };
+                            dcan0_fck {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;fixed-factor-clock&quot;;
+                                clocks = &lt;0x00000009&gt;;
+                                clock-mult = &lt;0x00000001&gt;;
+                                clock-div = &lt;0x00000001&gt;;
+                                phandle = &lt;0x00000032&gt;;
+                            };
+                            dcan1_fck {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;fixed-factor-clock&quot;;
+                                clocks = &lt;0x00000009&gt;;
+                                clock-mult = &lt;0x00000001&gt;;
+                                clock-div = &lt;0x00000001&gt;;
+                                phandle = &lt;0x00000033&gt;;
+                            };
+                            mcasp0_fck {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;fixed-factor-clock&quot;;
+                                clocks = &lt;0x00000009&gt;;
+                                clock-mult = &lt;0x00000001&gt;;
+                                clock-div = &lt;0x00000001&gt;;
+                                phandle = &lt;0x0000008d&gt;;
+                            };
+                            mcasp1_fck {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;fixed-factor-clock&quot;;
+                                clocks = &lt;0x00000009&gt;;
+                                clock-mult = &lt;0x00000001&gt;;
+                                clock-div = &lt;0x00000001&gt;;
+                                phandle = &lt;0x0000008e&gt;;
+                            };
+                            smartreflex0_fck {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;fixed-factor-clock&quot;;
+                                clocks = &lt;0x00000009&gt;;
+                                clock-mult = &lt;0x00000001&gt;;
+                                clock-div = &lt;0x00000001&gt;;
+                                phandle = &lt;0x0000008f&gt;;
+                            };
+                            smartreflex1_fck {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;fixed-factor-clock&quot;;
+                                clocks = &lt;0x00000009&gt;;
+                                clock-mult = &lt;0x00000001&gt;;
+                                clock-div = &lt;0x00000001&gt;;
+                                phandle = &lt;0x00000090&gt;;
+                            };
+                            sha0_fck {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;fixed-factor-clock&quot;;
+                                clocks = &lt;0x00000009&gt;;
+                                clock-mult = &lt;0x00000001&gt;;
+                                clock-div = &lt;0x00000001&gt;;
+                                phandle = &lt;0x00000091&gt;;
+                            };
+                            aes0_fck {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;fixed-factor-clock&quot;;
+                                clocks = &lt;0x00000009&gt;;
+                                clock-mult = &lt;0x00000001&gt;;
+                                clock-div = &lt;0x00000001&gt;;
+                                phandle = &lt;0x00000092&gt;;
+                            };
+                            rng_fck {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;fixed-factor-clock&quot;;
+                                clocks = &lt;0x00000009&gt;;
+                                clock-mult = &lt;0x00000001&gt;;
+                                clock-div = &lt;0x00000001&gt;;
+                                phandle = &lt;0x00000093&gt;;
+                            };
+                            ehrpwm0_tbclk@44e10664 {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;ti,gate-clock&quot;;
+                                clocks = &lt;0x00000023&gt;;
+                                ti,bit-shift = &lt;0x00000000&gt;;
+                                reg = &lt;0x00000664&gt;;
+                                phandle = &lt;0x0000003b&gt;;
+                            };
+                            ehrpwm1_tbclk@44e10664 {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;ti,gate-clock&quot;;
+                                clocks = &lt;0x00000023&gt;;
+                                ti,bit-shift = &lt;0x00000001&gt;;
+                                reg = &lt;0x00000664&gt;;
+                                phandle = &lt;0x0000003c&gt;;
+                            };
+                            ehrpwm2_tbclk@44e10664 {
+                                #clock-cells = &lt;0x00000000&gt;;
+                                compatible = &quot;ti,gate-clock&quot;;
+                                clocks = &lt;0x00000023&gt;;
+                                ti,bit-shift = &lt;0x00000002&gt;;
+                                reg = &lt;0x00000664&gt;;
+                                phandle = &lt;0x0000003d&gt;;
+                            };
+                        };
+                    };
+                    wkup_m3_ipc@1324 {
+                        compatible = &quot;ti,am3352-wkup-m3-ipc&quot;;
+                        reg = &lt;0x00001324 0x000001d6&gt;;
+                        interrupts = &lt;0x0000004e&gt;;
+                        ti,rproc = &lt;0x00000024&gt;;
+                        mboxes = &lt;0x00000025 0x000002f5&gt;;
+                        ti,scale-data-fw = &quot;am335x-bone-scale-data.bin&quot;;
+                        phandle = &lt;0x00000094&gt;;
+                    };
+                    dma-router@f90 {
+                        compatible = &quot;ti,am335x-edma-crossbar&quot;;
+                        reg = &lt;0x00000f90 0x00000306&gt;;
+                        #dma-cells = &lt;0x00000003&gt;;
+                        dma-requests = &lt;0x00000020&gt;;
+                        dma-masters = &lt;0x00000027&gt;;
+                        phandle = &lt;0x0000002d&gt;;
+                    };
+                    clockdomains {
+                        phandle = &lt;0x00000095&gt;;
+                    };
+                };
+            };
+            interrupt-controller@48200000 {
+                compatible = &quot;ti,am33xx-intc&quot;;
+                interrupt-controller;
+                #interrupt-cells = &lt;0x00000001&gt;;
+                reg = &lt;0x48200000 0x000000e4&gt;;
+                phandle = &lt;0x00000001&gt;;
+            };
+            edma@49000000 {
+                compatible = &quot;ti,edma3-tpcc&quot;;
+                ti,hwmods = &quot;tpcc&quot;;
+                reg = &lt;0x49000000 0x000001fa&gt;;
+                reg-names = &quot;edma3_cc&quot;;
+                interrupts = &lt;0x0000000c 0x00000027 0x696e7400&gt;;
+                interrupt-names = &quot;edma3_ccint&quot;, &quot;edma3_mperr&quot;, &quot;edma3_ccerrint&quot;;
+                dma-requests = &lt;0x00000040&gt;;
+                #dma-cells = &lt;0x00000002&gt;;
+                ti,tptcs = &lt;0x00000028 0x0000002a 0x00000369 0x00000004 0x00000001 0x30000000&gt;;
+                ti,edma-memcpy-channels = &lt;0x00000014 0x000000e4&gt;;
+                phandle = &lt;0x00000027&gt;;
+            };
+            tptc@49800000 {
+                compatible = &quot;ti,edma3-tptc&quot;;
+                ti,hwmods = &quot;tptc0&quot;;
+                reg = &lt;0x49800000 0x000001d6&gt;;
+                interrupts = &lt;0x00000070&gt;;
+                interrupt-names = &quot;edma3_tcerrint&quot;;
+                phandle = &lt;0x00000028&gt;;
+            };
+            tptc@49900000 {
+                compatible = &quot;ti,edma3-tptc&quot;;
+                ti,hwmods = &quot;tptc1&quot;;
+                reg = &lt;0x49900000 0x000001d6&gt;;
+                interrupts = &lt;0x00000071&gt;;
+                interrupt-names = &quot;edma3_tcerrint&quot;;
+                phandle = &lt;0x00000029&gt;;
+            };
+            tptc@49a00000 {
+                compatible = &quot;ti,edma3-tptc&quot;;
+                ti,hwmods = &quot;tptc2&quot;;
+                reg = &lt;0x49a00000 0x000001d6&gt;;
+                interrupts = &lt;0x00000072&gt;;
+                interrupt-names = &quot;edma3_tcerrint&quot;;
+                phandle = &lt;0x0000002a&gt;;
+            };
+            gpio@44e07000 {
+                compatible = &quot;ti,omap4-gpio&quot;;
+                ti,hwmods = &quot;gpio1&quot;;
+                gpio-controller;
+                #gpio-cells = &lt;0x00000002&gt;;
+                interrupt-controller;
+                #interrupt-cells = &lt;0x00000002&gt;;
+                reg = &lt;0x44e07000 0x000001d6&gt;;
+                interrupts = &lt;0x00000060&gt;;
+                gpio-line-names = &quot;MDIO_DATA&quot;, &quot;MDIO_CLK&quot;, &quot;SPI0_SCLK&quot;, &quot;SPI0_D0&quot;, &quot;SPI0_D1&quot;, &quot;SPI0_CS0&quot;, &quot;SPI0_CS1&quot;, &quot;ECAP0_IN_PWM0_OUT&quot;, &quot;LCD_DATA12&quot;, &quot;LCD_DATA13&quot;, &quot;LCD_DATA14&quot;, &quot;LCD_DATA15&quot;, &quot;UART1_CTSN&quot;, &quot;UART1_RTSN&quot;, &quot;UART1_RXD&quot;, &quot;UART1_TXD&quot;, &quot;GMII1_TXD3&quot;, &quot;GMII1_TXD2&quot;, &quot;USB0_DRVVBUS&quot;, &quot;XDMA_EVENT_INTR0&quot;, &quot;XDMA_EVENT_INTR1&quot;, &quot;GMII1_TXD1&quot;, &quot;GPMC_AD8&quot;, &quot;GPMC_AD9&quot;, &quot;NC&quot;, &quot;NC&quot;, &quot;GPMC_AD10&quot;, &quot;GPMC_AD11&quot;, &quot;GMII1_TXD0&quot;, &quot;RMII1_REFCLK&quot;, &quot;GPMC_WAIT0&quot;, &quot;GPMC_WPN&quot;;
+                phandle = &lt;0x0000002f&gt;;
+            };
+            gpio@4804c000 {
+                compatible = &quot;ti,omap4-gpio&quot;;
+                ti,hwmods = &quot;gpio2&quot;;
+                gpio-controller;
+                #gpio-cells = &lt;0x00000002&gt;;
+                interrupt-controller;
+                #interrupt-cells = &lt;0x00000002&gt;;
+                reg = &lt;0x4804c000 0x000001d6&gt;;
+                interrupts = &lt;0x00000062&gt;;
+                gpio-line-names = &quot;GPMC_AD0&quot;, &quot;GPMC_AD1&quot;, &quot;GPMC_AD2&quot;, &quot;GPMC_AD3&quot;, &quot;GPMC_AD4&quot;, &quot;GPMC_AD5&quot;, &quot;GPMC_AD6&quot;, &quot;GPMC_AD7&quot;, &quot;UART0_CTSN&quot;, &quot;UART0_RTSN&quot;, &quot;UART0_RXD&quot;, &quot;UART0_TXD&quot;, &quot;GPMC_AD12&quot;, &quot;GPMC_AD13&quot;, &quot;GPMC_AD14&quot;, &quot;GPMC_AD15&quot;, &quot;GPMC_A0&quot;, &quot;GPMC_A1&quot;, &quot;GPMC_A2&quot;, &quot;GPMC_A3&quot;, &quot;GPMC_A4&quot;, &quot;GPMC_A5&quot;, &quot;GPMC_A6&quot;, &quot;GPMC_A7&quot;, &quot;GPMC_A8&quot;, &quot;GPMC_A9&quot;, &quot;GPMC_A10&quot;, &quot;GPMC_A11&quot;, &quot;GPMC_BE1N&quot;, &quot;GPMC_CSN0&quot;, &quot;GPMC_CSN1&quot;, &quot;GPMC_CSN2&quot;;
+                phandle = &lt;0x0000005e&gt;;
+            };
+            gpio@481ac000 {
+                compatible = &quot;ti,omap4-gpio&quot;;
+                ti,hwmods = &quot;gpio3&quot;;
+                gpio-controller;
+                #gpio-cells = &lt;0x00000002&gt;;
+                interrupt-controller;
+                #interrupt-cells = &lt;0x00000002&gt;;
+                reg = &lt;0x481ac000 0x000001d6&gt;;
+                interrupts = &lt;0x00000020&gt;;
+                gpio-line-names = &quot;GPMC_CSN3&quot;, &quot;GPMC_CLK&quot;, &quot;GPMC_ADVN_ALE&quot;, &quot;GPMC_OEN_REN&quot;, &quot;GPMC_WEN&quot;, &quot;GPMC_BE0N_CLE&quot;, &quot;LCD_DATA0&quot;, &quot;LCD_DATA1&quot;, &quot;LCD_DATA2&quot;, &quot;LCD_DATA3&quot;, &quot;LCD_DATA4&quot;, &quot;LCD_DATA5&quot;, &quot;LCD_DATA6&quot;, &quot;LCD_DATA7&quot;, &quot;LCD_DATA8&quot;, &quot;LCD_DATA9&quot;, &quot;LCD_DATA10&quot;, &quot;LCD_DATA11&quot;, &quot;GMII1_RXD3&quot;, &quot;GMII1_RXD2&quot;, &quot;GMII1_RXD1&quot;, &quot;GMII1_RXD0&quot;, &quot;LCD_VSYNC&quot;, &quot;LCD_HSYNC&quot;, &quot;LCD_PCLK&quot;, &quot;LCD_AC_BIAS_EN&quot;, &quot;MMC0_DAT3&quot;, &quot;MMC0_DAT2&quot;, &quot;MMC0_DAT1&quot;, &quot;MMC0_DAT0&quot;, &quot;MMC0_CLK&quot;, &quot;MMC0_CMD&quot;;
+                phandle = &lt;0x00000096&gt;;
+            };
+            gpio@481ae000 {
+                compatible = &quot;ti,omap4-gpio&quot;;
+                ti,hwmods = &quot;gpio4&quot;;
+                gpio-controller;
+                #gpio-cells = &lt;0x00000002&gt;;
+                interrupt-controller;
+                #interrupt-cells = &lt;0x00000002&gt;;
+                reg = &lt;0x481ae000 0x000001d6&gt;;
+                interrupts = &lt;0x0000003e&gt;;
+                gpio-line-names = &quot;GMII1_COL&quot;, &quot;GMII1_CRS&quot;, &quot;GMII1_RXER&quot;, &quot;GMII1_TXEN&quot;, &quot;GMII1_RXDV&quot;, &quot;I2C0_SDA&quot;, &quot;I2C0_SCL&quot;, &quot;EMU0&quot;, &quot;EMU1&quot;, &quot;GMII1_TXCLK&quot;, &quot;GMII1_RXCLK&quot;, &quot;NC&quot;, &quot;NC&quot;, &quot;USB1_DRVVBUS&quot;, &quot;MCASP0_ACLKX&quot;, &quot;MCASP0_FSX&quot;, &quot;MCASP0_AXR0&quot;, &quot;MCASP0_AHCLKR&quot;, &quot;MCASP0_ACLKR&quot;, &quot;MCASP0_FSR&quot;, &quot;MCASP0_AXR1&quot;, &quot;MCASP0_AHCLKX&quot;, &quot;NC&quot;, &quot;NC&quot;, &quot;NC&quot;, &quot;NC&quot;, &quot;NC&quot;, &quot;NC&quot;, &quot;NC&quot;, &quot;NC&quot;, &quot;NC&quot;, &quot;NC&quot;;
+                phandle = &lt;0x00000097&gt;;
+            };
+            serial@44e09000 {
+                compatible = &quot;ti,am3352-uart&quot;, &quot;ti,omap3-uart&quot;;
+                ti,hwmods = &quot;uart1&quot;;
+                clock-frequency = &lt;0x02dc6c00&gt;;
+                reg = &lt;0x44e09000 0x000001d6&gt;;
+                interrupts = &lt;0x00000048&gt;;
+                status = &quot;okay&quot;;
+                dmas = &lt;0x00000027 0x0000001b 0x000003b9 0x00000008 0x00000003 0x00000003&gt;;
+                dma-names = &quot;tx&quot;, &quot;rx&quot;;
+                pinctrl-names = &quot;default&quot;;
+                pinctrl-0 = &lt;0x0000002b&gt;;
+                phandle = &lt;0x00000098&gt;;
+            };
+            serial@48022000 {
+                compatible = &quot;ti,am3352-uart&quot;, &quot;ti,omap3-uart&quot;;
+                ti,hwmods = &quot;uart2&quot;;
+                clock-frequency = &lt;0x02dc6c00&gt;;
+                reg = &lt;0x48022000 0x000001d6&gt;;
+                interrupts = &lt;0x00000049&gt;;
+                status = &quot;disabled&quot;;
+                dmas = &lt;0x00000027 0x0000001d 0x000003b9 0x00000004 0x00000001 0x30303000&gt;;
+                dma-names = &quot;tx&quot;, &quot;rx&quot;;
+                phandle = &lt;0x00000099&gt;;
+            };
+            serial@48024000 {
+                compatible = &quot;ti,am3352-uart&quot;, &quot;ti,omap3-uart&quot;;
+                ti,hwmods = &quot;uart3&quot;;
+                clock-frequency = &lt;0x02dc6c00&gt;;
+                reg = &lt;0x48024000 0x000001d6&gt;;
+                interrupts = &lt;0x0000004a&gt;;
+                status = &quot;disabled&quot;;
+                dmas = &lt;0x00000027 0x0000001f 0x000003b9 0x00000004 0x00000001 0x30303000&gt;;
+                dma-names = &quot;tx&quot;, &quot;rx&quot;;
+                phandle = &lt;0x0000009a&gt;;
+            };
+            serial@481a6000 {
+                compatible = &quot;ti,am3352-uart&quot;, &quot;ti,omap3-uart&quot;;
+                ti,hwmods = &quot;uart4&quot;;
+                clock-frequency = &lt;0x02dc6c00&gt;;
+                reg = &lt;0x481a6000 0x000001d6&gt;;
+                interrupts = &lt;0x0000002c&gt;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x0000009b&gt;;
+            };
+            serial@481a8000 {
+                compatible = &quot;ti,am3352-uart&quot;, &quot;ti,omap3-uart&quot;;
+                ti,hwmods = &quot;uart5&quot;;
+                clock-frequency = &lt;0x02dc6c00&gt;;
+                reg = &lt;0x481a8000 0x000001d6&gt;;
+                interrupts = &lt;0x0000002d&gt;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x0000009c&gt;;
+            };
+            serial@481aa000 {
+                compatible = &quot;ti,am3352-uart&quot;, &quot;ti,omap3-uart&quot;;
+                ti,hwmods = &quot;uart6&quot;;
+                clock-frequency = &lt;0x02dc6c00&gt;;
+                reg = &lt;0x481aa000 0x000001d6&gt;;
+                interrupts = &lt;0x0000002e&gt;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x0000009d&gt;;
+            };
+            i2c@44e0b000 {
+                compatible = &quot;ti,omap4-i2c&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000000&gt;;
+                ti,hwmods = &quot;i2c1&quot;;
+                reg = &lt;0x44e0b000 0x000001d6&gt;;
+                interrupts = &lt;0x00000046&gt;;
+                status = &quot;okay&quot;;
+                pinctrl-names = &quot;default&quot;;
+                pinctrl-0 = &lt;0x0000002c&gt;;
+                clock-frequency = &lt;0x00061a80&gt;;
+                phandle = &lt;0x0000009e&gt;;
+                tps@24 {
+                    reg = &lt;0x00000024&gt;;
+                    compatible = &quot;ti,tps65217&quot;;
+                    interrupt-controller;
+                    #interrupt-cells = &lt;0x00000001&gt;;
+                    interrupts = &lt;0x00000007&gt;;
+                    interrupt-parent = &lt;0x00000001&gt;;
+                    ti,pmic-shutdown-controller;
+                    phandle = &lt;0x00000039&gt;;
+                    charger {
+                        compatible = &quot;ti,tps65217-charger&quot;;
+                        interrupts = &lt;0x00000000 0x00000350&gt;;
+                        interrupt-names = &quot;USB&quot;, &quot;AC&quot;;
+                        status = &quot;okay&quot;;
+                    };
+                    pwrbutton {
+                        compatible = &quot;ti,tps65217-pwrbutton&quot;;
+                        interrupts = &lt;0x00000002&gt;;
+                        status = &quot;okay&quot;;
+                    };
+                    regulators {
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000000&gt;;
+                        regulator@0 {
+                            reg = &lt;0x00000000&gt;;
+                            regulator-compatible = &quot;dcdc1&quot;;
+                            regulator-name = &quot;vdds_dpr&quot;;
+                            regulator-always-on;
+                            phandle = &lt;0x0000009f&gt;;
+                        };
+                        regulator@1 {
+                            reg = &lt;0x00000001&gt;;
+                            regulator-compatible = &quot;dcdc2&quot;;
+                            regulator-name = &quot;vdd_mpu&quot;;
+                            regulator-min-microvolt = &lt;0x000e1d48&gt;;
+                            regulator-max-microvolt = &lt;0x00149f4c&gt;;
+                            regulator-boot-on;
+                            regulator-always-on;
+                            phandle = &lt;0x00000005&gt;;
+                        };
+                        regulator@2 {
+                            reg = &lt;0x00000002&gt;;
+                            regulator-compatible = &quot;dcdc3&quot;;
+                            regulator-name = &quot;vdd_core&quot;;
+                            regulator-min-microvolt = &lt;0x000e1d48&gt;;
+                            regulator-max-microvolt = &lt;0x00118c30&gt;;
+                            regulator-boot-on;
+                            regulator-always-on;
+                            phandle = &lt;0x000000a0&gt;;
+                        };
+                        regulator@3 {
+                            reg = &lt;0x00000003&gt;;
+                            regulator-compatible = &quot;ldo1&quot;;
+                            regulator-name = &quot;vio,vrtc,vdds&quot;;
+                            regulator-always-on;
+                            phandle = &lt;0x000000a1&gt;;
+                        };
+                        regulator@4 {
+                            reg = &lt;0x00000004&gt;;
+                            regulator-compatible = &quot;ldo2&quot;;
+                            regulator-name = &quot;vdd_3v3aux&quot;;
+                            regulator-always-on;
+                            phandle = &lt;0x000000a2&gt;;
+                        };
+                        regulator@5 {
+                            reg = &lt;0x00000005&gt;;
+                            regulator-compatible = &quot;ldo3&quot;;
+                            regulator-name = &quot;vdd_1v8&quot;;
+                            regulator-always-on;
+                            regulator-min-microvolt = &lt;0x001b7740&gt;;
+                            regulator-max-microvolt = &lt;0x001b7740&gt;;
+                            phandle = &lt;0x000000a3&gt;;
+                        };
+                        regulator@6 {
+                            reg = &lt;0x00000006&gt;;
+                            regulator-compatible = &quot;ldo4&quot;;
+                            regulator-name = &quot;vdd_3v3a&quot;;
+                            regulator-always-on;
+                            phandle = &lt;0x000000a4&gt;;
+                        };
+                    };
+                };
+                baseboard_eeprom@50 {
+                    compatible = &quot;atmel,24c256&quot;;
+                    reg = &lt;0x00000050&gt;;
+                    #address-cells = &lt;0x00000001&gt;;
+                    #size-cells = &lt;0x00000001&gt;;
+                    phandle = &lt;0x000000a5&gt;;
+                    baseboard_data@0 {
+                        reg = &lt;0x00000000 0x000000e4&gt;;
+                        phandle = &lt;0x000000a6&gt;;
+                    };
+                };
+            };
+            i2c@4802a000 {
+                compatible = &quot;ti,omap4-i2c&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000000&gt;;
+                ti,hwmods = &quot;i2c2&quot;;
+                reg = &lt;0x4802a000 0x000001d6&gt;;
+                interrupts = &lt;0x00000047&gt;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000a7&gt;;
+            };
+            i2c@4819c000 {
+                compatible = &quot;ti,omap4-i2c&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000000&gt;;
+                ti,hwmods = &quot;i2c3&quot;;
+                reg = &lt;0x4819c000 0x000001d6&gt;;
+                interrupts = &lt;0x0000001e&gt;;
+                status = &quot;okay&quot;;
+                pinctrl-names = &quot;default&quot;;
+                pinctrl-0;
+                clock-frequency = &lt;0x000186a0&gt;;
+                phandle = &lt;0x000000a8&gt;;
+                cape_eeprom0@54 {
+                    compatible = &quot;atmel,24c256&quot;;
+                    reg = &lt;0x00000054&gt;;
+                    #address-cells = &lt;0x00000001&gt;;
+                    #size-cells = &lt;0x00000001&gt;;
+                    phandle = &lt;0x000000a9&gt;;
+                    cape_data@0 {
+                        reg = &lt;0x00000000 0x000000e4&gt;;
+                        phandle = &lt;0x000000aa&gt;;
+                    };
+                };
+                cape_eeprom1@55 {
+                    compatible = &quot;atmel,24c256&quot;;
+                    reg = &lt;0x00000055&gt;;
+                    #address-cells = &lt;0x00000001&gt;;
+                    #size-cells = &lt;0x00000001&gt;;
+                    phandle = &lt;0x000000ab&gt;;
+                    cape_data@0 {
+                        reg = &lt;0x00000000 0x000000e4&gt;;
+                        phandle = &lt;0x000000ac&gt;;
+                    };
+                };
+                cape_eeprom2@56 {
+                    compatible = &quot;atmel,24c256&quot;;
+                    reg = &lt;0x00000056&gt;;
+                    #address-cells = &lt;0x00000001&gt;;
+                    #size-cells = &lt;0x00000001&gt;;
+                    phandle = &lt;0x000000ad&gt;;
+                    cape_data@0 {
+                        reg = &lt;0x00000000 0x000000e4&gt;;
+                        phandle = &lt;0x000000ae&gt;;
+                    };
+                };
+                cape_eeprom3@57 {
+                    compatible = &quot;atmel,24c256&quot;;
+                    reg = &lt;0x00000057&gt;;
+                    #address-cells = &lt;0x00000001&gt;;
+                    #size-cells = &lt;0x00000001&gt;;
+                    phandle = &lt;0x000000af&gt;;
+                    cape_data@0 {
+                        reg = &lt;0x00000000 0x000000e4&gt;;
+                        phandle = &lt;0x000000b0&gt;;
+                    };
+                };
+            };
+            mmc@48060000 {
+                compatible = &quot;ti,omap4-hsmmc&quot;;
+                ti,hwmods = &quot;mmc1&quot;;
+                ti,dual-volt;
+                ti,needs-special-reset;
+                ti,needs-special-hs-handling;
+                dmas = &lt;0x0000002d 0x0000002d 0x00000003 0x78000000 0x00000040 0x48060000 0x000003ad 0x00000004&gt;;
+                dma-names = &quot;tx&quot;, &quot;rx&quot;;
+                interrupts = &lt;0x00000040&gt;;
+                reg = &lt;0x48060000 0x000003ad&gt;;
+                status = &quot;okay&quot;;
+                bus-width = &lt;0x00000004&gt;;
+                pinctrl-names = &quot;default&quot;;
+                pinctrl-0 = &lt;0x0000002e&gt;;
+                cd-gpios = &lt;0x0000002f 0x00000004 0x00000004&gt;;
+                vmmc-supply = &lt;0x00000030&gt;;
+                phandle = &lt;0x000000b1&gt;;
+            };
+            mmc@481d8000 {
+                compatible = &quot;ti,omap4-hsmmc&quot;;
+                ti,hwmods = &quot;mmc2&quot;;
+                ti,needs-special-reset;
+                dmas = &lt;0x00000027 0x00000003 0x000003b9 0x00000004 0x00000008 0x00000003&gt;;
+                dma-names = &quot;tx&quot;, &quot;rx&quot;;
+                interrupts = &lt;0x0000001c&gt;;
+                reg = &lt;0x481d8000 0x000003ad&gt;;
+                status = &quot;okay&quot;;
+                vmmc-supply = &lt;0x00000030&gt;;
+                pinctrl-names = &quot;default&quot;;
+                pinctrl-0 = &lt;0x00000031&gt;;
+                bus-width = &lt;0x00000008&gt;;
+                phandle = &lt;0x000000b2&gt;;
+            };
+            mmc@47810000 {
+                compatible = &quot;ti,omap4-hsmmc&quot;;
+                ti,hwmods = &quot;mmc3&quot;;
+                ti,needs-special-reset;
+                interrupts = &lt;0x0000001d&gt;;
+                reg = &lt;0x47810000 0x000003ad&gt;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000b3&gt;;
+            };
+            spinlock@480ca000 {
+                compatible = &quot;ti,omap4-hwspinlock&quot;;
+                reg = &lt;0x480ca000 0x000001e1&gt;;
+                ti,hwmods = &quot;spinlock&quot;;
+                #hwlock-cells = &lt;0x00000001&gt;;
+                phandle = &lt;0x000000b4&gt;;
+            };
+            wdt@44e35000 {
+                compatible = &quot;ti,omap3-wdt&quot;;
+                ti,hwmods = &quot;wd_timer2&quot;;
+                reg = &lt;0x44e35000 0x000001d6&gt;;
+                interrupts = &lt;0x0000005b&gt;;
+                phandle = &lt;0x000000b5&gt;;
+            };
+            can@481cc000 {
+                compatible = &quot;ti,am3352-d_can&quot;;
+                ti,hwmods = &quot;d_can0&quot;;
+                reg = &lt;0x481cc000 0x0000011e&gt;;
+                clocks = &lt;0x00000032&gt;;
+                clock-names = &quot;fck&quot;;
+                syscon-raminit = &lt;0x00000006 0x00000004 0x00000009&gt;;
+                interrupts = &lt;0x00000034&gt;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000b6&gt;;
+            };
+            can@481d0000 {
+                compatible = &quot;ti,am3352-d_can&quot;;
+                ti,hwmods = &quot;d_can1&quot;;
+                reg = &lt;0x481d0000 0x0000011e&gt;;
+                clocks = &lt;0x00000033&gt;;
+                clock-names = &quot;fck&quot;;
+                syscon-raminit = &lt;0x00000006 0x00000004 0x00000009&gt;;
+                interrupts = &lt;0x00000037&gt;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000b7&gt;;
+            };
+            mailbox@480c8000 {
+                compatible = &quot;ti,omap4-mailbox&quot;;
+                reg = &lt;0x480c8000 0x000001d6&gt;;
+                interrupts = &lt;0x0000004d&gt;;
+                ti,hwmods = &quot;mailbox&quot;;
+                #mbox-cells = &lt;0x00000001&gt;;
+                ti,mbox-num-users = &lt;0x00000004&gt;;
+                ti,mbox-num-fifos = &lt;0x00000008&gt;;
+                phandle = &lt;0x00000025&gt;;
+                wkup_m3 {
+                    ti,mbox-send-noirq;
+                    ti,mbox-tx = &lt;0x00000000 0x0000000c 0x00000003&gt;;
+                    ti,mbox-rx = &lt;0x00000000 0x00000004 0x00000002&gt;;
+                    phandle = &lt;0x00000026&gt;;
+                };
+            };
+            timer@44e31000 {
+                compatible = &quot;ti,am335x-timer-1ms&quot;;
+                reg = &lt;0x44e31000 0x000001d6&gt;;
+                interrupts = &lt;0x00000043&gt;;
+                ti,hwmods = &quot;timer1&quot;;
+                ti,timer-alwon;
+                clocks = &lt;0x00000034&gt;;
+                clock-names = &quot;fck&quot;;
+                phandle = &lt;0x000000b8&gt;;
+            };
+            timer@48040000 {
+                compatible = &quot;ti,am335x-timer&quot;;
+                reg = &lt;0x48040000 0x000001d6&gt;;
+                interrupts = &lt;0x00000044&gt;;
+                ti,hwmods = &quot;timer2&quot;;
+                clocks = &lt;0x00000035&gt;;
+                clock-names = &quot;fck&quot;;
+                phandle = &lt;0x000000b9&gt;;
+            };
+            timer@48042000 {
+                compatible = &quot;ti,am335x-timer&quot;;
+                reg = &lt;0x48042000 0x000001d6&gt;;
+                interrupts = &lt;0x00000045&gt;;
+                ti,hwmods = &quot;timer3&quot;;
+                phandle = &lt;0x000000ba&gt;;
+            };
+            timer@48044000 {
+                compatible = &quot;ti,am335x-timer&quot;;
+                reg = &lt;0x48044000 0x000001d6&gt;;
+                interrupts = &lt;0x0000005c&gt;;
+                ti,hwmods = &quot;timer4&quot;;
+                ti,timer-pwm;
+                phandle = &lt;0x000000bb&gt;;
+            };
+            timer@48046000 {
+                compatible = &quot;ti,am335x-timer&quot;;
+                reg = &lt;0x48046000 0x000001d6&gt;;
+                interrupts = &lt;0x0000005d&gt;;
+                ti,hwmods = &quot;timer5&quot;;
+                ti,timer-pwm;
+                phandle = &lt;0x000000bc&gt;;
+            };
+            timer@48048000 {
+                compatible = &quot;ti,am335x-timer&quot;;
+                reg = &lt;0x48048000 0x000001d6&gt;;
+                interrupts = &lt;0x0000005e&gt;;
+                ti,hwmods = &quot;timer6&quot;;
+                ti,timer-pwm;
+                phandle = &lt;0x000000bd&gt;;
+            };
+            timer@4804a000 {
+                compatible = &quot;ti,am335x-timer&quot;;
+                reg = &lt;0x4804a000 0x000001d6&gt;;
+                interrupts = &lt;0x0000005f&gt;;
+                ti,hwmods = &quot;timer7&quot;;
+                ti,timer-pwm;
+                phandle = &lt;0x000000be&gt;;
+            };
+            rtc@44e3e000 {
+                compatible = &quot;ti,am3352-rtc&quot;, &quot;ti,da830-rtc&quot;;
+                reg = &lt;0x44e3e000 0x000001d6&gt;;
+                interrupts = &lt;0x0000004b 0x000001e1&gt;;
+                ti,hwmods = &quot;rtc&quot;;
+                clocks = &lt;0x00000018 0x00000003 0x636c6b00 0x00000000&gt;;
+                clock-names = &quot;ext-clk&quot;, &quot;int-clk&quot;;
+                system-power-controller;
+                phandle = &lt;0x000000bf&gt;;
+            };
+            spi@48030000 {
+                compatible = &quot;ti,omap4-mcspi&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000000&gt;;
+                reg = &lt;0x48030000 0x000001d6&gt;;
+                interrupts = &lt;0x00000041&gt;;
+                ti,spi-num-cs = &lt;0x00000002&gt;;
+                ti,hwmods = &quot;spi0&quot;;
+                dmas = &lt;0x00000027 0x00000011 0x00000000 0x00000003 0x72783000 0x00000009 0x00000000 0x000000c0 0x34383161 0x0000000f 0x2d6d6373 0x0000001c&gt;;
+                dma-names = &quot;tx0&quot;, &quot;rx0&quot;, &quot;tx1&quot;, &quot;rx1&quot;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000c0&gt;;
+            };
+            spi@481a0000 {
+                compatible = &quot;ti,omap4-mcspi&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000000&gt;;
+                reg = &lt;0x481a0000 0x000001d6&gt;;
+                interrupts = &lt;0x0000007d&gt;;
+                ti,spi-num-cs = &lt;0x00000002&gt;;
+                ti,hwmods = &quot;spi1&quot;;
+                dmas = &lt;0x00000027 0x0000002b 0x00000000 0x00000003 0x72783000 0x00000009 0x00000000 0x000000c1 0x34373430 0x0000000e 0x782d7573 0x00000106&gt;;
+                dma-names = &quot;tx0&quot;, &quot;rx0&quot;, &quot;tx1&quot;, &quot;rx1&quot;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000c1&gt;;
+            };
+            usb@47400000 {
+                compatible = &quot;ti,am33xx-usb&quot;;
+                reg = &lt;0x47400000 0x000001f3&gt;;
+                ranges;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000001&gt;;
+                ti,hwmods = &quot;usb_otg_hs&quot;;
+                status = &quot;okay&quot;;
+                phandle = &lt;0x000000c2&gt;;
+                control@44e10620 {
+                    compatible = &quot;ti,am335x-usb-ctrl-module&quot;;
+                    reg = &lt;0x44e10620 0x00000003 0x6374726c 0x00000005&gt;;
+                    reg-names = &quot;phy_ctrl&quot;, &quot;wakeup&quot;;
+                    status = &quot;okay&quot;;
+                    phandle = &lt;0x00000036&gt;;
+                };
+                usb-phy@47401300 {
+                    compatible = &quot;ti,am335x-usb-phy&quot;;
+                    reg = &lt;0x47401300 0x000001fa&gt;;
+                    reg-names = &quot;phy&quot;;
+                    status = &quot;okay&quot;;
+                    ti,ctrl_mod = &lt;0x00000036&gt;;
+                    #phy-cells = &lt;0x00000000&gt;;
+                    phandle = &lt;0x00000037&gt;;
+                };
+                usb@47401000 {
+                    compatible = &quot;ti,musb-am33xx&quot;;
+                    status = &quot;okay&quot;;
+                    reg = &lt;0x47401400 0x00000003 0x6f6e7472 0x000001d6&gt;;
+                    reg-names = &quot;mc&quot;, &quot;control&quot;;
+                    interrupts = &lt;0x00000012&gt;;
+                    interrupt-names = &quot;mc&quot;, &quot;vbus&quot;;
+                    dr_mode = &quot;peripheral&quot;;
+                    mentor,multipoint = &lt;0x00000001&gt;;
+                    mentor,num-eps = &lt;0x00000010&gt;;
+                    mentor,ram-bits = &lt;0x0000000c&gt;;
+                    mentor,power = &lt;0x000001f4&gt;;
+                    phys = &lt;0x00000037&gt;;
+                    dmas = &lt;0x00000038 0x00000001 0x00000000 0x00000038 0x00000005 0x00000000 0x00000038 0x00000009 0x00000000 0x00000038 0x0000000d 0x00000000 0x00000038 0x00000002 0x00000001 0x00000038 0x00000006 0x00000001 0x00000038 0x0000000a 0x00000001 0x00000038 0x0000000e 0x000003b9 0x72783400 0x72783800 0x31007278 0x00727831 0x33007478 0x37007478 0x78313100 0x31340074 0x000005eb 0x00000000 0x000000c3 0x70687940 0x00000003 0x6d333335 0x00000003 0x00000100 0x70687900 0x6f6b6179 0x00000589 0x00000595 0x000000e4 0x75736240 0x00000003 0x7573622d 0x00000005 0x00000003 0x00000400 0x0000000b 0x6f6c0000 0x00000013 0x6d630000 0x686f7374 0x000005a8 0x000005ba 0x000005c9 0x000005d9 0x000005e6 0x000003b4 0x00000038 0x00000011 0x00000000 0x00000038 0x00000015 0x00000000 0x00000038 0x00000019 0x00000000 0x00000038 0x0000001d 0x00000001 0x00000038 0x00000012 0x00000001 0x00000038 0x00000016 0x00000001 0x00000038 0x0000001a 0x00000001 0x00000038 0x00000084 0x72783300 0x72783700 0x00727831 0x72783134 0x32007478&gt;;
+                    dma-names = &quot;rx1&quot;, &quot;rx2&quot;, &quot;rx3&quot;, &quot;rx4&quot;, &quot;rx5&quot;, &quot;rx6&quot;, &quot;rx7&quot;, &quot;rx8&quot;, &quot;rx9&quot;, &quot;rx10&quot;, &quot;rx11&quot;, &quot;rx12&quot;, &quot;rx13&quot;, &quot;rx14&quot;, &quot;rx15&quot;, &quot;tx1&quot;, &quot;tx2&quot;, &quot;tx3&quot;, &quot;tx4&quot;, &quot;tx5&quot;, &quot;tx6&quot;, &quot;tx7&quot;, &quot;tx8&quot;, &quot;tx9&quot;, &quot;tx10&quot;, &quot;tx11&quot;, &quot;tx12&quot;, &quot;tx13&quot;, &quot;tx14&quot;, &quot;tx15&quot;;
+                    interrupts-extended = &lt;0x00000001 0x00000003 0x00000002 0x34373430&gt;;
+                    phandle = &lt;0x000000c3&gt;;
+                };
+                usb-phy@47401b00 {
+                    compatible = &quot;ti,am335x-usb-phy&quot;;
+                    reg = &lt;0x47401b00 0x000001fa&gt;;
+                    reg-names = &quot;phy&quot;;
+                    status = &quot;okay&quot;;
+                    ti,ctrl_mod = &lt;0x00000036&gt;;
+                    #phy-cells = &lt;0x00000000&gt;;
+                    phandle = &lt;0x0000003a&gt;;
+                };
+                usb@47401800 {
+                    compatible = &quot;ti,musb-am33xx&quot;;
+                    status = &quot;okay&quot;;
+                    reg = &lt;0x47401c00 0x00000003 0x6f6e7472 0x000001d6&gt;;
+                    reg-names = &quot;mc&quot;, &quot;control&quot;;
+                    interrupts = &lt;0x00000013&gt;;
+                    interrupt-names = &quot;mc&quot;;
+                    dr_mode = &quot;host&quot;;
+                    mentor,multipoint = &lt;0x00000001&gt;;
+                    mentor,num-eps = &lt;0x00000010&gt;;
+                    mentor,ram-bits = &lt;0x0000000c&gt;;
+                    mentor,power = &lt;0x000001f4&gt;;
+                    phys = &lt;0x0000003a&gt;;
+                    dmas = &lt;0x00000038 0x00000010 0x00000000 0x00000038 0x00000014 0x00000000 0x00000038 0x00000018 0x00000000 0x00000038 0x0000001c 0x00000000 0x00000038 0x00000011 0x00000001 0x00000038 0x00000015 0x00000001 0x00000038 0x00000019 0x00000001 0x00000038 0x0000001d 0x000003b9 0x72783400 0x72783800 0x31007278 0x00727831 0x33007478 0x37007478 0x78313100 0x31340074 0x000000e4 0x646d612d 0x37343032 0x00000000 0x70693431 0x00000106 0x00001000 0x00004000 0x676c7565 0x73636865 0x67720000 0x00000011 0x676c7565 0x00000306 0x000005ff 0x0000060d 0x000003ad 0x00000004 0x00000002 0x38333030 0x00000000 0x6d737300 0x48300000 0x000001e1 0x00000004 0x00000004 0x00000009 0x00000000 0x48300100 0x48300180 0x00000080 0x000000c5 0x30303130 0x00000000 0x61700074 0x70000000 0x00000003 0x48300100 0x0000011e 0x00000125 0x000001d6 0x00000350 0x00000009 0x00000000 0x000000c6 0x40307834 0x0000000f 0x782d6571 0x00000106 0x00000004 0x00000004 0x00000004 0x00000004 0x00000009 0x00000000 0x000000c7 0x34383330 0x00000022&gt;;
+                    dma-names = &quot;rx1&quot;, &quot;rx2&quot;, &quot;rx3&quot;, &quot;rx4&quot;, &quot;rx5&quot;, &quot;rx6&quot;, &quot;rx7&quot;, &quot;rx8&quot;, &quot;rx9&quot;, &quot;rx10&quot;, &quot;rx11&quot;, &quot;rx12&quot;, &quot;rx13&quot;, &quot;rx14&quot;, &quot;rx15&quot;, &quot;tx1&quot;, &quot;tx2&quot;, &quot;tx3&quot;, &quot;tx4&quot;, &quot;tx5&quot;, &quot;tx6&quot;, &quot;tx7&quot;, &quot;tx8&quot;, &quot;tx9&quot;, &quot;tx10&quot;, &quot;tx11&quot;, &quot;tx12&quot;, &quot;tx13&quot;, &quot;tx14&quot;, &quot;tx15&quot;;
+                    phandle = &lt;0x000000c4&gt;;
+                };
+                dma-controller@47402000 {
+                    compatible = &quot;ti,am3359-cppi41&quot;;
+                    reg = &lt;0x47400000 0x47403000 0x00000003 0x00636f6e 0x64756c65 0x00000003 0x00000003 0x00000000&gt;;
+                    reg-names = &quot;glue&quot;, &quot;controller&quot;, &quot;scheduler&quot;, &quot;queuemgr&quot;;
+                    interrupts = &lt;0x00000011&gt;;
+                    interrupt-names = &quot;glue&quot;;
+                    #dma-cells = &lt;0x00000002&gt;;
+                    #dma-channels = &lt;0x0000001e&gt;;
+                    #dma-requests = &lt;0x00000100&gt;;
+                    status = &quot;okay&quot;;
+                    phandle = &lt;0x00000038&gt;;
+                };
+            };
+            epwmss@48300000 {
+                compatible = &quot;ti,am33xx-pwmss&quot;;
+                reg = &lt;0x48300000 0x000001e1&gt;;
+                ti,hwmods = &quot;epwmss0&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000001&gt;;
+                status = &quot;disabled&quot;;
+                ranges = &lt;0x48300100 0x48300180 0x00000080 0x000000c5 0x30303130 0x00000000 0x61700074 0x70000000 0x00000003&gt;;
+                phandle = &lt;0x000000c5&gt;;
+                ecap@48300100 {
+                    compatible = &quot;ti,am3352-ecap&quot;, &quot;ti,am33xx-ecap&quot;;
+                    #pwm-cells = &lt;0x00000003&gt;;
+                    reg = &lt;0x48300100 0x0000011e&gt;;
+                    clocks = &lt;0x00000023&gt;;
+                    clock-names = &quot;fck&quot;;
+                    interrupts = &lt;0x0000001f&gt;;
+                    interrupt-names = &quot;ecap0&quot;;
+                    status = &quot;disabled&quot;;
+                    phandle = &lt;0x000000c6&gt;;
+                };
+                eqep@0x48300180 {
+                    compatible = &quot;ti,am33xx-eqep&quot;;
+                    reg = &lt;0x48300180 0x0000011e&gt;;
+                    clocks = &lt;0x00000023&gt;;
+                    clock-names = &quot;fck&quot;;
+                    interrupt-parent = &lt;0x00000001&gt;;
+                    interrupts = &lt;0x0000004f&gt;;
+                    status = &quot;disabled&quot;;
+                    phandle = &lt;0x000000c7&gt;;
+                };
+                pwm@48300200 {
+                    compatible = &quot;ti,am3352-ehrpwm&quot;, &quot;ti,am33xx-ehrpwm&quot;;
+                    #pwm-cells = &lt;0x00000003&gt;;
+                    reg = &lt;0x48300200 0x0000011e&gt;;
+                    clocks = &lt;0x0000003b 0x00000125&gt;;
+                    clock-names = &quot;tbclk&quot;, &quot;fck&quot;;
+                    status = &quot;disabled&quot;;
+                    phandle = &lt;0x000000c8&gt;;
+                };
+            };
+            epwmss@48302000 {
+                compatible = &quot;ti,am33xx-pwmss&quot;;
+                reg = &lt;0x48302000 0x000001e1&gt;;
+                ti,hwmods = &quot;epwmss1&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000001&gt;;
+                status = &quot;disabled&quot;;
+                ranges = &lt;0x48302100 0x48302180 0x00000080 0x000000c9 0x30323130 0x00000000 0x61700074 0x70000000 0x00000003&gt;;
+                phandle = &lt;0x000000c9&gt;;
+                ecap@48302100 {
+                    compatible = &quot;ti,am3352-ecap&quot;, &quot;ti,am33xx-ecap&quot;;
+                    #pwm-cells = &lt;0x00000003&gt;;
+                    reg = &lt;0x48302100 0x0000011e&gt;;
+                    clocks = &lt;0x00000023&gt;;
+                    clock-names = &quot;fck&quot;;
+                    interrupts = &lt;0x0000002f&gt;;
+                    interrupt-names = &quot;ecap1&quot;;
+                    status = &quot;disabled&quot;;
+                    phandle = &lt;0x000000ca&gt;;
+                };
+                eqep@0x48302180 {
+                    compatible = &quot;ti,am33xx-eqep&quot;;
+                    reg = &lt;0x48302180 0x0000011e&gt;;
+                    clocks = &lt;0x00000023&gt;;
+                    clock-names = &quot;fck&quot;;
+                    interrupt-parent = &lt;0x00000001&gt;;
+                    interrupts = &lt;0x00000058&gt;;
+                    status = &quot;disabled&quot;;
+                    phandle = &lt;0x000000cb&gt;;
+                };
+                pwm@48302200 {
+                    compatible = &quot;ti,am3352-ehrpwm&quot;, &quot;ti,am33xx-ehrpwm&quot;;
+                    #pwm-cells = &lt;0x00000003&gt;;
+                    reg = &lt;0x48302200 0x0000011e&gt;;
+                    clocks = &lt;0x0000003c 0x00000125&gt;;
+                    clock-names = &quot;tbclk&quot;, &quot;fck&quot;;
+                    status = &quot;disabled&quot;;
+                    phandle = &lt;0x000000cc&gt;;
+                };
+            };
+            epwmss@48304000 {
+                compatible = &quot;ti,am33xx-pwmss&quot;;
+                reg = &lt;0x48304000 0x000001e1&gt;;
+                ti,hwmods = &quot;epwmss2&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000001&gt;;
+                status = &quot;disabled&quot;;
+                ranges = &lt;0x48304100 0x48304180 0x00000080 0x000000cd 0x30343130 0x00000000 0x61700074 0x70000000 0x00000003&gt;;
+                phandle = &lt;0x000000cd&gt;;
+                ecap@48304100 {
+                    compatible = &quot;ti,am3352-ecap&quot;, &quot;ti,am33xx-ecap&quot;;
+                    #pwm-cells = &lt;0x00000003&gt;;
+                    reg = &lt;0x48304100 0x0000011e&gt;;
+                    clocks = &lt;0x00000023&gt;;
+                    clock-names = &quot;fck&quot;;
+                    interrupts = &lt;0x0000003d&gt;;
+                    interrupt-names = &quot;ecap2&quot;;
+                    status = &quot;disabled&quot;;
+                    phandle = &lt;0x000000ce&gt;;
+                };
+                eqep@0x48304180 {
+                    compatible = &quot;ti,am33xx-eqep&quot;;
+                    reg = &lt;0x48304180 0x0000011e&gt;;
+                    clocks = &lt;0x00000023&gt;;
+                    clock-names = &quot;fck&quot;;
+                    interrupt-parent = &lt;0x00000001&gt;;
+                    interrupts = &lt;0x00000059&gt;;
+                    status = &quot;disabled&quot;;
+                    phandle = &lt;0x000000cf&gt;;
+                };
+                pwm@48304200 {
+                    compatible = &quot;ti,am3352-ehrpwm&quot;, &quot;ti,am33xx-ehrpwm&quot;;
+                    #pwm-cells = &lt;0x00000003&gt;;
+                    reg = &lt;0x48304200 0x0000011e&gt;;
+                    clocks = &lt;0x0000003d 0x00000125&gt;;
+                    clock-names = &quot;tbclk&quot;, &quot;fck&quot;;
+                    status = &quot;disabled&quot;;
+                    phandle = &lt;0x000000d0&gt;;
+                };
+            };
+            ethernet@4a100000 {
+                compatible = &quot;ti,am335x-cpsw&quot;, &quot;ti,cpsw&quot;;
+                ti,hwmods = &quot;cpgmac0&quot;;
+                clocks = &lt;0x0000003e 0x00000125&gt;;
+                clock-names = &quot;fck&quot;, &quot;cpts&quot;;
+                cpdma_channels = &lt;0x00000008&gt;;
+                ale_entries = &lt;0x00000400&gt;;
+                bd_ram_size = &lt;0x00002000&gt;;
+                mac_control = &lt;0x00000020&gt;;
+                slaves = &lt;0x00000001&gt;;
+                active_slave = &lt;0x00000000&gt;;
+                cpts_clock_mult = &lt;0x80000000&gt;;
+                cpts_clock_shift = &lt;0x0000001d&gt;;
+                reg = &lt;0x4a100000 0x00000003 0x00000003 0x00000003&gt;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000001&gt;;
+                interrupts = &lt;0x00000028 0x00000003 0x00000004 0x00000005&gt;;
+                ranges;
+                syscon = &lt;0x00000006&gt;;
+                status = &quot;okay&quot;;
+                pinctrl-names = &quot;default&quot;, &quot;sleep&quot;;
+                pinctrl-0 = &lt;0x00000040&gt;;
+                pinctrl-1 = &lt;0x00000041&gt;;
+                phandle = &lt;0x000000d1&gt;;
+                mdio@4a101000 {
+                    compatible = &quot;ti,cpsw-mdio&quot;, &quot;ti,davinci_mdio&quot;;
+                    #address-cells = &lt;0x00000001&gt;;
+                    #size-cells = &lt;0x00000000&gt;;
+                    ti,hwmods = &quot;davinci_mdio&quot;;
+                    bus_freq = &lt;0x000f4240&gt;;
+                    reg = &lt;0x4a101000 0x000003ad&gt;;
+                    status = &quot;okay&quot;;
+                    pinctrl-names = &quot;default&quot;, &quot;sleep&quot;;
+                    pinctrl-0 = &lt;0x00000042&gt;;
+                    pinctrl-1 = &lt;0x00000043&gt;;
+                    phandle = &lt;0x00000044&gt;;
+                };
+                slave@4a100200 {
+                    mac-address = [00 00 00 00 00 00];
+                    phy_id = &lt;0x00000044 0x000006b4&gt;;
+                    phy-mode = &quot;mii&quot;;
+                    phandle = &lt;0x000000d2&gt;;
+                };
+                slave@4a100300 {
+                    mac-address = [00 00 00 00 00 00];
+                    phandle = &lt;0x000000d3&gt;;
+                };
+                cpsw-phy-sel@44e10650 {
+                    compatible = &quot;ti,am3352-cpsw-phy-sel&quot;;
+                    reg = &lt;0x44e10650 0x000001fa&gt;;
+                    reg-names = &quot;gmii-sel&quot;;
+                    phandle = &lt;0x000000d4&gt;;
+                };
+            };
+            ocmcram@40300000 {
+                compatible = &quot;mmio-sram&quot;;
+                reg = &lt;0x40300000 0x000001f3&gt;;
+                ranges = &lt;0x00000000 0x00000004 0x00000004&gt;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000001&gt;;
+                phandle = &lt;0x000000d5&gt;;
+                pm-sram-code@0 {
+                    compatible = &quot;ti,sram&quot;;
+                    reg = &lt;0x00000000 0x000006bd&gt;;
+                    protect-exec;
+                    phandle = &lt;0x00000007&gt;;
+                };
+                pm-sram-data@1000 {
+                    compatible = &quot;ti,sram&quot;;
+                    reg = &lt;0x00001000 0x000006ca&gt;;
+                    pool;
+                    phandle = &lt;0x00000008&gt;;
+                };
+            };
+            pruss-soc-bus@4a326004 {
+                compatible = &quot;ti,am3356-pruss-soc-bus&quot;;
+                reg = &lt;0x4a326004 0x000001e1&gt;;
+                ti,hwmods = &quot;pruss&quot;;
+                #address-cells = &lt;0x00000001&gt;;
+                #size-cells = &lt;0x00000001&gt;;
+                ranges;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000d6&gt;;
+                pruss@4a300000 {
+                    compatible = &quot;ti,am3356-pruss&quot;;
+                    reg = &lt;0x4a300000 0x000001d6&gt;;
+                    interrupts = &lt;0x00000014 0x00000018 0x00000003 0x3200686f 0x73743500 0x686f7374 0x00000004 0x00000004&gt;;
+                    interrupt-names = &quot;host2&quot;, &quot;host3&quot;, &quot;host4&quot;, &quot;host5&quot;, &quot;host6&quot;, &quot;host7&quot;, &quot;host8&quot;, &quot;host9&quot;;
+                    #address-cells = &lt;0x00000001&gt;;
+                    #size-cells = &lt;0x00000001&gt;;
+                    ranges;
+                    status = &quot;disabled&quot;;
+                    phandle = &lt;0x000000d7&gt;;
+                    memories@4a300000 {
+                        reg = &lt;0x4a300000 0x4a310000 0x000001fa 0x73687264 0x00000004 0x00000001&gt;;
+                        reg-names = &quot;dram0&quot;, &quot;dram1&quot;, &quot;shrdram2&quot;;
+                        phandle = &lt;0x000000d8&gt;;
+                    };
+                    cfg@4a326000 {
+                        compatible = &quot;syscon&quot;;
+                        reg = &lt;0x4a326000 0x000000e4&gt;;
+                        phandle = &lt;0x000000d9&gt;;
+                    };
+                    iep@4a32e000 {
+                        compatible = &quot;syscon&quot;;
+                        reg = &lt;0x4a32e000 0x000000e4&gt;;
+                        phandle = &lt;0x000000da&gt;;
+                    };
+                    mii-rt@4a332000 {
+                        compatible = &quot;syscon&quot;;
+                        reg = &lt;0x4a332000 0x000000e4&gt;;
+                        phandle = &lt;0x000000db&gt;;
+                    };
+                    interrupt-controller@4a320000 {
+                        compatible = &quot;ti,am3356-pruss-intc&quot;;
+                        reg = &lt;0x4a320000 0x0000032a&gt;;
+                        interrupt-controller;
+                        #interrupt-cells = &lt;0x00000001&gt;;
+                        phandle = &lt;0x00000045&gt;;
+                    };
+                    pru@4a334000 {
+                        compatible = &quot;ti,am3356-pru&quot;;
+                        reg = &lt;0x4a334000 0x4a322400 0x000001fa 0x00646562 0x000006cf 0x66770000&gt;;
+                        reg-names = &quot;iram&quot;, &quot;control&quot;, &quot;debug&quot;;
+                        firmware-name = &quot;am335x-pru0-fw&quot;;
+                        interrupt-parent = &lt;0x00000045&gt;;
+                        interrupts = &lt;0x00000010 0x00000350&gt;;
+                        interrupt-names = &quot;vring&quot;, &quot;kick&quot;;
+                        phandle = &lt;0x000000dc&gt;;
+                    };
+                    pru@4a338000 {
+                        compatible = &quot;ti,am3356-pru&quot;;
+                        reg = &lt;0x4a338000 0x4a324400 0x000001fa 0x00646562 0x000006cf 0x66770000&gt;;
+                        reg-names = &quot;iram&quot;, &quot;control&quot;, &quot;debug&quot;;
+                        firmware-name = &quot;am335x-pru1-fw&quot;;
+                        interrupt-parent = &lt;0x00000045&gt;;
+                        interrupts = &lt;0x00000012 0x00000350&gt;;
+                        interrupt-names = &quot;vring&quot;, &quot;kick&quot;;
+                        phandle = &lt;0x000000dd&gt;;
+                    };
+                    mdio@4a332400 {
+                        compatible = &quot;ti,davinci_mdio&quot;;
+                        reg = &lt;0x4a332400 0x0000011e&gt;;
+                        clocks = &lt;0x00000012&gt;;
+                        clock-names = &quot;fck&quot;;
+                        bus_freq = &lt;0x000f4240&gt;;
+                        #address-cells = &lt;0x00000001&gt;;
+                        #size-cells = &lt;0x00000000&gt;;
+                        status = &quot;disabled&quot;;
+                        phandle = &lt;0x000000de&gt;;
+                    };
+                };
+            };
+            elm@48080000 {
+                compatible = &quot;ti,am3352-elm&quot;;
+                reg = &lt;0x48080000 0x000001d6&gt;;
+                interrupts = &lt;0x00000004&gt;;
+                ti,hwmods = &quot;elm&quot;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000df&gt;;
+            };
+            lcdc@4830e000 {
+                compatible = &quot;ti,am33xx-tilcdc&quot;;
+                reg = &lt;0x4830e000 0x000001d6&gt;;
+                interrupts = &lt;0x00000024&gt;;
+                ti,hwmods = &quot;lcdc&quot;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000e0&gt;;
+            };
+            tscadc@44e0d000 {
+                compatible = &quot;ti,am3359-tscadc&quot;;
+                reg = &lt;0x44e0d000 0x000001d6&gt;;
+                interrupts = &lt;0x00000010&gt;;
+                ti,hwmods = &quot;adc_tsc&quot;;
+                status = &quot;disabled&quot;;
+                dmas = &lt;0x00000027 0x00000039 0x000003b9 0x00000003 0x00000001 0x00000000&gt;;
+                dma-names = &quot;fifo0&quot;, &quot;fifo1&quot;;
+                phandle = &lt;0x000000e1&gt;;
+                tsc {
+                    compatible = &quot;ti,am3359-tsc&quot;;
+                };
+                adc {
+                    #io-channel-cells = &lt;0x00000001&gt;;
+                    compatible = &quot;ti,am3359-adc&quot;;
+                    phandle = &lt;0x000000e2&gt;;
+                };
+            };
+            emif@4c000000 {
+                compatible = &quot;ti,emif-am3352&quot;;
+                reg = &lt;0x4c000000 0x000001e1&gt;;
+                ti,hwmods = &quot;emif&quot;;
+                interrupts = &lt;0x00000065&gt;;
+                sram = &lt;0x00000007 0x000006ef&gt;;
+                ti,no-idle;
+                phandle = &lt;0x000000e3&gt;;
+            };
+            gpmc@50000000 {
+                compatible = &quot;ti,am3352-gpmc&quot;;
+                ti,hwmods = &quot;gpmc&quot;;
+                ti,no-idle-on-init;
+                reg = &lt;0x50000000 0x000001d6&gt;;
+                interrupts = &lt;0x00000064&gt;;
+                dmas = &lt;0x00000027 0x00000005 0x00000003&gt;;
+                dma-names = &quot;rxtx&quot;;
+                gpmc,num-cs = &lt;0x00000007&gt;;
+                gpmc,num-waitpins = &lt;0x00000002&gt;;
+                #address-cells = &lt;0x00000002&gt;;
+                #size-cells = &lt;0x00000001&gt;;
+                interrupt-controller;
+                #interrupt-cells = &lt;0x00000002&gt;;
+                gpio-controller;
+                #gpio-cells = &lt;0x00000002&gt;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000e4&gt;;
+            };
+            sham@53100000 {
+                compatible = &quot;ti,omap4-sham&quot;;
+                ti,hwmods = &quot;sham&quot;;
+                reg = &lt;0x53100000 0x000001d6&gt;;
+                interrupts = &lt;0x0000006d&gt;;
+                dmas = &lt;0x00000027 0x00000003 0x00000005&gt;;
+                dma-names = &quot;rx&quot;;
+                status = &quot;okay&quot;;
+                phandle = &lt;0x000000e5&gt;;
+            };
+            aes@53500000 {
+                compatible = &quot;ti,omap4-aes&quot;;
+                ti,hwmods = &quot;aes&quot;;
+                reg = &lt;0x53500000 0x000001d6&gt;;
+                interrupts = &lt;0x00000067&gt;;
+                dmas = &lt;0x00000027 0x00000005 0x000003b9 0x00000005 0x00000003 0x00000002&gt;;
+                dma-names = &quot;tx&quot;, &quot;rx&quot;;
+                status = &quot;okay&quot;;
+                phandle = &lt;0x000000e6&gt;;
+            };
+            mcasp@48038000 {
+                compatible = &quot;ti,am33xx-mcasp-audio&quot;;
+                ti,hwmods = &quot;mcasp0&quot;;
+                reg = &lt;0x48038000 0x00000003 0x64617400 0x00000050&gt;;
+                reg-names = &quot;mpu&quot;, &quot;dat&quot;;
+                interrupts = &lt;0x00000050 0x00000350&gt;;
+                interrupt-names = &quot;tx&quot;, &quot;rx&quot;;
+                status = &quot;okay&quot;;
+                dmas = &lt;0x00000027 0x00000009 0x000003b9 0x0000000e 0x736c6565 0x000003d1&gt;;
+                dma-names = &quot;tx&quot;, &quot;rx&quot;;
+                pinctrl-names = &quot;default&quot;, &quot;sleep&quot;;
+                pinctrl-0 = &lt;0x00000046&gt;;
+                pinctrl-1 = &lt;0x00000047&gt;;
+                op-mode = &lt;0x00000000&gt;;
+                tdm-slots = &lt;0x00000002&gt;;
+                serial-dir = &lt;0x00000002 0x00000003 0x00000003 0x00000003&gt;;
+                tx-num-evt = &lt;0x00000001&gt;;
+                rx-num-evt = &lt;0x00000001&gt;;
+                phandle = &lt;0x000000e7&gt;;
+            };
+            mcasp@4803c000 {
+                compatible = &quot;ti,am33xx-mcasp-audio&quot;;
+                ti,hwmods = &quot;mcasp1&quot;;
+                reg = &lt;0x4803c000 0x00000003 0x64617400 0x00000052&gt;;
+                reg-names = &quot;mpu&quot;, &quot;dat&quot;;
+                interrupts = &lt;0x00000052 0x00000350&gt;;
+                interrupt-names = &quot;tx&quot;, &quot;rx&quot;;
+                status = &quot;disabled&quot;;
+                dmas = &lt;0x00000027 0x0000000b 0x000003b9 0x00000004 0x00000001 0x00000000&gt;;
+                dma-names = &quot;tx&quot;, &quot;rx&quot;;
+                phandle = &lt;0x000000e8&gt;;
+            };
+            rng@48310000 {
+                compatible = &quot;ti,omap4-rng&quot;;
+                ti,hwmods = &quot;rng&quot;;
+                reg = &lt;0x48310000 0x000001d6&gt;;
+                interrupts = &lt;0x0000006f&gt;;
+                phandle = &lt;0x000000e9&gt;;
+            };
+            sgx@56000000 {
+                compatible = &quot;ti,am3352-sgx530&quot;, &quot;img,sgx530&quot;;
+                ti,hwmods = &quot;gfx&quot;;
+                reg = &lt;0x56000000 0x000001d6&gt;;
+                interrupts = &lt;0x00000025&gt;;
+                clocks = &lt;0x00000048&gt;;
+                clock-names = &quot;fclk&quot;;
+                status = &quot;disabled&quot;;
+                phandle = &lt;0x000000ea&gt;;
+            };
+            P9_19_pinmux {
+                compatible = &quot;bone-pinmux-helper&quot;;
+                status = &quot;okay&quot;;
+                pinctrl-names = &quot;default&quot;, &quot;gpio&quot;, &quot;gpio_pu&quot;, &quot;gpio_pd&quot;, &quot;gpio_input&quot;, &quot;spi_cs&quot;, &quot;can&quot;, &quot;i2c&quot;, &quot;pru_uart&quot;, &quot;timer&quot;;
+                pinctrl-0 = &lt;0x00000049&gt;;
+                pinctrl-1 = &lt;0x0000004a&gt;;
+                pinctrl-2 = &lt;0x0000004b&gt;;
+                pinctrl-3 = &lt;0x0000004c&gt;;
+                pinctrl-4 = &lt;0x0000004d&gt;;
+                pinctrl-5 = &lt;0x0000004e&gt;;
+                pinctrl-6 = &lt;0x0000004f&gt;;
+                pinctrl-7 = &lt;0x00000050&gt;;
+                pinctrl-8 = &lt;0x00000051&gt;;
+                pinctrl-9 = &lt;0x00000052&gt;;
+            };
+            P9_20_pinmux {
+                compatible = &quot;bone-pinmux-helper&quot;;
+                status = &quot;okay&quot;;
+                pinctrl-names = &quot;default&quot;, &quot;gpio&quot;, &quot;gpio_pu&quot;, &quot;gpio_pd&quot;, &quot;gpio_input&quot;, &quot;spi_cs&quot;, &quot;can&quot;, &quot;i2c&quot;, &quot;pru_uart&quot;, &quot;timer&quot;;
+                pinctrl-0 = &lt;0x00000053&gt;;
+                pinctrl-1 = &lt;0x00000054&gt;;
+                pinctrl-2 = &lt;0x00000055&gt;;
+                pinctrl-3 = &lt;0x00000056&gt;;
+                pinctrl-4 = &lt;0x00000057&gt;;
+                pinctrl-5 = &lt;0x00000058&gt;;
+                pinctrl-6 = &lt;0x00000059&gt;;
+                pinctrl-7 = &lt;0x0000005a&gt;;
+                pinctrl-8 = &lt;0x0000005b&gt;;
+                pinctrl-9 = &lt;0x0000005c&gt;;
+            };
+            cape-universal {
+                compatible = &quot;gpio-of-helper&quot;;
+                status = &quot;okay&quot;;
+                pinctrl-names = &quot;default&quot;;
+                pinctrl-0;
+                P9_19 {
+                    gpio-name = &quot;P9_19&quot;;
+                    gpio = &lt;0x0000002f 0x00000000 0x000007c3&gt;;
+                    input;
+                    dir-changeable;
+                };
+                P9_20 {
+                    gpio-name = &quot;P9_20&quot;;
+                    gpio = &lt;0x0000002f 0x00000000 0x000007c3&gt;;
+                    input;
+                    dir-changeable;
+                };
+            };
+        };
+        memory@80000000 {
+            device_type = &quot;memory&quot;;
+            reg = &lt;0x80000000 0x6c656473&gt;;
+        };
+        leds {
+            pinctrl-names = &quot;default&quot;;
+            pinctrl-0 = &lt;0x0000005d&gt;;
+            compatible = &quot;gpio-leds&quot;;
+            led2 {
+                label = &quot;beaglebone:green:usr0&quot;;
+                gpios = &lt;0x0000005e 0x0000000a 0x74000000&gt;;
+                linux,default-trigger = &quot;heartbeat&quot;;
+                default-state = &quot;off&quot;;
+            };
+            led3 {
+                label = &quot;beaglebone:green:usr1&quot;;
+                gpios = &lt;0x0000005e 0x00000005 0x00000003&gt;;
+                linux,default-trigger = &quot;mmc0&quot;;
+                default-state = &quot;off&quot;;
+            };
+            led4 {
+                label = &quot;beaglebone:green:usr2&quot;;
+                gpios = &lt;0x0000005e 0x00000005 0x00000003&gt;;
+                linux,default-trigger = &quot;cpu0&quot;;
+                default-state = &quot;off&quot;;
+            };
+            led5 {
+                label = &quot;beaglebone:green:usr3&quot;;
+                gpios = &lt;0x0000005e 0x00000005 0x00000003&gt;;
+                linux,default-trigger = &quot;mmc1&quot;;
+                default-state = &quot;off&quot;;
+            };
+        };
+        fixedregulator0 {
+            compatible = &quot;regulator-fixed&quot;;
+            regulator-name = &quot;vmmcsd_fixed&quot;;
+            regulator-min-microvolt = &lt;0x00325aa0&gt;;
+            regulator-max-microvolt = &lt;0x00325aa0&gt;;
+            phandle = &lt;0x00000030&gt;;
+        };
+        spi_gpio {
+            compatible = &quot;spi-gpio&quot;;
+            #address-cells = &lt;0x00000001&gt;;
+            ranges;
+            gpio-sck = &lt;0x0000002f 0x0000000c 0x00000000&gt;;
+            gpio-mosi = &lt;0x0000002f 0x0000000c 0x00000000&gt;;
+            gpio-miso = &lt;0x0000002f 0x00000018 0x00000000&gt;;
+            cs-gpios = &lt;0x0000002f 0x0000000a 0x00000822 0x000003ad 0x00000003 0x00000002&gt;;
+            num-chipselects = &lt;0x00000002&gt;;
+            status = &quot;disabled&quot;;
+            phandle = &lt;0x000000eb&gt;;
+        };
+        clk_mcasp0_fixed {
+            #clock-cells = &lt;0x00000000&gt;;
+            compatible = &quot;fixed-clock&quot;;
+            clock-frequency = &lt;0x01770000&gt;;
+            phandle = &lt;0x0000005f&gt;;
+        };
+        clk_mcasp0 {
+            #clock-cells = &lt;0x00000000&gt;;
+            compatible = &quot;gpio-gate-clock&quot;;
+            clocks = &lt;0x0000005f&gt;;
+            enable-gpios = &lt;0x0000005e 0x00000004 0x00000001&gt;;
+            phandle = &lt;0x000000ec&gt;;
+        };
+        __symbols__ {
+            aliases = &quot;/aliases&quot;;
+            mpu_gate = &quot;/cpus/idle-states/mpu_gate&quot;;
+            cpu0_opp_table = &quot;/opp-table&quot;;
+            ocp = &quot;/ocp&quot;;
+            l4_wkup = &quot;/ocp/l4_wkup@44c00000&quot;;
+            wkup_m3 = &quot;/ocp/l4_wkup@44c00000/wkup_m3@100000&quot;;
+            prcm = &quot;/ocp/l4_wkup@44c00000/prcm@200000&quot;;
+            prcm_clocks = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks&quot;;
+            clk_32768_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/clk_32768_ck&quot;;
+            clk_rc32k_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/clk_rc32k_ck&quot;;
+            virt_19200000_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/virt_19200000_ck&quot;;
+            virt_24000000_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/virt_24000000_ck&quot;;
+            virt_25000000_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/virt_25000000_ck&quot;;
+            virt_26000000_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/virt_26000000_ck&quot;;
+            tclkin_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/tclkin_ck&quot;;
+            dpll_core_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_core_ck@490&quot;;
+            dpll_core_x2_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_core_x2_ck&quot;;
+            dpll_core_m4_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_core_m4_ck@480&quot;;
+            dpll_core_m5_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_core_m5_ck@484&quot;;
+            dpll_core_m6_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_core_m6_ck@4d8&quot;;
+            dpll_mpu_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_mpu_ck@488&quot;;
+            dpll_mpu_m2_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_mpu_m2_ck@4a8&quot;;
+            dpll_ddr_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_ddr_ck@494&quot;;
+            dpll_ddr_m2_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_ddr_m2_ck@4a0&quot;;
+            dpll_ddr_m2_div2_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_ddr_m2_div2_ck&quot;;
+            dpll_disp_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_disp_ck@498&quot;;
+            dpll_disp_m2_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_disp_m2_ck@4a4&quot;;
+            dpll_per_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_per_ck@48c&quot;;
+            dpll_per_m2_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_per_m2_ck@4ac&quot;;
+            dpll_per_m2_div4_wkupdm_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_per_m2_div4_wkupdm_ck&quot;;
+            dpll_per_m2_div4_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_per_m2_div4_ck&quot;;
+            clk_24mhz = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/clk_24mhz&quot;;
+            clkdiv32k_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/clkdiv32k_ck&quot;;
+            l3_gclk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/l3_gclk&quot;;
+            pruss_ocp_gclk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/pruss_ocp_gclk@530&quot;;
+            mmu_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/mmu_fck@914&quot;;
+            timer1_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/timer1_fck@528&quot;;
+            timer2_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/timer2_fck@508&quot;;
+            timer3_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/timer3_fck@50c&quot;;
+            timer4_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/timer4_fck@510&quot;;
+            timer5_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/timer5_fck@518&quot;;
+            timer6_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/timer6_fck@51c&quot;;
+            timer7_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/timer7_fck@504&quot;;
+            usbotg_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/usbotg_fck@47c&quot;;
+            dpll_core_m4_div2_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/dpll_core_m4_div2_ck&quot;;
+            ieee5000_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/ieee5000_fck@e4&quot;;
+            wdt1_fck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/wdt1_fck@538&quot;;
+            l4_rtc_gclk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/l4_rtc_gclk&quot;;
+            l4hs_gclk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/l4hs_gclk&quot;;
+            l3s_gclk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/l3s_gclk&quot;;
+            l4fw_gclk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/l4fw_gclk&quot;;
+            l4ls_gclk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/l4ls_gclk&quot;;
+            sysclk_div_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/sysclk_div_ck&quot;;
+            cpsw_125mhz_gclk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/cpsw_125mhz_gclk&quot;;
+            cpsw_cpts_rft_clk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/cpsw_cpts_rft_clk@520&quot;;
+            gpio0_dbclk_mux_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/gpio0_dbclk_mux_ck@53c&quot;;
+            lcd_gclk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/lcd_gclk@534&quot;;
+            mmc_clk = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/mmc_clk&quot;;
+            gfx_fclk_clksel_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/gfx_fclk_clksel_ck@52c&quot;;
+            gfx_fck_div_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/gfx_fck_div_ck@52c&quot;;
+            sysclkout_pre_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/sysclkout_pre_ck@700&quot;;
+            clkout2_div_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/clkout2_div_ck@700&quot;;
+            clkout2_ck = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clocks/clkout2_ck@700&quot;;
+            prcm_clockdomains = &quot;/ocp/l4_wkup@44c00000/prcm@200000/clockdomains&quot;;
+            l4_per_cm = &quot;/ocp/l4_wkup@44c00000/prcm@200000/l4_per_cm@0&quot;;
+            l4_per_clkctrl = &quot;/ocp/l4_wkup@44c00000/prcm@200000/l4_per_cm@0/clk@14&quot;;
+            l4_wkup_cm = &quot;/ocp/l4_wkup@44c00000/prcm@200000/l4_wkup_cm@400&quot;;
+            l4_wkup_clkctrl = &quot;/ocp/l4_wkup@44c00000/prcm@200000/l4_wkup_cm@400/clk@4&quot;;
+            mpu_cm = &quot;/ocp/l4_wkup@44c00000/prcm@200000/mpu_cm@600&quot;;
+            mpu_clkctrl = &quot;/ocp/l4_wkup@44c00000/prcm@200000/mpu_cm@600/clk@4&quot;;
+            l4_rtc_cm = &quot;/ocp/l4_wkup@44c00000/prcm@200000/l4_rtc_cm@800&quot;;
+            l4_rtc_clkctrl = &quot;/ocp/l4_wkup@44c00000/prcm@200000/l4_rtc_cm@800/clk@0&quot;;
+            gfx_l3_cm = &quot;/ocp/l4_wkup@44c00000/prcm@200000/gfx_l3_cm@900&quot;;
+            gfx_l3_clkctrl = &quot;/ocp/l4_wkup@44c00000/prcm@200000/gfx_l3_cm@900/clk@4&quot;;
+            l4_cefuse_cm = &quot;/ocp/l4_wkup@44c00000/prcm@200000/l4_cefuse_cm@a00&quot;;
+            l4_cefuse_clkctrl = &quot;/ocp/l4_wkup@44c00000/prcm@200000/l4_cefuse_cm@a00/clk@20&quot;;
+            scm = &quot;/ocp/l4_wkup@44c00000/scm@210000&quot;;
+            am33xx_pinmux = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800&quot;;
+            user_leds_s0 = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/user_leds_s0&quot;;
+            i2c0_pins = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_i2c0_pins&quot;;
+            uart0_pins = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_uart0_pins&quot;;
+            cpsw_default = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/cpsw_default&quot;;
+            cpsw_sleep = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/cpsw_sleep&quot;;
+            davinci_mdio_default = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/davinci_mdio_default&quot;;
+            davinci_mdio_sleep = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/davinci_mdio_sleep&quot;;
+            mmc1_pins = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_mmc1_pins&quot;;
+            emmc_pins = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_emmc_pins&quot;;
+            P9_19_default_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_19_default_pin&quot;;
+            P9_19_gpio_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_19_gpio_pin&quot;;
+            P9_19_gpio_pu_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_19_gpio_pu_pin&quot;;
+            P9_19_gpio_pd_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_19_gpio_pd_pin&quot;;
+            P9_19_gpio_input_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_19_gpio_input_pin&quot;;
+            P9_19_timer_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_19_timer_pin&quot;;
+            P9_19_can_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_19_can_pin&quot;;
+            P9_19_i2c_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_19_i2c_pin&quot;;
+            P9_19_spi_cs_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_19_spi_cs_pin&quot;;
+            P9_19_pru_uart_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_19_pru_uart_pin&quot;;
+            P9_20_default_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_20_default_pin&quot;;
+            P9_20_gpio_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_20_gpio_pin&quot;;
+            P9_20_gpio_pu_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_20_gpio_pu_pin&quot;;
+            P9_20_gpio_pd_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_20_gpio_pd_pin&quot;;
+            P9_20_gpio_input_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_20_gpio_input_pin&quot;;
+            P9_20_timer_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_20_timer_pin&quot;;
+            P9_20_can_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_20_can_pin&quot;;
+            P9_20_i2c_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_20_i2c_pin&quot;;
+            P9_20_spi_cs_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_20_spi_cs_pin&quot;;
+            P9_20_pru_uart_pin = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/pinmux_P9_20_pru_uart_pin&quot;;
+            mcasp0_pins = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/mcasp0_pins&quot;;
+            mcasp0_pins_sleep = &quot;/ocp/l4_wkup@44c00000/scm@210000/pinmux@800/mcasp0_pins_sleep&quot;;
+            scm_conf = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0&quot;;
+            scm_clocks = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks&quot;;
+            sys_clkin_ck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/sys_clkin_ck@40&quot;;
+            adc_tsc_fck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/adc_tsc_fck&quot;;
+            dcan0_fck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/dcan0_fck&quot;;
+            dcan1_fck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/dcan1_fck&quot;;
+            mcasp0_fck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/mcasp0_fck&quot;;
+            mcasp1_fck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/mcasp1_fck&quot;;
+            smartreflex0_fck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/smartreflex0_fck&quot;;
+            smartreflex1_fck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/smartreflex1_fck&quot;;
+            sha0_fck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/sha0_fck&quot;;
+            aes0_fck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/aes0_fck&quot;;
+            rng_fck = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/rng_fck&quot;;
+            ehrpwm0_tbclk = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/ehrpwm0_tbclk@44e10664&quot;;
+            ehrpwm1_tbclk = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/ehrpwm1_tbclk@44e10664&quot;;
+            ehrpwm2_tbclk = &quot;/ocp/l4_wkup@44c00000/scm@210000/scm_conf@0/clocks/ehrpwm2_tbclk@44e10664&quot;;
+            wkup_m3_ipc = &quot;/ocp/l4_wkup@44c00000/scm@210000/wkup_m3_ipc@1324&quot;;
+            edma_xbar = &quot;/ocp/l4_wkup@44c00000/scm@210000/dma-router@f90&quot;;
+            scm_clockdomains = &quot;/ocp/l4_wkup@44c00000/scm@210000/clockdomains&quot;;
+            intc = &quot;/ocp/interrupt-controller@48200000&quot;;
+            edma = &quot;/ocp/edma@49000000&quot;;
+            edma_tptc0 = &quot;/ocp/tptc@49800000&quot;;
+            edma_tptc1 = &quot;/ocp/tptc@49900000&quot;;
+            edma_tptc2 = &quot;/ocp/tptc@49a00000&quot;;
+            gpio0 = &quot;/ocp/gpio@44e07000&quot;;
+            gpio1 = &quot;/ocp/gpio@4804c000&quot;;
+            gpio2 = &quot;/ocp/gpio@481ac000&quot;;
+            gpio3 = &quot;/ocp/gpio@481ae000&quot;;
+            uart0 = &quot;/ocp/serial@44e09000&quot;;
+            uart1 = &quot;/ocp/serial@48022000&quot;;
+            uart2 = &quot;/ocp/serial@48024000&quot;;
+            uart3 = &quot;/ocp/serial@481a6000&quot;;
+            uart4 = &quot;/ocp/serial@481a8000&quot;;
+            uart5 = &quot;/ocp/serial@481aa000&quot;;
+            i2c0 = &quot;/ocp/i2c@44e0b000&quot;;
+            tps = &quot;/ocp/i2c@44e0b000/tps@24&quot;;
+            dcdc1_reg = &quot;/ocp/i2c@44e0b000/tps@24/regulators/regulator@0&quot;;
+            dcdc2_reg = &quot;/ocp/i2c@44e0b000/tps@24/regulators/regulator@1&quot;;
+            dcdc3_reg = &quot;/ocp/i2c@44e0b000/tps@24/regulators/regulator@2&quot;;
+            ldo1_reg = &quot;/ocp/i2c@44e0b000/tps@24/regulators/regulator@3&quot;;
+            ldo2_reg = &quot;/ocp/i2c@44e0b000/tps@24/regulators/regulator@4&quot;;
+            ldo3_reg = &quot;/ocp/i2c@44e0b000/tps@24/regulators/regulator@5&quot;;
+            ldo4_reg = &quot;/ocp/i2c@44e0b000/tps@24/regulators/regulator@6&quot;;
+            baseboard_eeprom = &quot;/ocp/i2c@44e0b000/baseboard_eeprom@50&quot;;
+            baseboard_data = &quot;/ocp/i2c@44e0b000/baseboard_eeprom@50/baseboard_data@0&quot;;
+            i2c1 = &quot;/ocp/i2c@4802a000&quot;;
+            i2c2 = &quot;/ocp/i2c@4819c000&quot;;
+            cape_eeprom0 = &quot;/ocp/i2c@4819c000/cape_eeprom0@54&quot;;
+            cape0_data = &quot;/ocp/i2c@4819c000/cape_eeprom0@54/cape_data@0&quot;;
+            cape_eeprom1 = &quot;/ocp/i2c@4819c000/cape_eeprom1@55&quot;;
+            cape1_data = &quot;/ocp/i2c@4819c000/cape_eeprom1@55/cape_data@0&quot;;
+            cape_eeprom2 = &quot;/ocp/i2c@4819c000/cape_eeprom2@56&quot;;
+            cape2_data = &quot;/ocp/i2c@4819c000/cape_eeprom2@56/cape_data@0&quot;;
+            cape_eeprom3 = &quot;/ocp/i2c@4819c000/cape_eeprom3@57&quot;;
+            cape3_data = &quot;/ocp/i2c@4819c000/cape_eeprom3@57/cape_data@0&quot;;
+            mmc1 = &quot;/ocp/mmc@48060000&quot;;
+            mmc2 = &quot;/ocp/mmc@481d8000&quot;;
+            mmc3 = &quot;/ocp/mmc@47810000&quot;;
+            hwspinlock = &quot;/ocp/spinlock@480ca000&quot;;
+            wdt2 = &quot;/ocp/wdt@44e35000&quot;;
+            dcan0 = &quot;/ocp/can@481cc000&quot;;
+            dcan1 = &quot;/ocp/can@481d0000&quot;;
+            mailbox = &quot;/ocp/mailbox@480c8000&quot;;
+            mbox_wkupm3 = &quot;/ocp/mailbox@480c8000/wkup_m3&quot;;
+            timer1 = &quot;/ocp/timer@44e31000&quot;;
+            timer2 = &quot;/ocp/timer@48040000&quot;;
+            timer3 = &quot;/ocp/timer@48042000&quot;;
+            timer4 = &quot;/ocp/timer@48044000&quot;;
+            timer5 = &quot;/ocp/timer@48046000&quot;;
+            timer6 = &quot;/ocp/timer@48048000&quot;;
+            timer7 = &quot;/ocp/timer@4804a000&quot;;
+            rtc = &quot;/ocp/rtc@44e3e000&quot;;
+            spi0 = &quot;/ocp/spi@48030000&quot;;
+            spi1 = &quot;/ocp/spi@481a0000&quot;;
+            usb = &quot;/ocp/usb@47400000&quot;;
+            usb_ctrl_mod = &quot;/ocp/usb@47400000/control@44e10620&quot;;
+            usb0_phy = &quot;/ocp/usb@47400000/usb-phy@47401300&quot;;
+            usb0 = &quot;/ocp/usb@47400000/usb@47401000&quot;;
+            usb1_phy = &quot;/ocp/usb@47400000/usb-phy@47401b00&quot;;
+            usb1 = &quot;/ocp/usb@47400000/usb@47401800&quot;;
+            cppi41dma = &quot;/ocp/usb@47400000/dma-controller@47402000&quot;;
+            epwmss0 = &quot;/ocp/epwmss@48300000&quot;;
+            ecap0 = &quot;/ocp/epwmss@48300000/ecap@48300100&quot;;
+            eqep0 = &quot;/ocp/epwmss@48300000/eqep@0x48300180&quot;;
+            ehrpwm0 = &quot;/ocp/epwmss@48300000/pwm@48300200&quot;;
+            epwmss1 = &quot;/ocp/epwmss@48302000&quot;;
+            ecap1 = &quot;/ocp/epwmss@48302000/ecap@48302100&quot;;
+            eqep1 = &quot;/ocp/epwmss@48302000/eqep@0x48302180&quot;;
+            ehrpwm1 = &quot;/ocp/epwmss@48302000/pwm@48302200&quot;;
+            epwmss2 = &quot;/ocp/epwmss@48304000&quot;;
+            ecap2 = &quot;/ocp/epwmss@48304000/ecap@48304100&quot;;
+            eqep2 = &quot;/ocp/epwmss@48304000/eqep@0x48304180&quot;;
+            ehrpwm2 = &quot;/ocp/epwmss@48304000/pwm@48304200&quot;;
+            mac = &quot;/ocp/ethernet@4a100000&quot;;
+            davinci_mdio = &quot;/ocp/ethernet@4a100000/mdio@4a101000&quot;;
+            cpsw_emac0 = &quot;/ocp/ethernet@4a100000/slave@4a100200&quot;;
+            cpsw_emac1 = &quot;/ocp/ethernet@4a100000/slave@4a100300&quot;;
+            phy_sel = &quot;/ocp/ethernet@4a100000/cpsw-phy-sel@44e10650&quot;;
+            ocmcram = &quot;/ocp/ocmcram@40300000&quot;;
+            pm_sram_code = &quot;/ocp/ocmcram@40300000/pm-sram-code@0&quot;;
+            pm_sram_data = &quot;/ocp/ocmcram@40300000/pm-sram-data@1000&quot;;
+            pruss_soc_bus = &quot;/ocp/pruss-soc-bus@4a326004&quot;;
+            pruss = &quot;/ocp/pruss-soc-bus@4a326004/pruss@4a300000&quot;;
+            pruss_mem = &quot;/ocp/pruss-soc-bus@4a326004/pruss@4a300000/memories@4a300000&quot;;
+            pruss_cfg = &quot;/ocp/pruss-soc-bus@4a326004/pruss@4a300000/cfg@4a326000&quot;;
+            pruss_iep = &quot;/ocp/pruss-soc-bus@4a326004/pruss@4a300000/iep@4a32e000&quot;;
+            pruss_mii_rt = &quot;/ocp/pruss-soc-bus@4a326004/pruss@4a300000/mii-rt@4a332000&quot;;
+            pruss_intc = &quot;/ocp/pruss-soc-bus@4a326004/pruss@4a300000/interrupt-controller@4a320000&quot;;
+            pru0 = &quot;/ocp/pruss-soc-bus@4a326004/pruss@4a300000/pru@4a334000&quot;;
+            pru1 = &quot;/ocp/pruss-soc-bus@4a326004/pruss@4a300000/pru@4a338000&quot;;
+            pruss_mdio = &quot;/ocp/pruss-soc-bus@4a326004/pruss@4a300000/mdio@4a332400&quot;;
+            elm = &quot;/ocp/elm@48080000&quot;;
+            lcdc = &quot;/ocp/lcdc@4830e000&quot;;
+            tscadc = &quot;/ocp/tscadc@44e0d000&quot;;
+            am335x_adc = &quot;/ocp/tscadc@44e0d000/adc&quot;;
+            emif = &quot;/ocp/emif@4c000000&quot;;
+            gpmc = &quot;/ocp/gpmc@50000000&quot;;
+            sham = &quot;/ocp/sham@53100000&quot;;
+            aes = &quot;/ocp/aes@53500000&quot;;
+            mcasp0 = &quot;/ocp/mcasp@48038000&quot;;
+            mcasp1 = &quot;/ocp/mcasp@4803c000&quot;;
+            rng = &quot;/ocp/rng@48310000&quot;;
+            sgx = &quot;/ocp/sgx@56000000&quot;;
+            vmmcsd_fixed = &quot;/fixedregulator0&quot;;
+            spi_gpio = &quot;/spi_gpio&quot;;
+            clk_mcasp0_fixed = &quot;/clk_mcasp0_fixed&quot;;
+            clk_mcasp0 = &quot;/clk_mcasp0&quot;;
+        };
+    };
+</code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
