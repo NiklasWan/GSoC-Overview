@@ -21,3 +21,10 @@ Kernel Image: repos.rcn-ee.net/debian/pool/main/l/linux-upstream/linux-image-5.4
 ## Week 2: May, 13 - May, 20
 - Research on AVB subprotocols
 - Port of CTAG Face to kernel 4.19-rt continued
+
+## Week 3: May, 20 - May, 27
+- Device Tree and Device Tree Overlay Research
+- Trying to implement Device Tree for CTAG FACE on 4.19-rt
+- Problems with getting Codec Driver loaded
+- Codec Driver is throwing error code -517
+- Rest of Driver is ported successfully to 4.19-rt for BBB
