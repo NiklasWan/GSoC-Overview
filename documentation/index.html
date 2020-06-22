@@ -462,48 +462,72 @@ is a predicate, the function should return a &quot;succeeded&quot; boolean.&quot
 <p>[2] https://wiki.beyondlogic.org/index.php/BeagleBoneBlack_Building_Kernel</p>
 <h1 id="ctag-face-alsa-driver">CTAG Face Alsa Driver</h1>
 <p>The CTAG Face Alsa Driver runs on 4.19-rt, for both BBB and BBAI. To get the Face running on your device, please follow all steps.</p>
-<p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt">here</a>
-    <code>git clone https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt</code>
-2.) Load BB device configuration:
-    <code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig</code>
-3.) Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture - ALSA for SoC audio support:
-    Enable module build for SoC Audio Support for CTAG face-2-4 Audio Card (AD1938)
-4.) Build kernel:
-    <code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8</code>
-5.) Download current Image for your device at: https://beagleboard.org/latest-images
-6.) Install image using Balena Etcher
-7.) Copy built linux image, linux header and linux libc to sd card:
-    <code>sudo cp linux-* /media/dev/rootfs/home/debian</code>
-8.) Start BB from Sd Card and Install kernel:
-    <code>sudo dpkg -i linux-headers*</code>
-    <code>sudo dpkg -i linux-libc*</code>
-    <code>sudo dpkg -i linux-image*</code>
-9.) Restart:
-    <code>sudo restart</code>
-10.) Clone overlay repo:
-    <code>git clone https://github.com/NiklasWan/bb.org-overlays.git &amp;&amp; cd bb.org-overlays</code>
-11.) Install dtc + dependencies:
-    <code>sudo ./dtc-overlays.sh</code>
-12.) Install overlays:
-    <code>git checkout dev_gsoc_face &amp;&amp; sudo ./install.sh</code>
-13.) Edit Uboot uEnv.txt:
-    For BBAI:
-      add the following lines to /boot/uEnv.txt:
-        <code>enable-uboot-overlays=1</code>
-        <code>uboot_overlay_addr0=/lib/firmware/BBAI_BB-BONE-FACE-8CH-00A0.dtbo</code>
-    For BBB:
-      comment out the following line:
-        <code>#enable_uboot_cape_universal=1</code>
-      uncomment:
-        <code>disable_uboot_overlay_video=1</code>
-        <code>disable_uboot_overlay_audio=1</code>
-      add: 
-        <code>uboot_overlay_addr0=/lib/firmware/BB-CTAG-SW-8CH-00A0.dtbo</code></p>
-<p>14.) Clone https://github.com/ctag-fh-kiel/ctag-face-2-4.git:
-  <code>git clone https://github.com/ctag-fh-kiel/ctag-face-2-4.git &amp; cd ctag-face-2-4</code>
-15.) Install alsa config:
-  <code>cd alsa-configs &amp; sudo cp asound.conf.8ch ~/.asoundrc</code>
-16.) Reboot your board and use the audio card :-)</p></div>
+<p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt">here</a></p>
+<pre><code>`git clone https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt`
+</code></pre>
+<p>2.) Load BB device configuration:</p>
+<pre><code>`make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig`
+</code></pre>
+<p>3.) Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture - ALSA for SoC audio support:</p>
+<pre><code>Enable module build for SoC Audio Support for CTAG face-2-4 Audio Card (AD1938)
+</code></pre>
+<p>4.) Build kernel:</p>
+<pre><code>`make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8`
+</code></pre>
+<p>5.) Download current Image for your device at: https://beagleboard.org/latest-images</p>
+<p>6.) Install image using Balena Etcher</p>
+<p>7.) Copy built linux image, linux header and linux libc to sd card:</p>
+<pre><code>`sudo cp linux-* /media/dev/rootfs/home/debian`
+</code></pre>
+<p>8.) Start BB from Sd Card and Install kernel:</p>
+<pre><code>`sudo dpkg -i linux-headers*`
+
+`sudo dpkg -i linux-libc*`
+
+`sudo dpkg -i linux-image*`
+</code></pre>
+<p>9.) Restart:</p>
+<pre><code>`sudo restart`
+</code></pre>
+<p>10.) Clone overlay repo:</p>
+<pre><code>`git clone https://github.com/NiklasWan/bb.org-overlays.git &amp;&amp; cd bb.org-overlays`
+</code></pre>
+<p>11.) Install dtc + dependencies:</p>
+<pre><code>`sudo ./dtc-overlays.sh`
+</code></pre>
+<p>12.) Install overlays:</p>
+<pre><code>`git checkout dev_gsoc_face &amp;&amp; sudo ./install.sh`
+</code></pre>
+<p>13.) Edit Uboot uEnv.txt:</p>
+<pre><code>For BBAI:
+
+  add the following lines to /boot/uEnv.txt:
+
+    `enable-uboot-overlays=1`
+
+    `uboot_overlay_addr0=/lib/firmware/BBAI_BB-BONE-FACE-8CH-00A0.dtbo`
+
+For BBB:
+
+  comment out the following line:
+
+    `#enable_uboot_cape_universal=1`
+
+  uncomment:
+
+    `disable_uboot_overlay_video=1`
+
+    `disable_uboot_overlay_audio=1`
+
+  add:
+
+    `uboot_overlay_addr0=/lib/firmware/BB-CTAG-SW-8CH-00A0.dtbo`
+</code></pre>
+<p>14.) Clone https://github.com/ctag-fh-kiel/ctag-face-2-4.git:</p>
+<p><code>git clone https://github.com/ctag-fh-kiel/ctag-face-2-4.git &amp; cd ctag-face-2-4</code></p>
+<p>15.) Install alsa config:</p>
+<p><code>cd alsa-configs &amp; sudo cp asound.conf.8ch ~/.asoundrc</code></p>
+<p>16.) Reboot your board and use the audio card :-)</p></div>
             </div>
         </div>
 
