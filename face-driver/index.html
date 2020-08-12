@@ -8,7 +8,7 @@
         
         
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>Timeline - GSoC Ip Media Streaming Overview</title>
+        <title>FACE-Driver - GSoC Ip Media Streaming Overview</title>
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/font-awesome.min.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
@@ -37,10 +37,13 @@
                                 <a href=".." class="nav-link">Home</a>
                             </li>
                             <li class="navitem">
-                                <a href="../documentation/" class="nav-link">Documentation</a>
+                                <a href="../documentation/" class="nav-link">Coding-Style</a>
                             </li>
                             <li class="navitem active">
-                                <a href="./" class="nav-link">Timeline</a>
+                                <a href="./" class="nav-link">FACE-Driver</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../avb-alsa/" class="nav-link">AVB-ALSA</a>
                             </li>
                         </ul>
 
@@ -56,7 +59,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" class="nav-link disabled">
+                                <a rel="next" href="../avb-alsa/" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -78,20 +81,8 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#community-bonding-period-may-4-june-1" class="nav-link">Community Bonding Period: May, 4 - June, 1</a>
+            <li class="nav-item" data-level="1"><a href="#ctag-face-alsa-driver" class="nav-link">CTAG Face Alsa Driver</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-level="2"><a href="#week-1-may-6-may-13" class="nav-link">Week 1: May, 6 - May, 13</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#week-2-may-13-may-20" class="nav-link">Week 2: May, 13 - May, 20</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#week-3-may-20-may-27" class="nav-link">Week 3: May, 20 - May, 27</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
               </ul>
             </li>
         </ul>
@@ -99,41 +90,66 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="community-bonding-period-may-4-june-1">Community Bonding Period: May, 4 - June, 1</h1>
-<h2 id="week-1-may-6-may-13">Week 1: May, 6 - May, 13</h2>
-<ul>
-<li>Research regarding Linux Kernel Build System</li>
-<li>Research regarding Linux Kernel ALSA SoC Developmenz</li>
-<li>Started to port CTAG Face driver from <a href="https://github.com/henrix/beagle-linux/tree/4.4-ctag-dev">Henrix Beagleboard.org Fork</a> to <a href="https://github.com/NiklasWan/linux/tree/dev_ctag_4.19-rt">my Fork from Beagleboard.org 4.19-RT</a> for BBB</li>
-<li>Found out that Davinci SoC Platform Drivers are no longer in Mainline Kernel since version 4.14 (TODO: Ask Jason on wensday)</li>
-<li>However Davinci SoC Drivers for newer kernel versions (&gt;4.14) can be found at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/nsekhar/linux-davinci.git/refs/tags">TI git</a></li>
-<li>Created Dev Branch for proting CTAG Face to <a href="https://github.com/NiklasWan/linux/tree/dev_ctag_5.4-rt">kernel 5.4-rt for Beaglebone AI</a></li>
-<li>Problem?: TI version of Davinci drivers still in debug for kernel 5.4</li>
-<li>Found out that Davinci and Omap Drivers moved to /sound/soc/ti, so no need to ask jason about that...</li>
-<li>Question now is mkdir ctag under sound/soc for ctag driver module?</li>
-<li>Edited eLinux page to include links to this site and updated timeline regarding changes from Google</li>
-</ul>
-<h3 id="helpfull-links-from-jason-regarding-kernel-54-rt">Helpfull links from Jason regarding kernel 5.4-rt:</h3>
-<ul>
-<li>http://repos.rcn-ee.com/latest/buster-armhf/LATEST-ti-rt</li>
-<li>Headers: repos.rcn-ee.net/debian/pool/main/l/linux-upstream/linux-headers-5.4.28-ti-rt-r7_1buster_armhf.deb
-Kernel Image: repos.rcn-ee.net/debian/pool/main/l/linux-upstream/linux-image-5.4.28-ti-rt-r7_1buster_armhf.deb</li>
-<li>https://github.com/beagleboard/linux/tree/5.4-rt</li>
-<li>Kernel Log: https://github.com/beagleboard/linux/commit/42e00287293c09d0863688e965b20ed48a280888</li>
-</ul>
-<h2 id="week-2-may-13-may-20">Week 2: May, 13 - May, 20</h2>
-<ul>
-<li>Research on AVB subprotocols</li>
-<li>Port of CTAG Face to kernel 4.19-rt continued</li>
-</ul>
-<h2 id="week-3-may-20-may-27">Week 3: May, 20 - May, 27</h2>
-<ul>
-<li>Device Tree and Device Tree Overlay Research</li>
-<li>Trying to implement Device Tree for CTAG FACE on 4.19-rt</li>
-<li>Problems with getting Codec Driver loaded</li>
-<li>Codec Driver is throwing error code -517</li>
-<li>Rest of Driver is ported successfully to 4.19-rt for BBB</li>
-</ul></div>
+<h1 id="ctag-face-alsa-driver">CTAG Face Alsa Driver</h1>
+<p>The CTAG Face Alsa Driver runs on 4.19-rt, for both BBB and BBAI. To get the Face running on your device, please follow all steps.</p>
+<p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt">here</a></p>
+<pre><code>git clone https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt
+</code></pre>
+<p>2.) Load BB device configuration:</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig
+</code></pre>
+<p>3.) Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture - ALSA for SoC audio support:
+    Enable module build for SoC Audio Support for CTAG face-2-4 Audio Card (AD1938)
+4.) Build kernel:</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8
+</code></pre>
+<p>5.) Download current Image for your device at: https://beagleboard.org/latest-images
+6.) Install image using Balena Etcher
+7.) Copy built linux image, linux header and linux libc to sd card:</p>
+<pre><code>sudo cp linux-* /media/dev/rootfs/home/debian
+</code></pre>
+<p>8.) Start BB from Sd Card and Install kernel:</p>
+<pre><code>sudo dpkg -i linux-headers*
+
+sudo dpkg -i linux-libc*
+
+sudo dpkg -i linux-image*
+</code></pre>
+<p>9.) Restart:
+    sudo restart
+10.) Clone overlay repo:</p>
+<pre><code>git clone https://github.com/NiklasWan/bb.org-overlays.git &amp;&amp; cd bb.org-overlays
+</code></pre>
+<p>11.) Install dtc + dependencies:</p>
+<pre><code>sudo ./dtc-overlays.sh
+</code></pre>
+<p>12.) Install overlays:</p>
+<pre><code>git checkout dev_gsoc_face &amp;&amp; sudo ./install.sh
+</code></pre>
+<p>13.) Edit Uboot uEnv.txt:</p>
+<pre><code>For BBAI:
+  add the following lines to /boot/uEnv.txt:
+    enable-uboot-overlays=1
+    uboot_overlay_addr0=/lib/firmware/BBAI_BB-BONE-FACE-8CH-00A0.dtbo
+For BBB:
+  comment out the following line:
+
+    #enable_uboot_cape_universal=1
+  uncomment:
+
+    disable_uboot_overlay_video=1
+    disable_uboot_overlay_audio=1
+  add:
+
+    uboot_overlay_addr0=/lib/firmware/BB-CTAG-SW-8CH-00A0.dtbo
+</code></pre>
+<p>14.) Clone https://github.com/ctag-fh-kiel/ctag-face-2-4.git:</p>
+<pre><code>git clone https://github.com/ctag-fh-kiel/ctag-face-2-4.git &amp; cd ctag-face-2-4
+</code></pre>
+<p>15.) Install alsa config:</p>
+<pre><code>cd alsa-configs &amp; sudo cp asound.conf.8ch ~/.asoundrc
+</code></pre>
+<p>16.) Reboot your board and use the audio card :-)</p></div>
             </div>
         </div>
 
@@ -162,7 +178,7 @@ Kernel Image: repos.rcn-ee.net/debian/pool/main/l/linux-upstream/linux-image-5.4
                 </p>
                 <form>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
                     </div>
                 </form>
                 <div id="mkdocs-search-results"></div>
