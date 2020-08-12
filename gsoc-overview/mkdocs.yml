@@ -1,6 +1,7 @@
 site_name: GSoC Ip Media Streaming Overview
 nav: 
   - Home: index.md
-  - Documentation: documentation.md
-  - Timeline: timeline.md
+  - Coding-Style: documentation.md
+  - FACE-Driver: face-driver.md
+  - AVB-ALSA: avb-alsa.md
 
