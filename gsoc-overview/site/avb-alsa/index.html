@@ -159,7 +159,7 @@ If you want to continue working on porting this to kernel space, take a look <a 
 <p>Because of API changes between kernel version  4.4 and 5.4, the playback and capture copy function needed some adjustments.
 One point is, that in kernel version 5.4 the count of data to copy and the position in the buffer are no longer passed in number of frames but instead the number of bytes are passed. So the parameters needed to be calculated in frames first to allow for expected behavior. The second point was, that the member of <code>snd_pcm_ops</code> which handles copying between user and kernel space now was renamed to <code>.copy_user</code>.</p>
 <h3 id="changed-to-kernel-sockets">Changed to kernel sockets</h3>
-<p>The socket communication was changed to the kernel space sockets. So now all functions from <a href="https://elixir.bootlin.com/linux/latest/source/include/linux/net.h">linux/net.h</a> prepended with <code>kernel_&lt;op&gt;</code>are being used.</p>
+<p>The socket communication was changed to the kernel space sockets. So now all functions from <a href="https://elixir.bootlin.com/linux/latest/source/include/linux/net.h">linux/net.h</a> prepended with <code>kernel_&lt;op&gt;</code> are being used.</p>
 <h2 id="installation-and-usage">Installation and Usage</h2>
 <h3 id="compilation-of-the-kernel-module">Compilation of the kernel module</h3>
 <h3 id="compilation-of-the-gptp-daemon">Compilation of the gptp daemon</h3>
@@ -167,11 +167,13 @@ One point is, that in kernel version 5.4 the count of data to copy and the posit
 <h3 id="installation-of-the-avb-stack">Installation of the AVB Stack</h3>
 <h3 id="usage-of-the-avb-stack">Usage of the AVB Stack</h3>
 <h2 id="limitations">Limitations</h2>
-<p>Until now the implementation have the following limitations:
-- Playback of one stream with up to 8 channels
-- Playback between on Listener and one Talker (BBB or BBAI need to be used)
-- Listener does not receive the whole audio file, there is a problem reception of the last few frames of audio data
-- AVDECC identification on an Apple MAC with propriatery AVB soulution of Beagleboard Device using ALSA AVB driver is not working properly (However the avbdiagnose application is able to identify the Beagleboard device)</p></div>
+<p>Until now the implementation have the following limitations:</p>
+<ul>
+<li>Playback of one stream with up to 8 channels</li>
+<li>Playback between on Listener and one Talker (BBB or BBAI need to be used)</li>
+<li>Listener does not receive the whole audio file, there is a problem reception of the last few frames of audio data</li>
+<li>AVDECC identification on an Apple MAC with propriatery AVB soulution of Beagleboard Device using ALSA AVB driver is not working properly (However the avbdiagnose application is able to identify the Beagleboard device)</li>
+</ul></div>
             </div>
         </div>
 

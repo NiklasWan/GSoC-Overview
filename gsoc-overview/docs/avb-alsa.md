@@ -58,19 +58,114 @@ Because of API changes between kernel version  4.4 and 5.4, the playback and cap
 One point is, that in kernel version 5.4 the count of data to copy and the position in the buffer are no longer passed in number of frames but instead the number of bytes are passed. So the parameters needed to be calculated in frames first to allow for expected behavior. The second point was, that the member of ```snd_pcm_ops``` which handles copying between user and kernel space now was renamed to ```.copy_user```.
 
 ### Changed to kernel sockets
-The socket communication was changed to the kernel space sockets. So now all functions from [linux/net.h](https://elixir.bootlin.com/linux/latest/source/include/linux/net.h) prepended with ```kernel_<op>```are being used.
+The socket communication was changed to the kernel space sockets. So now all functions from [linux/net.h](https://elixir.bootlin.com/linux/latest/source/include/linux/net.h) prepended with ```kernel_<op>``` are being used.
 
 ## Installation and Usage
 
 ### Compilation of the kernel module
+
+The ALSA AVB Driver runs on 5.4-rt, for both BBB and BBAI. The following steps show all required steps to compile the driver including the Linux kernel.
+
+1. Clone kernel from [here](https://github.com/NiklasWan/linux.git)
+    
+    ```git clone https://github.com/NiklasWan/linux.git && cd linux && git checkout dev_avb_5.4-rt```
+2. Load BB device configuration:
+    
+    ```make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig```
+3. Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture
+and choose module build "M" for Generic AVB driver
+4. Build kernel:
+    
+    ```make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8```
+
 ### Compilation of the gptp daemon
+
+To compile the gptp daemon for the ARM platform simply issue the following commands:
+
+1. Clone repository:
+
+	```git clone https://github.com/NiklasWan/gPTPd.git```
+
+2. Compile gptpd:
+
+	```make CROSS_COMPILE=arm-linux-gnueabihf- bbb```
+
 ### Compilation of the avbtest app
 
-### Installation of the AVB Stack
-### Usage of the AVB Stack
+To allow for compilation of the avbtest app on an non ARM system for an ARM system, we first need to install libasound2 for our Cross Compiler. The following installation routine applies to the gnueabihf compiler from the apt repository.
 
+1. Check the required ALSA version on Beaglebone:
+	```aplay --version```
+2. Download the alsa library:
+
+	```wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-<version>.tar.bz```
+3. Unpack and remove archive:
+
+	```tar -xf alsa-lib-<version>.tar.bz2 && rm alsa-lib-<version>.tar.bz2```
+4. Configure Cross Compilation:
+
+	```CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux --prefix=/usr/arm-linux-gnueabihf```
+5. Run make and make install as super user:
+
+	```sudo make && sudo make install```
+
+After finishing the installation of the alsa developer library you can compile the avbtest app using the following commands:
+
+1. Clone avbtest:
+
+	```git clone https://github.com/NiklasWan/avbtest.git```
+
+2. Compile avbtest:
+
+	```make CROSS_COMPILE=arm-linux-gnueabihf- all```
+
+
+### Installation of the AVB Stack
+First we need to install a new pre built image to an SD card:
+1. Download current Image for your device at: https://beagleboard.org/latest-images
+2. Install image using Balena Etcher
+
+After that we can install the built kernel in step [Compilation of the kernel module](###Compilation%20of%20the%20kernel%20module):
+1. Copy built linux image, linux header and linux libc to sd card:
+    
+    ```sudo cp linux-* /media/dev/rootfs/home/debian```
+2. Start BB from Sd Card and Install kernel:
+    
+    ```sudo dpkg -i linux-headers*```
+    
+    ```sudo dpkg -i linux-libc*```
+    
+    ```sudo dpkg -i linux-image*```
+3. Restart:
+
+    ```sudo restart```
+
+The last step is to copy both the gptp daemon and the avbtest app to the home directory of the SD card:
+1. Copy avbtest app:
+	```sudo cp avbtest /media/dev/rootfs/home/debian```
+1. Copy gptp daemon:
+	```sudo cp gptpd /media/dev/rootfs/home/debian```
+
+
+#### Usage of the AVB Stack
+
+All different variants require two BBB's or BBAI's being conneced via a cross ethernet cable.
+The following steps need to be followed after starting up the device every time for listener and receiver:
+- Start gPTP daemon ```sudo ./gptpd```
+- Load hwdep module ```sudo modprobe snd-hwdep```
+- Load AVB module ```sudo modprobe snd-avb```
+
+1. Use Cae: Playback and Record audio file directly on device without playback via other soundcard:
+	
+	Steps on receiver device:
+	- Start recording ```sudo ./avbtest -r -c<number of channels> -l<log level> -s<sampling_rate> <name of file to be saved>.wav```
+
+	Steps on playback device:
+	- Start playback ```sudo ./avbtest -p -c<number of channels> -l<log level> -s<sampling_rate> <name of file to be played back>.wav```
 ## Limitations
+
 Until now the implementation have the following limitations:
+
 - Playback of one stream with up to 8 channels
 - Playback between on Listener and one Talker (BBB or BBAI need to be used)
 - Listener does not receive the whole audio file, there is a problem reception of the last few frames of audio data
