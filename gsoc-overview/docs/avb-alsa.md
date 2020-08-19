@@ -23,12 +23,12 @@ To seperate the avb driver from other ALSA driver, the implementation directory 
 Also the whole codebase was inspected and code was changed to conform to linux kernel coding conventions.
 
 ### Abstraction of PTP HW clock (Not included in final submission)
-Additionally some research was conducted in how to access the PTP hardware clock of the NIC, if one is available. On TI devices this is done via the CPTS module. To abstract access away for other NIC's an abstraction layer was implemented, which can be found [here](https://github.com/NiklasWan/linux/commit/882436802ad1b0f4195d79ae9eb467d9bb438119).
+Additionally some research was conducted in how to access the PTP hardware clock of the NIC, if one is available. On TI devices this is done via the CPTS module. To abstract access away for other NIC's an abstraction layer was implemented, which can be found [here](https://github.com/NiklasWan/linux/tree/dev_gsoc_backup_hw_gptp/sound/drivers/avb). The abstraction is done in ```avb_hwclock.h``` and ```avb_hwclock.c```, ```ti_hwclock.c```implements this interface for ti devices.
 At first it was planned to implement synchronisation of different audio streams in kernel space but due to the fact, that we want to playback audio to different devices, we can't handle this in kernel space. Because of that we decided to not use the PTP HW clock in kernel space.
 
 ### Porting the gPTP User Space daemon to the kernel space (Not included in final submission)
 Also some time was invested in trying to port the gPTP daemon to Kernel Space. This however failed, because I was not able to access the CMSGHDR data, for accessing the TX hardware timestamps. All other parts however are working fine in kernel space and can be found [here](https://github.com/NiklasWan/linux/tree/dev_avb_5.4-rt/drivers/net/gptp).
-If you want to continue working on porting this to kernel space, take a look [here](https://github.com/NiklasWan/linux/blob/dev_avb_5.4-rt/drivers/net/gptp/gptp_common.c). The functions, ```void get_rx_ts(struct gptp_instance* gptp, struct timespec64* ts)``` and ```void get_tx_ts(struct gptp_instance* gptp, struct timespec64* ts)```are causing the issues in accessing the CMSGHDR of a packet. Maybe somone can find a way to access the timestamp information.
+If you want to continue working on porting this to kernel space, take a look [here](https://github.com/NiklasWan/linux/blob/dev_gsoc_backup_hw_gptp/drivers/net/gptp/gptp_common.c). The functions, ```void get_rx_ts(struct gptp_instance* gptp, struct timespec64* ts)``` and ```void get_tx_ts(struct gptp_instance* gptp, struct timespec64* ts)```are causing the issues in accessing the CMSGHDR of a packet. Maybe somone can find a way to access the timestamp information.
 
 ### Changed snd_pcm_hardware description of playback capture device.
 
@@ -69,11 +69,14 @@ The ALSA AVB Driver runs on 5.4-rt, for both BBB and BBAI. The following steps s
 1. Clone kernel from [here](https://github.com/NiklasWan/linux.git)
     
     ```git clone https://github.com/NiklasWan/linux.git && cd linux && git checkout dev_avb_5.4-rt```
+
 2. Load BB device configuration:
     
     ```make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig```
+
 3. Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture
 and choose module build "M" for Generic AVB driver
+
 4. Build kernel:
     
     ```make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8```
@@ -96,15 +99,19 @@ To allow for compilation of the avbtest app on an non ARM system for an ARM syst
 
 1. Check the required ALSA version on Beaglebone:
 	```aplay --version```
+
 2. Download the alsa library:
 
 	```wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-<version>.tar.bz```
+
 3. Unpack and remove archive:
 
 	```tar -xf alsa-lib-<version>.tar.bz2 && rm alsa-lib-<version>.tar.bz2```
+
 4. Configure Cross Compilation:
 
 	```CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux --prefix=/usr/arm-linux-gnueabihf```
+	
 5. Run make and make install as super user:
 
 	```sudo make && sudo make install```
@@ -121,11 +128,14 @@ After finishing the installation of the alsa developer library you can compile t
 
 
 ### Installation of the AVB Stack
+
 First we need to install a new pre built image to an SD card:
+
 1. Download current Image for your device at: https://beagleboard.org/latest-images
 2. Install image using Balena Etcher
 
 After that we can install the built kernel in step [Compilation of the kernel module](###Compilation%20of%20the%20kernel%20module):
+
 1. Copy built linux image, linux header and linux libc to sd card:
     
     ```sudo cp linux-* /media/dev/rootfs/home/debian```
@@ -141,6 +151,7 @@ After that we can install the built kernel in step [Compilation of the kernel mo
     ```sudo restart```
 
 The last step is to copy both the gptp daemon and the avbtest app to the home directory of the SD card:
+
 1. Copy avbtest app:
 	```sudo cp avbtest /media/dev/rootfs/home/debian```
 1. Copy gptp daemon:
@@ -151,6 +162,7 @@ The last step is to copy both the gptp daemon and the avbtest app to the home di
 
 All different variants require two BBB's or BBAI's being conneced via a cross ethernet cable.
 The following steps need to be followed after starting up the device every time for listener and receiver:
+
 - Start gPTP daemon ```sudo ./gptpd```
 - Load hwdep module ```sudo modprobe snd-hwdep```
 - Load AVB module ```sudo modprobe snd-avb```
