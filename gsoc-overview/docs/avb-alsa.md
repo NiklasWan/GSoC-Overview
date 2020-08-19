@@ -27,7 +27,7 @@ Additionally some research was conducted in how to access the PTP hardware clock
 At first it was planned to implement synchronisation of different audio streams in kernel space but due to the fact, that we want to playback audio to different devices, we can't handle this in kernel space. Because of that we decided to not use the PTP HW clock in kernel space.
 
 ### Porting the gPTP User Space daemon to the kernel space (Not included in final submission)
-Also some time was invested in trying to port the gPTP daemon to Kernel Space. This however failed, because I was not able to access the CMSGHDR data, for accessing the TX hardware timestamps. All other parts however are working fine in kernel space and can be found [here](https://github.com/NiklasWan/linux/tree/dev_avb_5.4-rt/drivers/net/gptp).
+Also some time was invested in trying to port the gPTP daemon to Kernel Space. This however failed, because I was not able to access the CMSGHDR data, for accessing the TX hardware timestamps. All other parts however are working fine in kernel space and can be found [here](https://github.com/NiklasWan/linux/blob/dev_gsoc_backup_hw_gptp/drivers/net/gptp).
 If you want to continue working on porting this to kernel space, take a look [here](https://github.com/NiklasWan/linux/blob/dev_gsoc_backup_hw_gptp/drivers/net/gptp/gptp_common.c). The functions, ```void get_rx_ts(struct gptp_instance* gptp, struct timespec64* ts)``` and ```void get_tx_ts(struct gptp_instance* gptp, struct timespec64* ts)```are causing the issues in accessing the CMSGHDR of a packet. Maybe somone can find a way to access the timestamp information.
 
 ### Changed snd_pcm_hardware description of playback capture device.
