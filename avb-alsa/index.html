@@ -37,9 +37,6 @@
                                 <a href=".." class="nav-link">Home</a>
                             </li>
                             <li class="navitem">
-                                <a href="../documentation/" class="nav-link">Coding-Style</a>
-                            </li>
-                            <li class="navitem">
                                 <a href="../face-driver/" class="nav-link">FACE-Driver</a>
                             </li>
                             <li class="navitem active">
@@ -260,23 +257,29 @@ The following steps need to be followed after starting up the device every time 
 <ul>
 <li>Start gPTP daemon <code>sudo ./gptpd</code></li>
 <li>Load hwdep module <code>sudo modprobe snd-hwdep</code></li>
+<li>Load AVB module <code>sudo modprobe snd-avb</code></li>
+</ul>
+<p>The avbtest app of indu has been modified and stripped down to just handle HDMI playback and USB output, because the porting of the CTAG Face drivers to kernel 5.4-rt was not successfull.</p>
+<ol>
 <li>
-<p>Load AVB module <code>sudo modprobe snd-avb</code></p>
-</li>
-<li>
-<p>Use Cae: Playback and Record audio file directly on device without playback via other soundcard:</p>
+<p>Use Cae: Stream audio data from BBB to BBAI and save file to disk:</p>
 <p>Steps on receiver device:
 - Start recording <code>sudo ./avbtest -r -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be saved&gt;.wav</code></p>
 <p>Steps on playback device:
-- Start playback <code>sudo ./avbtest -p -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be played back&gt;.wav</code></p>
+- Start playback <code>sudo ./avbtest -p -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be played back&gt;.wav</code>
+2. Use Cae: Stream audio data from BBB to BBAI and playback via HDMI</p>
+<p>Steps on receiver device:
+- Start recording <code>sudo ./avbtest -y -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;dummy name&gt;.wav</code></p>
+<p>Steps on playback device:
+- Start playback <code>sudo ./avbtest -x -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be played back&gt;.wav</code></p>
 <h2 id="limitations">Limitations</h2>
 </li>
-</ul>
+</ol>
 <p>Until now the implementation have the following limitations:</p>
 <ul>
+<li>Audio file has to be a multiple of the ALSA period size in length</li>
 <li>Playback of one stream with up to 8 channels</li>
-<li>Playback between on Listener and one Talker (BBB or BBAI need to be used)</li>
-<li>Listener does not receive the whole audio file, there is a problem reception of the last few frames of audio data</li>
+<li>Playback between on Listener (BBB) and one Talker (BBAI)</li>
 <li>AVDECC identification on an Apple MAC with propriatery AVB soulution of Beagleboard Device using ALSA AVB driver is not working properly (However the avbdiagnose application is able to identify the Beagleboard device)</li>
 </ul></div>
             </div>

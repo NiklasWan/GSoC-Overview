@@ -36,9 +36,6 @@
                             <li class="navitem">
                                 <a href=".." class="nav-link">Home</a>
                             </li>
-                            <li class="navitem">
-                                <a href="../documentation/" class="nav-link">Coding-Style</a>
-                            </li>
                             <li class="navitem active">
                                 <a href="./" class="nav-link">FACE-Driver</a>
                             </li>
@@ -54,7 +51,7 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" href="../documentation/" class="nav-link">
+                                <a rel="prev" href=".." class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
@@ -116,21 +113,24 @@ sudo dpkg -i linux-libc*
 sudo dpkg -i linux-image*
 </code></pre>
 <p>9.) Restart:
-    sudo restart
-10.) Clone overlay repo:</p>
-<pre><code>git clone https://github.com/NiklasWan/bb.org-overlays.git &amp;&amp; cd bb.org-overlays
+    sudo reboot
+10.) Install bootloader update:
+    sudo ./opt/scripts/tools/developers/update_bootloaders.sh
+11.) Update system:
+    sudo apt update &amp;&amp; sudo apt upgrade
+12.) Clone overlay repo:</p>
+<pre><code>git clone https://github.com/NiklasWan/BeagleBoard-DeviceTrees.git &amp;&amp; cd BeagleBoard-DeviceTrees &amp;&amp; git checkout compatibility_Update3
 </code></pre>
-<p>11.) Install dtc + dependencies:</p>
-<pre><code>sudo ./dtc-overlays.sh
-</code></pre>
-<p>12.) Install overlays:</p>
-<pre><code>git checkout dev_gsoc_face &amp;&amp; sudo ./install.sh
+<p>13.) Install overlays:</p>
+<pre><code>sudo make install
 </code></pre>
 <p>13.) Edit Uboot uEnv.txt:</p>
-<pre><code>For BBAI:
+<pre><code>IMPORTANT NOTE: The uboot overlay process changed during the course of the project just the BBAI version has been tested until now
+
+For BBAI:
   add the following lines to /boot/uEnv.txt:
-    enable-uboot-overlays=1
-    uboot_overlay_addr0=/lib/firmware/BBAI_BB-BONE-FACE-8CH-00A0.dtbo
+    enable_uboot_overlays=1
+    uboot_overlay_addr0=BB-CTAG-SW-8CH-00A0.dtbo
 For BBB:
   comment out the following line:
 
@@ -141,7 +141,7 @@ For BBB:
     disable_uboot_overlay_audio=1
   add:
 
-    uboot_overlay_addr0=/lib/firmware/BB-CTAG-SW-8CH-00A0.dtbo
+    uboot_overlay_addr0=BB-CTAG-SW-8CH-00A0.dtbo
 </code></pre>
 <p>14.) Clone https://github.com/ctag-fh-kiel/ctag-face-2-4.git:</p>
 <pre><code>git clone https://github.com/ctag-fh-kiel/ctag-face-2-4.git &amp; cd ctag-face-2-4
