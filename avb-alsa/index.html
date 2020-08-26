@@ -258,6 +258,7 @@ The following steps need to be followed after starting up the device every time 
 <li>Start gPTP daemon <code>sudo ./gptpd</code></li>
 <li>Load hwdep module <code>sudo modprobe snd-hwdep</code></li>
 <li>Load AVB module <code>sudo modprobe snd-avb</code></li>
+<li>When using provided images <code>sudo insmod snd-avb.ko</code></li>
 </ul>
 <p>The avbtest app of indu has been modified and stripped down to just handle HDMI playback and USB output, because the porting of the CTAG Face drivers to kernel 5.4-rt was not successfull.</p>
 <ol>
@@ -266,8 +267,10 @@ The following steps need to be followed after starting up the device every time 
 <p>Steps on receiver device:
 - Start recording <code>sudo ./avbtest -r -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be saved&gt;.wav</code></p>
 <p>Steps on playback device:
-- Start playback <code>sudo ./avbtest -p -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be played back&gt;.wav</code>
-2. Use Cae: Stream audio data from BBB to BBAI and playback via HDMI</p>
+- Start playback <code>sudo ./avbtest -p -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be played back&gt;.wav</code></p>
+</li>
+<li>
+<p>Use Cae: Stream audio data from BBB to BBAI and playback via HDMI</p>
 <p>Steps on receiver device:
 - Start recording <code>sudo ./avbtest -y -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;dummy name&gt;.wav</code></p>
 <p>Steps on playback device:
