@@ -681,7 +681,7 @@ version 5.4-RT.</p>
 <p>The basic structure of the AVB kernel space and user space modules can be seen in the following component diagram.
 <img alt="ComponentDiagram" src="../img/component_diag.png" />
 The straight dashed red lines show the borders between User and Kernel Space. The components, which needed adjustments are marked with dashed red circles. For the user space modules just the avbtest application needed adjustments to allow playback of received audio data via the HDMI port of the BBAI.
-The kernel space module needed some adjustments, which are specifically described in <a href="#Adjustments">Adjustments</a>.</p>
+The kernel space module needed some adjustments, which are specifically described in <strong>Adjustments</strong>.</p>
 <h2 id="adjustments">Adjustments</h2>
 <p>Here, the most prominent changes are shown, which needed adjustments, for successfully porting the AVB ALSA driver to the 5.4-RT kernel on BBAI.</p>
 <h3 id="modularization-and-refactoring">Modularization and Refactoring</h3>
@@ -770,7 +770,7 @@ and choose module build "M" for Generic AVB driver</p>
 <p>First we need to install a new pre built image to an SD card:</p>
 <p>1.) Download current Image for your device at: https://beagleboard.org/latest-images
 2.) Install image using Balena Etcher</p>
-<p>After that we can install the built kernel in step <a href="#Compilation%20of%20the%20kernel%20module">Compilation of the kernel module</a>:</p>
+<p>After that we can install the built kernel in step <strong>Compilation of the kernel module</strong>:</p>
 <p>1.) Copy built linux image, linux header and linux libc to sd card:</p>
 <pre><code>sudo cp linux-* /media/dev/rootfs/home/debian
 </code></pre>
