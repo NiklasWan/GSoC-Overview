@@ -82,13 +82,55 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            
+            <li class="nav-item" data-level="1"><a href="#adjustments" class="nav-link">Adjustments</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#information-on-overlays" class="nav-link">Information on Overlays</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#drivers-for-419-rt" class="nav-link">Drivers for 4.19-rt</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#drivers-for-54-rt" class="nav-link">Drivers for 5.4-rt</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#compilation-and-installation-of-the-kernel-module" class="nav-link">Compilation and installation of the kernel module</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
         </ul>
     </div>
 </div></div>
                     <div class="col-md-9" role="main">
 
 <h1 id="ctag-face-alsa-driver">CTAG Face Alsa Driver</h1>
+<p>The CTAG Face 2|4 is an audio card for Beaglebone devices, which is equipped with 2 input and 4 output channels. One of the goals for this GSoC project was to port the CTAG Face driver for usage on the BBAI and the BBB to linux kernel 4.19-rt.</p>
+<p>WARNING: To use the CTAG Face with the BBAI, stackable headers need to be used. This is due to the height of the passive cooling unit on the CPU.</p>
+<h1 id="adjustments">Adjustments</h1>
+<p>Here the adjustments, which needed to be made are shown. During the project, I realized, that the linux kernel 4.19-rt is still not running stable on BBAI (As of August, 22 2020). Because of that, I also tried to port the driver to kernel version 5.4-rt, this however failed, because it took too long to adjust for the API changes in ALSA-ASoC API from 4.19 to 5.4.
+For both versions, the codec driver of the AD1938 had to be adjusted. This is due to the changes in how overlays are handled on BeagleBoards since kernel version 4.4. Back in that time overlays were loaded using the bone capemanager. A script was handled, how the face was loaded back then. There the reset pin (P8.34) had to be set to HIGH and then to LOW. This is needed to properly start the codec. Because the capemanager is now deprecated the reset functionality is now implemented in the <code>sound/soc/codecs/ad193x.c</code> file. The probe function of the codec is now responsible to reset the codec at startup.</p>
+<h2 id="information-on-overlays">Information on Overlays</h2>
+<p>During the course of GSoC, another GSoC student at BeagleBoard.org Deepak Khatri worked on a compatibility layer for overlays. Therefore he ported the overlays I created for BBB and BBAI which can be found <a href="https://github.com/NiklasWan/bb.org-overlays/tree/dev_gsoc_face">here</a> to the new overlay repository. The current status is the compatibility update 3 on his repository, which can be found <a href="https://github.com/lorforlinux/BeagleBoard-DeviceTrees/tree/compatibility_Update3">here</a>. The documentation on how overlays are handled now can be found <a href="https://deepaklorkhatri.me/GSoC2020_BeagleBoard.org/">here</a>.
+Links to overlays:</p>
+<ul>
+<li>The implementation of the overlay BBAI (old way) can be found <a href="https://github.com/NiklasWan/bb.org-overlays/blob/dev_gsoc_face/src/arm/BBAI_BB-BONE-FACE-8CH-00A0.dts">here</a></li>
+<li>The implementation of the overlay BBB (old way) can be found <a href="https://github.com/NiklasWan/bb.org-overlays/blob/dev_gsoc_face/src/arm/BB-CTAG-SW-8CH-00A0.dts">here</a></li>
+<li>The implementation for both overlays (new way) can be found <a href="https://github.com/NiklasWan/BeagleBoard-DeviceTrees/blob/dev_face_fix/src/arm/overlays/BB-CTAG-SW-8CH-00A0.dts">here</a></li>
+</ul>
+<h2 id="drivers-for-419-rt">Drivers for 4.19-rt</h2>
+<p>The implementation of the driver code can be found <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt">here</a></p>
+<h2 id="drivers-for-54-rt">Drivers for 5.4-rt</h2>
+<p>The implementation for the driver code can be found <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_5.4-rt">here</a></p>
+<p>Known issues:
+- driver loads and <code>aplay -l</code> and <code>arecord -l</code> list the CTAG Face card, however it can not be controlled via <code>amixer</code> or <code>`alsamixer</code>. This is due to the spi-gpio bitbang driver being not loaded</p>
+<h2 id="compilation-and-installation-of-the-kernel-module">Compilation and installation of the kernel module</h2>
 <p>The CTAG Face Alsa Driver runs on 4.19-rt, for both BBB and BBAI. To get the Face running on your device, please follow all steps.</p>
+<p>IMPORTANT NOTE: The uboot overlay process changed during the course of the project just the BBAI version has been tested until now. For installation on BBB the whole setup has to be done on the internal eMMC chip.</p>
 <p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt">here</a></p>
 <pre><code>git clone https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt
 </code></pre>
@@ -125,9 +167,7 @@ sudo dpkg -i linux-image*
 <pre><code>sudo make install
 </code></pre>
 <p>13.) Edit Uboot uEnv.txt:</p>
-<pre><code>IMPORTANT NOTE: The uboot overlay process changed during the course of the project just the BBAI version has been tested until now
-
-For BBAI:
+<pre><code>For BBAI:
   add the following lines to /boot/uEnv.txt:
     enable_uboot_overlays=1
     uboot_overlay_addr0=BB-CTAG-SW-8CH-00A0.dtbo

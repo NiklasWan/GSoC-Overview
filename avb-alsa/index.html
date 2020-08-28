@@ -121,14 +121,14 @@ version 5.4-RT.</p>
 The straight dashed red lines show the borders between User and Kernel Space. The components, which needed adjustments are marked with dashed red circles. For the user space modules just the avbtest application needed adjustments to allow playback of received audio data via the HDMI port of the BBAI.
 The kernel space module needed some adjustments, which are specifically described in <a href="##Adjustments">Adjustments</a>.</p>
 <h2 id="adjustments">Adjustments</h2>
-<p>Here the most prominent changes are shown, which needed adjustments, for successfully porting the AVB ALSA driver to the 5.4-RT kernel on BBAI.</p>
+<p>Here, the most prominent changes are shown, which needed adjustments, for successfully porting the AVB ALSA driver to the 5.4-RT kernel on BBAI.</p>
 <h3 id="modularization-and-refactoring">Modularization and Refactoring</h3>
 <p>The source code of <a href="https://github.com/induarun9086">indu</a> was seperated into different files, to improve readability and separation of source code. Therefore, the AVTP, the MSRP and the AVDECC protocols have been split into several files. This also required some small changes within interface definitions. Additionally, a common utility header was introduced, which implements functionality and macros, which are used in several modules.
-To seperate the avb driver from other ALSA driver, the implementation directory was changed to <code>/linux/sound/drivers/avb</code>.
+To seperate the avb driver from other ALSA drivers, the implementation directory was changed to <code>/linux/sound/drivers/avb</code>.
 Also the whole codebase was inspected and code was changed to conform to linux kernel coding conventions.</p>
 <h3 id="abstraction-of-ptp-hw-clock-not-included-in-final-submission">Abstraction of PTP HW clock (Not included in final submission)</h3>
-<p>Additionally some research was conducted in how to access the PTP hardware clock of the NIC, if one is available. On TI devices this is done via the CPTS module. To abstract access away for other NIC's an abstraction layer was implemented, which can be found <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_backup_hw_gptp/sound/drivers/avb">here</a>. The abstraction is done in <code>avb_hwclock.h</code> and <code>avb_hwclock.c</code>, <code>ti_hwclock.c</code>implements this interface for ti devices.
-At first it was planned to implement synchronisation of different audio streams in kernel space but due to the fact, that we want to playback audio to different devices, we can't handle this in kernel space. Because of that we decided to not use the PTP HW clock in kernel space.</p>
+<p>Additionally some research was conducted in how to access the PTP hardware clock of the NIC. On TI devices the hardware clock is implemented in the CPTS (Common Platform Time Sync) module. To abstract away access to the HW clock for other NIC's an abstraction layer was implemented, which can be found <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_backup_hw_gptp/sound/drivers/avb">here</a>. The abstraction is done in <code>avb_hwclock.h</code> and <code>avb_hwclock.c</code>, <code>ti_hwclock.c</code>implements this interface for ti devices.
+At first it was planned to implement synchronization of different audio streams in kernel space but due to the fact, that we want to playback audio to different devices, we can't handle this in kernel space. Because of that, we decided to not use the PTP HW clock in kernel space.</p>
 <h3 id="porting-the-gptp-user-space-daemon-to-the-kernel-space-not-included-in-final-submission">Porting the gPTP User Space daemon to the kernel space (Not included in final submission)</h3>
 <p>Also some time was invested in trying to port the gPTP daemon to Kernel Space. This however failed, because I was not able to access the CMSGHDR data, for accessing the TX hardware timestamps. All other parts however are working fine in kernel space and can be found <a href="https://github.com/NiklasWan/linux/blob/dev_gsoc_backup_hw_gptp/drivers/net/gptp">here</a>.
 If you want to continue working on porting this to kernel space, take a look <a href="https://github.com/NiklasWan/linux/blob/dev_gsoc_backup_hw_gptp/drivers/net/gptp/gptp_common.c">here</a>. The functions, <code>void get_rx_ts(struct gptp_instance* gptp, struct timespec64* ts)</code> and <code>void get_tx_ts(struct gptp_instance* gptp, struct timespec64* ts)</code>are causing the issues in accessing the CMSGHDR of a packet. Maybe somone can find a way to access the timestamp information.</p>
@@ -153,13 +153,14 @@ If you want to continue working on porting this to kernel space, take a look <a 
 </code></pre>
 
 <h3 id="changed-snd_pcm_ops-copy-function">Changed snd_pcm_ops copy function</h3>
-<p>Because of API changes between kernel version  4.4 and 5.4, the playback and capture copy function needed some adjustments.
+<p>Because of API changes between kernel version 4.4 and 5.4, the playback and capture copy function needed some adjustments.
 One point is, that in kernel version 5.4 the count of data to copy and the position in the buffer are no longer passed in number of frames but instead the number of bytes are passed. So the parameters needed to be calculated in frames first to allow for expected behavior. The second point was, that the member of <code>snd_pcm_ops</code> which handles copying between user and kernel space now was renamed to <code>.copy_user</code>.</p>
 <h3 id="changed-to-kernel-sockets">Changed to kernel sockets</h3>
 <p>The socket communication was changed to the kernel space sockets. So now all functions from <a href="https://elixir.bootlin.com/linux/latest/source/include/linux/net.h">linux/net.h</a> prepended with <code>kernel_&lt;op&gt;</code> are being used.</p>
 <h2 id="installation-and-usage">Installation and Usage</h2>
+<p>If you do not want to compile the kernel, avbtest-application and the gptp daemon by hand, you can obtain a working image for both, the BBB and the BBAI from <a href="https://github.com/NiklasWan/linux/releases/tag/avb-0.1">here</a>. To install it just download the corresponding image for your platform and install onto an SD card using BalenaEtcher.</p>
 <h3 id="compilation-of-the-kernel-module">Compilation of the kernel module</h3>
-<p>The ALSA AVB Driver runs on 5.4-rt, for both BBB and BBAI. The following steps show all required steps to compile the driver including the Linux kernel.</p>
+<p>The ALSA AVB Driver runs on 5.4-rt, for both BBB and BBAI. In the following all required steps to compile the driver including the Linux kernel are shown.</p>
 <ol>
 <li>
 <p>Clone kernel from <a href="https://github.com/NiklasWan/linux.git">here</a></p>
@@ -191,7 +192,7 @@ and choose module build "M" for Generic AVB driver</p>
 </li>
 </ol>
 <h3 id="compilation-of-the-avbtest-app">Compilation of the avbtest app</h3>
-<p>To allow for compilation of the avbtest app on an non ARM system for an ARM system, we first need to install libasound2 for our Cross Compiler. The following installation routine applies to the gnueabihf compiler from the apt repository.</p>
+<p>To allow for compilation of the avbtest app on a non ARM system for an ARM system, we first need to install libasound2 for our Cross Compiler. The following installation routine applies to the gnueabihf compiler from the apt repository.</p>
 <ol>
 <li>
 <p>Check the required ALSA version on Beaglebone:
@@ -278,7 +279,7 @@ The following steps need to be followed after starting up the device every time 
 <h2 id="limitations">Limitations</h2>
 </li>
 </ol>
-<p>Until now the implementation have the following limitations:</p>
+<p>Until now the implementation has the following limitations:</p>
 <ul>
 <li>Audio file has to be a multiple of the ALSA period size in length</li>
 <li>Playback of one stream with up to 8 channels</li>
