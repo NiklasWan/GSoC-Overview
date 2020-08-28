@@ -12,19 +12,19 @@ version 5.4-RT.
 The basic structure of the AVB kernel space and user space modules can be seen in the following component diagram.
 ![ComponentDiagram](./img/component_diag.png)
 The straight dashed red lines show the borders between User and Kernel Space. The components, which needed adjustments are marked with dashed red circles. For the user space modules just the avbtest application needed adjustments to allow playback of received audio data via the HDMI port of the BBAI.
-The kernel space module needed some adjustments, which are specifically described in [Adjustments](##Adjustments).
+The kernel space module needed some adjustments, which are specifically described in **Adjustments**.
 
 ## Adjustments
-Here the most prominent changes are shown, which needed adjustments, for successfully porting the AVB ALSA driver to the 5.4-RT kernel on BBAI.
+Here, the most prominent changes are shown, which needed adjustments, for successfully porting the AVB ALSA driver to the 5.4-RT kernel on BBAI.
 
 ### Modularization and Refactoring
 The source code of [indu](https://github.com/induarun9086) was seperated into different files, to improve readability and separation of source code. Therefore, the AVTP, the MSRP and the AVDECC protocols have been split into several files. This also required some small changes within interface definitions. Additionally, a common utility header was introduced, which implements functionality and macros, which are used in several modules.
-To seperate the avb driver from other ALSA driver, the implementation directory was changed to ```/linux/sound/drivers/avb```.
+To seperate the avb driver from other ALSA drivers, the implementation directory was changed to ```/linux/sound/drivers/avb```.
 Also the whole codebase was inspected and code was changed to conform to linux kernel coding conventions.
 
 ### Abstraction of PTP HW clock (Not included in final submission)
-Additionally some research was conducted in how to access the PTP hardware clock of the NIC, if one is available. On TI devices this is done via the CPTS module. To abstract access away for other NIC's an abstraction layer was implemented, which can be found [here](https://github.com/NiklasWan/linux/tree/dev_gsoc_backup_hw_gptp/sound/drivers/avb). The abstraction is done in ```avb_hwclock.h``` and ```avb_hwclock.c```, ```ti_hwclock.c```implements this interface for ti devices.
-At first it was planned to implement synchronisation of different audio streams in kernel space but due to the fact, that we want to playback audio to different devices, we can't handle this in kernel space. Because of that we decided to not use the PTP HW clock in kernel space.
+Additionally some research was conducted in how to access the PTP hardware clock of the NIC. On TI devices the hardware clock is implemented in the CPTS (Common Platform Time Sync) module. To abstract away access to the HW clock for other NIC's an abstraction layer was implemented, which can be found [here](https://github.com/NiklasWan/linux/tree/dev_gsoc_backup_hw_gptp/sound/drivers/avb). The abstraction is done in ```avb_hwclock.h``` and ```avb_hwclock.c```, ```ti_hwclock.c```implements this interface for ti devices.
+At first it was planned to implement synchronization of different audio streams in kernel space but due to the fact, that we want to playback audio to different devices, we can't handle this in kernel space. Because of that, we decided to not use the PTP HW clock in kernel space.
 
 ### Porting the gPTP User Space daemon to the kernel space (Not included in final submission)
 Also some time was invested in trying to port the gPTP daemon to Kernel Space. This however failed, because I was not able to access the CMSGHDR data, for accessing the TX hardware timestamps. All other parts however are working fine in kernel space and can be found [here](https://github.com/NiklasWan/linux/blob/dev_gsoc_backup_hw_gptp/drivers/net/gptp).
@@ -54,7 +54,7 @@ static struct snd_pcm_hardware avb_playback_hw = {
 ```
 
 ### Changed snd_pcm_ops copy function
-Because of API changes between kernel version  4.4 and 5.4, the playback and capture copy function needed some adjustments.
+Because of API changes between kernel version 4.4 and 5.4, the playback and capture copy function needed some adjustments.
 One point is, that in kernel version 5.4 the count of data to copy and the position in the buffer are no longer passed in number of frames but instead the number of bytes are passed. So the parameters needed to be calculated in frames first to allow for expected behavior. The second point was, that the member of ```snd_pcm_ops``` which handles copying between user and kernel space now was renamed to ```.copy_user```.
 
 ### Changed to kernel sockets
@@ -62,100 +62,108 @@ The socket communication was changed to the kernel space sockets. So now all fun
 
 ## Installation and Usage
 
+If you do not want to compile the kernel, avbtest-application and the gptp daemon by hand, you can obtain a working image for both, the BBB and the BBAI from [here](https://github.com/NiklasWan/linux/releases/tag/avb-0.1). To install it just download the corresponding image for your platform and install onto an SD card using BalenaEtcher.
+
 ### Compilation of the kernel module
 
-The ALSA AVB Driver runs on 5.4-rt, for both BBB and BBAI. The following steps show all required steps to compile the driver including the Linux kernel.
+The ALSA AVB Driver runs on 5.4-rt, for both BBB and BBAI. In the following all required steps to compile the driver including the Linux kernel are shown.
 
-1. Clone kernel from [here](https://github.com/NiklasWan/linux.git)
+1.) Clone kernel from [here](https://github.com/NiklasWan/linux.git)
+	
+	git clone https://github.com/NiklasWan/linux.git && cd linux && git checkout dev_avb_5.4-rt
+
+2.) Load BB device configuration:
     
-    ```git clone https://github.com/NiklasWan/linux.git && cd linux && git checkout dev_avb_5.4-rt```
+    make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig
 
-2. Load BB device configuration:
-    
-    ```make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig```
-
-3. Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture
+3.) Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture
 and choose module build "M" for Generic AVB driver
 
-4. Build kernel:
+4.) Build kernel:
     
-    ```make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8```
+    make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8
 
 ### Compilation of the gptp daemon
 
 To compile the gptp daemon for the ARM platform simply issue the following commands:
 
-1. Clone repository:
+1.) Clone repository:
 
-	```git clone https://github.com/NiklasWan/gPTPd.git```
+	git clone https://github.com/NiklasWan/gPTPd.git
 
-2. Compile gptpd:
+2.) Compile gptpd:
 
-	```make CROSS_COMPILE=arm-linux-gnueabihf- bbb```
+	make CROSS_COMPILE=arm-linux-gnueabihf- bbb
 
 ### Compilation of the avbtest app
 
-To allow for compilation of the avbtest app on an non ARM system for an ARM system, we first need to install libasound2 for our Cross Compiler. The following installation routine applies to the gnueabihf compiler from the apt repository.
+To allow for compilation of the avbtest app on a non ARM system for an ARM system, we first need to install libasound2 for our Cross Compiler. The following installation routine applies to the gnueabihf compiler from the apt repository.
 
-1. Check the required ALSA version on Beaglebone:
-	```aplay --version```
+1.) Check the required ALSA version on Beaglebone:
 
-2. Download the alsa library:
+	aplay --version
 
-	```wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-<version>.tar.bz```
+2.) Download the alsa library:
 
-3. Unpack and remove archive:
+	wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-<version>.tar.bz
 
-	```tar -xf alsa-lib-<version>.tar.bz2 && rm alsa-lib-<version>.tar.bz2```
+3.) Unpack and remove archive:
 
-4. Configure Cross Compilation:
+	tar -xf alsa-lib-<version>.tar.bz2 && rm alsa-lib-<version>.tar.bz2
 
-	```CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux --prefix=/usr/arm-linux-gnueabihf```
+4.) Configure Cross Compilation:
+
+	CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux --prefix=/usr/arm-linux-gnueabihf
 	
-5. Run make and make install as super user:
+5.) Run make and make install as super user:
 
-	```sudo make && sudo make install```
+	sudo make && sudo make install
 
 After finishing the installation of the alsa developer library you can compile the avbtest app using the following commands:
 
-1. Clone avbtest:
+1.) Clone avbtest:
 
-	```git clone https://github.com/NiklasWan/avbtest.git```
+	git clone https://github.com/NiklasWan/avbtest.git
 
-2. Compile avbtest:
+2.) Compile avbtest:
 
-	```make CROSS_COMPILE=arm-linux-gnueabihf- all```
+	make CROSS_COMPILE=arm-linux-gnueabihf- all
 
 
 ### Installation of the AVB Stack
 
 First we need to install a new pre built image to an SD card:
 
-1. Download current Image for your device at: https://beagleboard.org/latest-images
-2. Install image using Balena Etcher
+1.) Download current Image for your device at: https://beagleboard.org/latest-images
 
-After that we can install the built kernel in step [Compilation of the kernel module](###Compilation%20of%20the%20kernel%20module):
+2.) Install image using Balena Etcher
 
-1. Copy built linux image, linux header and linux libc to sd card:
-    
-    ```sudo cp linux-* /media/dev/rootfs/home/debian```
-2. Start BB from Sd Card and Install kernel:
-    
-    ```sudo dpkg -i linux-headers*```
-    
-    ```sudo dpkg -i linux-libc*```
-    
-    ```sudo dpkg -i linux-image*```
-3. Restart:
+After that we can install the built kernel in step **Compilation of the kernel module**:
 
-    ```sudo restart```
+1.) Copy built linux image, linux header and linux libc to sd card:
+    
+    sudo cp linux-* /media/dev/rootfs/home/debian
+
+2.) Start BB from Sd Card and Install kernel:
+    
+    sudo dpkg -i linux-headers*
+    
+    sudo dpkg -i linux-libc*
+    
+    sudo dpkg -i linux-image*
+	
+3.) Restart:
+
+    sudo restart
 
 The last step is to copy both the gptp daemon and the avbtest app to the home directory of the SD card:
 
-1. Copy avbtest app:
-	```sudo cp avbtest /media/dev/rootfs/home/debian```
-1. Copy gptp daemon:
-	```sudo cp gptpd /media/dev/rootfs/home/debian```
+1.) Copy avbtest app:
+
+	sudo cp avbtest /media/dev/rootfs/home/debian
+2.) Copy gptp daemon:
+
+	sudo cp gptpd /media/dev/rootfs/home/debian
 
 
 #### Usage of the AVB Stack
@@ -166,19 +174,47 @@ The following steps need to be followed after starting up the device every time 
 - Start gPTP daemon ```sudo ./gptpd```
 - Load hwdep module ```sudo modprobe snd-hwdep```
 - Load AVB module ```sudo modprobe snd-avb```
+- When using provided images ```sudo insmod snd-avb.ko```
 
-1. Use Cae: Playback and Record audio file directly on device without playback via other soundcard:
+The avbtest app of indu has been modified and stripped down to just handle HDMI playback and USB output, because the porting of the CTAG Face drivers to kernel 5.4-rt was not successfull.
+
+1.) Use Case: Stream audio data from BBB to BBAI and save file to disk:
 	
-	Steps on receiver device:
-	- Start recording ```sudo ./avbtest -r -c<number of channels> -l<log level> -s<sampling_rate> <name of file to be saved>.wav```
+Steps on receiver device:
 
-	Steps on playback device:
-	- Start playback ```sudo ./avbtest -p -c<number of channels> -l<log level> -s<sampling_rate> <name of file to be played back>.wav```
+- Start recording 
+	```
+	sudo ./avbtest -r -c<number_of_channels> -l<log_level> -s<sampling_rate> <name_of_file_to_be_saved>.wav
+	```
+
+Steps on playback device:
+
+- Start playback 
+	```
+	sudo ./avbtest -p -c<number_of_channels> -l<log_level> -s<sampling_rate> <name_of_file_to_be_played_back>.wav
+	```
+
+2.) Use Case: Stream audio data from BBB to BBAI and playback via HDMI
+	
+Steps on receiver device:
+
+- Start recording 
+	```
+	sudo ./avbtest -y -c<number_of_channels> -l<log_level> -s<sampling_rate> <dummy_name>.wav
+	```
+
+Steps on playback device:
+
+- Start playback 
+	```
+	sudo ./avbtest -x -c<number_of_channels> -l<log_level> -s<sampling_rate> <name_of_file_to_be_played_back>.wav
+	```
+
 ## Limitations
 
-Until now the implementation have the following limitations:
+Until now the implementation has the following limitations:
 
+- Audio file has to be a multiple of the ALSA period size in length
 - Playback of one stream with up to 8 channels
-- Playback between on Listener and one Talker (BBB or BBAI need to be used)
-- Listener does not receive the whole audio file, there is a problem reception of the last few frames of audio data
+- Playback between on Listener (BBB) and one Talker (BBAI)
 - AVDECC identification on an Apple MAC with propriatery AVB soulution of Beagleboard Device using ALSA AVB driver is not working properly (However the avbdiagnose application is able to identify the Beagleboard device)

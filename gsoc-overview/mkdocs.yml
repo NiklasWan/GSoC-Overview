@@ -1,7 +1,19 @@
-site_name: GSoC Ip Media Streaming Overview
+site_name: GSoC 2020 Ip Media Streaming
 nav: 
-  - Home: index.md
-  - Coding-Style: documentation.md
-  - FACE-Driver: face-driver.md
-  - AVB-ALSA: avb-alsa.md
+  - Home: 
+    - index.md
+  - FACE-Driver: 
+    - face-driver.md
+  - AVB-ALSA: 
+    - avb-alsa.md
 
+theme:
+  name: material
+  features:
+    - tabs
+  palette:
+    scheme: slate
+    primary: amber
+  icon:
+    logo: material/volume-source
+  favicon: material/volume-source

@@ -1,116 +1,675 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../material/volume-source">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.9">
+    
+    
+      
+        <title>AVB Alsa driver - GSoC 2020 Ip Media Streaming</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.36ee6aaa.min.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/palette.83bccb1f.min.css">
+      
+      
         
         
+        <meta name="theme-color" content="#ffc105">
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
         
-        <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>AVB-ALSA - GSoC Ip Media Streaming Overview</title>
-        <link href="../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../css/font-awesome.min.css" rel="stylesheet">
-        <link href="../css/base.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-
-        <script src="../js/jquery-1.10.2.min.js" defer></script>
-        <script src="../js/bootstrap.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-        <script>hljs.initHighlightingOnLoad();</script> 
-    </head>
-
-    <body>
-        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href="..">GSoC Ip Media Streaming Overview</a>
-                <!-- Expander button -->
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <!-- Expanded navigation -->
-                <div id="navbar-collapse" class="navbar-collapse collapse">
-                        <!-- Main navigation -->
-                        <ul class="nav navbar-nav">
-                            <li class="navitem">
-                                <a href=".." class="nav-link">Home</a>
-                            </li>
-                            <li class="navitem">
-                                <a href="../documentation/" class="nav-link">Coding-Style</a>
-                            </li>
-                            <li class="navitem">
-                                <a href="../face-driver/" class="nav-link">FACE-Driver</a>
-                            </li>
-                            <li class="navitem active">
-                                <a href="./" class="nav-link">AVB-ALSA</a>
-                            </li>
-                        </ul>
-
-                    <ul class="nav navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
-                            </a>
-                        </li>
-                            <li class="nav-item">
-                                <a rel="prev" href="../face-driver/" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a rel="next" class="nav-link disabled">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="row">
-                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
-            <span class="fa fa-angle-down"></span>
-        </button>
+        <a href="#avb-alsa-driver" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href=".." title="GSoC 2020 Ip Media Streaming" class="md-header-nav__button md-logo" aria-label="GSoC 2020 Ip Media Streaming">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3m13 6h-2V9h2v6m4 4h-2V5h2v14z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            GSoC 2020 Ip Media Streaming
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              AVB Alsa driver
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+          
+
+  
+
+<nav class="md-tabs md-tabs--active" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href=".." class="md-tabs__link">
+          Home
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../face-driver/" class="md-tabs__link">
+          FACE-Driver
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="./" class="md-tabs__link md-tabs__link--active">
+          AVB-ALSA
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="GSoC 2020 Ip Media Streaming" class="md-nav__button md-logo" aria-label="GSoC 2020 Ip Media Streaming">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3m13 6h-2V9h2v6m4 4h-2V5h2v14z"/></svg>
+
+    </a>
+    GSoC 2020 Ip Media Streaming
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      Home
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Home" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Home
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Project Overview" class="md-nav__link">
+      Project Overview
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
 
     
-    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
-        <ul class="nav flex-column">
-            
-            <li class="nav-item" data-level="1"><a href="#avb-alsa-driver" class="nav-link">AVB Alsa driver</a>
-              <ul class="nav flex-column">
-            <li class="nav-item" data-level="2"><a href="#introduction" class="nav-link">Introduction</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#architecture" class="nav-link">Architecture</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#adjustments" class="nav-link">Adjustments</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#installation-and-usage" class="nav-link">Installation and Usage</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#limitations" class="nav-link">Limitations</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-              </ul>
-            </li>
-        </ul>
-    </div>
-</div></div>
-                    <div class="col-md-9" role="main">
+      
+      
+      
 
-<h1 id="avb-alsa-driver">AVB Alsa driver</h1>
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      FACE-Driver
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="FACE-Driver" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        FACE-Driver
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../face-driver/" title="CTAG Face Alsa Driver" class="md-nav__link">
+      CTAG Face Alsa Driver
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+    
+    <label class="md-nav__link" for="nav-3">
+      AVB-ALSA
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="AVB-ALSA" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        AVB-ALSA
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        AVB Alsa driver
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="AVB Alsa driver" class="md-nav__link md-nav__link--active">
+      AVB Alsa driver
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    Architecture
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adjustments" class="md-nav__link">
+    Adjustments
+  </a>
+  
+    <nav class="md-nav" aria-label="Adjustments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modularization-and-refactoring" class="md-nav__link">
+    Modularization and Refactoring
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abstraction-of-ptp-hw-clock-not-included-in-final-submission" class="md-nav__link">
+    Abstraction of PTP HW clock (Not included in final submission)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#porting-the-gptp-user-space-daemon-to-the-kernel-space-not-included-in-final-submission" class="md-nav__link">
+    Porting the gPTP User Space daemon to the kernel space (Not included in final submission)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed-snd_pcm_hardware-description-of-playback-capture-device" class="md-nav__link">
+    Changed snd_pcm_hardware description of playback capture device.
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed-snd_pcm_ops-copy-function" class="md-nav__link">
+    Changed snd_pcm_ops copy function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed-to-kernel-sockets" class="md-nav__link">
+    Changed to kernel sockets
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-and-usage" class="md-nav__link">
+    Installation and Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation and Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compilation-of-the-kernel-module" class="md-nav__link">
+    Compilation of the kernel module
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilation-of-the-gptp-daemon" class="md-nav__link">
+    Compilation of the gptp daemon
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilation-of-the-avbtest-app" class="md-nav__link">
+    Compilation of the avbtest app
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-of-the-avb-stack" class="md-nav__link">
+    Installation of the AVB Stack
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation of the AVB Stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage-of-the-avb-stack" class="md-nav__link">
+    Usage of the AVB Stack
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    Limitations
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    Architecture
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adjustments" class="md-nav__link">
+    Adjustments
+  </a>
+  
+    <nav class="md-nav" aria-label="Adjustments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modularization-and-refactoring" class="md-nav__link">
+    Modularization and Refactoring
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abstraction-of-ptp-hw-clock-not-included-in-final-submission" class="md-nav__link">
+    Abstraction of PTP HW clock (Not included in final submission)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#porting-the-gptp-user-space-daemon-to-the-kernel-space-not-included-in-final-submission" class="md-nav__link">
+    Porting the gPTP User Space daemon to the kernel space (Not included in final submission)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed-snd_pcm_hardware-description-of-playback-capture-device" class="md-nav__link">
+    Changed snd_pcm_hardware description of playback capture device.
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed-snd_pcm_ops-copy-function" class="md-nav__link">
+    Changed snd_pcm_ops copy function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed-to-kernel-sockets" class="md-nav__link">
+    Changed to kernel sockets
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-and-usage" class="md-nav__link">
+    Installation and Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation and Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compilation-of-the-kernel-module" class="md-nav__link">
+    Compilation of the kernel module
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilation-of-the-gptp-daemon" class="md-nav__link">
+    Compilation of the gptp daemon
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilation-of-the-avbtest-app" class="md-nav__link">
+    Compilation of the avbtest app
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-of-the-avb-stack" class="md-nav__link">
+    Installation of the AVB Stack
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation of the AVB Stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage-of-the-avb-stack" class="md-nav__link">
+    Usage of the AVB Stack
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    Limitations
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="avb-alsa-driver">AVB Alsa driver</h1>
 <h2 id="introduction">Introduction</h2>
 <p>The Alsa AVB driver is based on the Implemenatation of <a href="https://github.com/induarun9086">indu</a> and consists of three modules.
 The IEEE 802.1-AS protocol (gPTP) is implemented in the gPTP User Space daemon. The IEEE 1722-2011 Layer 2 (AVTP), 
@@ -122,19 +681,19 @@ version 5.4-RT.</p>
 <p>The basic structure of the AVB kernel space and user space modules can be seen in the following component diagram.
 <img alt="ComponentDiagram" src="../img/component_diag.png" />
 The straight dashed red lines show the borders between User and Kernel Space. The components, which needed adjustments are marked with dashed red circles. For the user space modules just the avbtest application needed adjustments to allow playback of received audio data via the HDMI port of the BBAI.
-The kernel space module needed some adjustments, which are specifically described in <a href="##Adjustments">Adjustments</a>.</p>
+The kernel space module needed some adjustments, which are specifically described in <strong>Adjustments</strong>.</p>
 <h2 id="adjustments">Adjustments</h2>
-<p>Here the most prominent changes are shown, which needed adjustments, for successfully porting the AVB ALSA driver to the 5.4-RT kernel on BBAI.</p>
+<p>Here, the most prominent changes are shown, which needed adjustments, for successfully porting the AVB ALSA driver to the 5.4-RT kernel on BBAI.</p>
 <h3 id="modularization-and-refactoring">Modularization and Refactoring</h3>
 <p>The source code of <a href="https://github.com/induarun9086">indu</a> was seperated into different files, to improve readability and separation of source code. Therefore, the AVTP, the MSRP and the AVDECC protocols have been split into several files. This also required some small changes within interface definitions. Additionally, a common utility header was introduced, which implements functionality and macros, which are used in several modules.
-To seperate the avb driver from other ALSA driver, the implementation directory was changed to <code>/linux/sound/drivers/avb</code>.
+To seperate the avb driver from other ALSA drivers, the implementation directory was changed to <code>/linux/sound/drivers/avb</code>.
 Also the whole codebase was inspected and code was changed to conform to linux kernel coding conventions.</p>
 <h3 id="abstraction-of-ptp-hw-clock-not-included-in-final-submission">Abstraction of PTP HW clock (Not included in final submission)</h3>
-<p>Additionally some research was conducted in how to access the PTP hardware clock of the NIC, if one is available. On TI devices this is done via the CPTS module. To abstract access away for other NIC's an abstraction layer was implemented, which can be found <a href="https://github.com/NiklasWan/linux/commit/882436802ad1b0f4195d79ae9eb467d9bb438119">here</a>.
-At first it was planned to implement synchronisation of different audio streams in kernel space but due to the fact, that we want to playback audio to different devices, we can't handle this in kernel space. Because of that we decided to not use the PTP HW clock in kernel space.</p>
+<p>Additionally some research was conducted in how to access the PTP hardware clock of the NIC. On TI devices the hardware clock is implemented in the CPTS (Common Platform Time Sync) module. To abstract away access to the HW clock for other NIC's an abstraction layer was implemented, which can be found <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_backup_hw_gptp/sound/drivers/avb">here</a>. The abstraction is done in <code>avb_hwclock.h</code> and <code>avb_hwclock.c</code>, <code>ti_hwclock.c</code>implements this interface for ti devices.
+At first it was planned to implement synchronization of different audio streams in kernel space but due to the fact, that we want to playback audio to different devices, we can't handle this in kernel space. Because of that, we decided to not use the PTP HW clock in kernel space.</p>
 <h3 id="porting-the-gptp-user-space-daemon-to-the-kernel-space-not-included-in-final-submission">Porting the gPTP User Space daemon to the kernel space (Not included in final submission)</h3>
-<p>Also some time was invested in trying to port the gPTP daemon to Kernel Space. This however failed, because I was not able to access the CMSGHDR data, for accessing the TX hardware timestamps. All other parts however are working fine in kernel space and can be found <a href="https://github.com/NiklasWan/linux/tree/dev_avb_5.4-rt/drivers/net/gptp">here</a>.
-If you want to continue working on porting this to kernel space, take a look <a href="https://github.com/NiklasWan/linux/blob/dev_avb_5.4-rt/drivers/net/gptp/gptp_common.c">here</a>. The functions, <code>void get_rx_ts(struct gptp_instance* gptp, struct timespec64* ts)</code> and <code>void get_tx_ts(struct gptp_instance* gptp, struct timespec64* ts)</code>are causing the issues in accessing the CMSGHDR of a packet. Maybe somone can find a way to access the timestamp information.</p>
+<p>Also some time was invested in trying to port the gPTP daemon to Kernel Space. This however failed, because I was not able to access the CMSGHDR data, for accessing the TX hardware timestamps. All other parts however are working fine in kernel space and can be found <a href="https://github.com/NiklasWan/linux/blob/dev_gsoc_backup_hw_gptp/drivers/net/gptp">here</a>.
+If you want to continue working on porting this to kernel space, take a look <a href="https://github.com/NiklasWan/linux/blob/dev_gsoc_backup_hw_gptp/drivers/net/gptp/gptp_common.c">here</a>. The functions, <code>void get_rx_ts(struct gptp_instance* gptp, struct timespec64* ts)</code> and <code>void get_tx_ts(struct gptp_instance* gptp, struct timespec64* ts)</code>are causing the issues in accessing the CMSGHDR of a packet. Maybe somone can find a way to access the timestamp information.</p>
 <h3 id="changed-snd_pcm_hardware-description-of-playback-capture-device">Changed snd_pcm_hardware description of playback capture device.</h3>
 <p>Here the <code>.periods_min</code> parameter was adjusted, to adjust the minimum length of pcm interrupts. This was needed due some overrun issues while playing back and recording audio data with the AVB sound card.</p>
 <p>The following listing shows the resulting structure for the playback hardware, which is redundant to the capture hardware.</p>
@@ -156,206 +715,187 @@ If you want to continue working on porting this to kernel space, take a look <a 
 </code></pre>
 
 <h3 id="changed-snd_pcm_ops-copy-function">Changed snd_pcm_ops copy function</h3>
-<p>Because of API changes between kernel version  4.4 and 5.4, the playback and capture copy function needed some adjustments.
+<p>Because of API changes between kernel version 4.4 and 5.4, the playback and capture copy function needed some adjustments.
 One point is, that in kernel version 5.4 the count of data to copy and the position in the buffer are no longer passed in number of frames but instead the number of bytes are passed. So the parameters needed to be calculated in frames first to allow for expected behavior. The second point was, that the member of <code>snd_pcm_ops</code> which handles copying between user and kernel space now was renamed to <code>.copy_user</code>.</p>
 <h3 id="changed-to-kernel-sockets">Changed to kernel sockets</h3>
 <p>The socket communication was changed to the kernel space sockets. So now all functions from <a href="https://elixir.bootlin.com/linux/latest/source/include/linux/net.h">linux/net.h</a> prepended with <code>kernel_&lt;op&gt;</code> are being used.</p>
 <h2 id="installation-and-usage">Installation and Usage</h2>
+<p>If you do not want to compile the kernel, avbtest-application and the gptp daemon by hand, you can obtain a working image for both, the BBB and the BBAI from <a href="https://github.com/NiklasWan/linux/releases/tag/avb-0.1">here</a>. To install it just download the corresponding image for your platform and install onto an SD card using BalenaEtcher.</p>
 <h3 id="compilation-of-the-kernel-module">Compilation of the kernel module</h3>
-<p>The ALSA AVB Driver runs on 5.4-rt, for both BBB and BBAI. The following steps show all required steps to compile the driver including the Linux kernel.</p>
-<ol>
-<li>
-<p>Clone kernel from <a href="https://github.com/NiklasWan/linux.git">here</a></p>
-<p><code>git clone https://github.com/NiklasWan/linux.git &amp;&amp; cd linux &amp;&amp; git checkout dev_avb_5.4-rt</code></p>
-</li>
-<li>
-<p>Load BB device configuration:</p>
-<p><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig</code></p>
-</li>
-<li>
-<p>Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture
+<p>The ALSA AVB Driver runs on 5.4-rt, for both BBB and BBAI. In the following all required steps to compile the driver including the Linux kernel are shown.</p>
+<p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux.git">here</a></p>
+<pre><code>git clone https://github.com/NiklasWan/linux.git &amp;&amp; cd linux &amp;&amp; git checkout dev_avb_5.4-rt
+</code></pre>
+<p>2.) Load BB device configuration:</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig
+</code></pre>
+<p>3.) Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture
 and choose module build "M" for Generic AVB driver</p>
-</li>
-<li>
-<p>Build kernel:</p>
-<p><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8</code></p>
-</li>
-</ol>
+<p>4.) Build kernel:</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8
+</code></pre>
 <h3 id="compilation-of-the-gptp-daemon">Compilation of the gptp daemon</h3>
 <p>To compile the gptp daemon for the ARM platform simply issue the following commands:</p>
-<ol>
-<li>
-<p>Clone repository:</p>
-<p><code>git clone https://github.com/NiklasWan/gPTPd.git</code></p>
-</li>
-<li>
-<p>Compile gptpd:</p>
-<p><code>make CROSS_COMPILE=arm-linux-gnueabihf- bbb</code></p>
-</li>
-</ol>
+<p>1.) Clone repository:</p>
+<pre><code>git clone https://github.com/NiklasWan/gPTPd.git
+</code></pre>
+<p>2.) Compile gptpd:</p>
+<pre><code>make CROSS_COMPILE=arm-linux-gnueabihf- bbb
+</code></pre>
 <h3 id="compilation-of-the-avbtest-app">Compilation of the avbtest app</h3>
-<p>To allow for compilation of the avbtest app on an non ARM system for an ARM system, we first need to install libasound2 for our Cross Compiler. The following installation routine applies to the gnueabihf compiler from the apt repository.</p>
-<ol>
-<li>
-<p>Check the required ALSA version on Beaglebone:
-    <code>aplay --version</code></p>
-</li>
-<li>
-<p>Download the alsa library:</p>
-<p><code>wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-&lt;version&gt;.tar.bz</code></p>
-</li>
-<li>
-<p>Unpack and remove archive:</p>
-<p><code>tar -xf alsa-lib-&lt;version&gt;.tar.bz2 &amp;&amp; rm alsa-lib-&lt;version&gt;.tar.bz2</code></p>
-</li>
-<li>
-<p>Configure Cross Compilation:</p>
-<p><code>CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux --prefix=/usr/arm-linux-gnueabihf</code></p>
-</li>
-<li>
-<p>Run make and make install as super user:</p>
-<p><code>sudo make &amp;&amp; sudo make install</code></p>
-</li>
-</ol>
+<p>To allow for compilation of the avbtest app on a non ARM system for an ARM system, we first need to install libasound2 for our Cross Compiler. The following installation routine applies to the gnueabihf compiler from the apt repository.</p>
+<p>1.) Check the required ALSA version on Beaglebone:</p>
+<pre><code>aplay --version
+</code></pre>
+<p>2.) Download the alsa library:</p>
+<pre><code>wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-&lt;version&gt;.tar.bz
+</code></pre>
+<p>3.) Unpack and remove archive:</p>
+<pre><code>tar -xf alsa-lib-&lt;version&gt;.tar.bz2 &amp;&amp; rm alsa-lib-&lt;version&gt;.tar.bz2
+</code></pre>
+<p>4.) Configure Cross Compilation:</p>
+<pre><code>CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux --prefix=/usr/arm-linux-gnueabihf
+</code></pre>
+<p>5.) Run make and make install as super user:</p>
+<pre><code>sudo make &amp;&amp; sudo make install
+</code></pre>
 <p>After finishing the installation of the alsa developer library you can compile the avbtest app using the following commands:</p>
-<ol>
-<li>
-<p>Clone avbtest:</p>
-<p><code>git clone https://github.com/NiklasWan/avbtest.git</code></p>
-</li>
-<li>
-<p>Compile avbtest:</p>
-<p><code>make CROSS_COMPILE=arm-linux-gnueabihf- all</code></p>
-</li>
-</ol>
+<p>1.) Clone avbtest:</p>
+<pre><code>git clone https://github.com/NiklasWan/avbtest.git
+</code></pre>
+<p>2.) Compile avbtest:</p>
+<pre><code>make CROSS_COMPILE=arm-linux-gnueabihf- all
+</code></pre>
 <h3 id="installation-of-the-avb-stack">Installation of the AVB Stack</h3>
 <p>First we need to install a new pre built image to an SD card:</p>
-<ol>
-<li>Download current Image for your device at: https://beagleboard.org/latest-images</li>
-<li>Install image using Balena Etcher</li>
-</ol>
-<p>After that we can install the built kernel in step <a href="###Compilation%20of%20the%20kernel%20module">Compilation of the kernel module</a>:</p>
-<ol>
-<li>
-<p>Copy built linux image, linux header and linux libc to sd card:</p>
-<p><code>sudo cp linux-* /media/dev/rootfs/home/debian</code>
-2. Start BB from Sd Card and Install kernel:</p>
-<p><code>sudo dpkg -i linux-headers*</code></p>
-<p><code>sudo dpkg -i linux-libc*</code></p>
-<p><code>sudo dpkg -i linux-image*</code>
-3. Restart:</p>
-<p><code>sudo restart</code></p>
-</li>
-</ol>
+<p>1.) Download current Image for your device at: https://beagleboard.org/latest-images</p>
+<p>2.) Install image using Balena Etcher</p>
+<p>After that we can install the built kernel in step <strong>Compilation of the kernel module</strong>:</p>
+<p>1.) Copy built linux image, linux header and linux libc to sd card:</p>
+<pre><code>sudo cp linux-* /media/dev/rootfs/home/debian
+</code></pre>
+<p>2.) Start BB from Sd Card and Install kernel:</p>
+<pre><code>sudo dpkg -i linux-headers*
+
+sudo dpkg -i linux-libc*
+
+sudo dpkg -i linux-image*
+</code></pre>
+<p>3.) Restart:</p>
+<pre><code>sudo restart
+</code></pre>
 <p>The last step is to copy both the gptp daemon and the avbtest app to the home directory of the SD card:</p>
-<ol>
-<li>Copy avbtest app:
-    <code>sudo cp avbtest /media/dev/rootfs/home/debian</code></li>
-<li>Copy gptp daemon:
-    <code>sudo cp gptpd /media/dev/rootfs/home/debian</code></li>
-</ol>
+<p>1.) Copy avbtest app:</p>
+<pre><code>sudo cp avbtest /media/dev/rootfs/home/debian
+</code></pre>
+<p>2.) Copy gptp daemon:</p>
+<pre><code>sudo cp gptpd /media/dev/rootfs/home/debian
+</code></pre>
 <h4 id="usage-of-the-avb-stack">Usage of the AVB Stack</h4>
 <p>All different variants require two BBB's or BBAI's being conneced via a cross ethernet cable.
 The following steps need to be followed after starting up the device every time for listener and receiver:</p>
 <ul>
 <li>Start gPTP daemon <code>sudo ./gptpd</code></li>
 <li>Load hwdep module <code>sudo modprobe snd-hwdep</code></li>
-<li>
-<p>Load AVB module <code>sudo modprobe snd-avb</code></p>
-</li>
-<li>
-<p>Use Cae: Playback and Record audio file directly on device without playback via other soundcard:</p>
-<p>Steps on receiver device:
-- Start recording <code>sudo ./avbtest -r -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be saved&gt;.wav</code></p>
-<p>Steps on playback device:
-- Start playback <code>sudo ./avbtest -p -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be played back&gt;.wav</code></p>
-<h2 id="limitations">Limitations</h2>
-</li>
+<li>Load AVB module <code>sudo modprobe snd-avb</code></li>
+<li>When using provided images <code>sudo insmod snd-avb.ko</code></li>
 </ul>
-<p>Until now the implementation have the following limitations:</p>
+<p>The avbtest app of indu has been modified and stripped down to just handle HDMI playback and USB output, because the porting of the CTAG Face drivers to kernel 5.4-rt was not successfull.</p>
+<p>1.) Use Case: Stream audio data from BBB to BBAI and save file to disk:</p>
+<p>Steps on receiver device:</p>
 <ul>
+<li>Start recording 
+    <code>sudo ./avbtest -r -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_saved&gt;.wav</code></li>
+</ul>
+<p>Steps on playback device:</p>
+<ul>
+<li>Start playback 
+    <code>sudo ./avbtest -p -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_played_back&gt;.wav</code></li>
+</ul>
+<p>2.) Use Case: Stream audio data from BBB to BBAI and playback via HDMI</p>
+<p>Steps on receiver device:</p>
+<ul>
+<li>Start recording 
+    <code>sudo ./avbtest -y -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;dummy_name&gt;.wav</code></li>
+</ul>
+<p>Steps on playback device:</p>
+<ul>
+<li>Start playback 
+    <code>sudo ./avbtest -x -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_played_back&gt;.wav</code></li>
+</ul>
+<h2 id="limitations">Limitations</h2>
+<p>Until now the implementation has the following limitations:</p>
+<ul>
+<li>Audio file has to be a multiple of the ALSA period size in length</li>
 <li>Playback of one stream with up to 8 channels</li>
-<li>Playback between on Listener and one Talker (BBB or BBAI need to be used)</li>
-<li>Listener does not receive the whole audio file, there is a problem reception of the last few frames of audio data</li>
+<li>Playback between on Listener (BBB) and one Talker (BBAI)</li>
 <li>AVDECC identification on an Apple MAC with propriatery AVB soulution of Beagleboard Device using ALSA AVB driver is not working properly (However the avbdiagnose application is able to identify the Beagleboard device)</li>
-</ul></div>
-            </div>
-        </div>
+</ul>
+                
+              
+              
+                
 
-        <footer class="col-md-12">
-            <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
-        </footer>
-        <script>
-            var base_url = "..",
-                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
-        </script>
-        <script src="../js/base.js" defer></script>
-        <script src="../search/main.js" defer></script>
 
-        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-                <p>
-                    From here you can search these documents. Enter
-                    your search terms below.
-                </p>
-                <form>
-                    <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
-                    </div>
-                </form>
-                <div id="mkdocs-search-results"></div>
-            </div>
-            <div class="modal-footer">
-            </div>
+              
+            </article>
+          </div>
         </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../face-driver/" title="CTAG Face Alsa Driver" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                CTAG Face Alsa Driver
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
     </div>
-</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
-                  </tr>
-                  <tr>
-                    <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
-                  </tr>
-                  <tr>
-                    <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
-                  </tr>
-                  <tr>
-                    <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
     </div>
-</div>
-
-    </body>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.df0def68.min.js"></script>
+      <script src="../assets/javascripts/bundle.ba57d267.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: ["tabs"],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.5eca75d3.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
 </html>

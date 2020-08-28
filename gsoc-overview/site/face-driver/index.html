@@ -1,111 +1,521 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../material/volume-source">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.9">
+    
+    
+      
+        <title>CTAG Face Alsa Driver - GSoC 2020 Ip Media Streaming</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.36ee6aaa.min.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/palette.83bccb1f.min.css">
+      
+      
         
         
+        <meta name="theme-color" content="#ffc105">
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
         
-        <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>FACE-Driver - GSoC Ip Media Streaming Overview</title>
-        <link href="../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../css/font-awesome.min.css" rel="stylesheet">
-        <link href="../css/base.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-
-        <script src="../js/jquery-1.10.2.min.js" defer></script>
-        <script src="../js/bootstrap.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-        <script>hljs.initHighlightingOnLoad();</script> 
-    </head>
-
-    <body>
-        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href="..">GSoC Ip Media Streaming Overview</a>
-                <!-- Expander button -->
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <!-- Expanded navigation -->
-                <div id="navbar-collapse" class="navbar-collapse collapse">
-                        <!-- Main navigation -->
-                        <ul class="nav navbar-nav">
-                            <li class="navitem">
-                                <a href=".." class="nav-link">Home</a>
-                            </li>
-                            <li class="navitem">
-                                <a href="../documentation/" class="nav-link">Coding-Style</a>
-                            </li>
-                            <li class="navitem active">
-                                <a href="./" class="nav-link">FACE-Driver</a>
-                            </li>
-                            <li class="navitem">
-                                <a href="../avb-alsa/" class="nav-link">AVB-ALSA</a>
-                            </li>
-                        </ul>
-
-                    <ul class="nav navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
-                            </a>
-                        </li>
-                            <li class="nav-item">
-                                <a rel="prev" href="../documentation/" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a rel="next" href="../avb-alsa/" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="row">
-                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
-            <span class="fa fa-angle-down"></span>
-        </button>
+        <a href="#ctag-face-alsa-driver" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href=".." title="GSoC 2020 Ip Media Streaming" class="md-header-nav__button md-logo" aria-label="GSoC 2020 Ip Media Streaming">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3m13 6h-2V9h2v6m4 4h-2V5h2v14z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            GSoC 2020 Ip Media Streaming
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              CTAG Face Alsa Driver
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+          
+
+  
+
+<nav class="md-tabs md-tabs--active" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href=".." class="md-tabs__link">
+          Home
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="./" class="md-tabs__link md-tabs__link--active">
+          FACE-Driver
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../avb-alsa/" class="md-tabs__link">
+          AVB-ALSA
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="GSoC 2020 Ip Media Streaming" class="md-nav__button md-logo" aria-label="GSoC 2020 Ip Media Streaming">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3m13 6h-2V9h2v6m4 4h-2V5h2v14z"/></svg>
+
+    </a>
+    GSoC 2020 Ip Media Streaming
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      Home
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Home" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Home
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Project Overview" class="md-nav__link">
+      Project Overview
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
 
     
-    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
-        <ul class="nav flex-column">
-            
-            <li class="nav-item" data-level="1"><a href="#ctag-face-alsa-driver" class="nav-link">CTAG Face Alsa Driver</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-        </ul>
-    </div>
-</div></div>
-                    <div class="col-md-9" role="main">
+      
+      
+      
 
-<h1 id="ctag-face-alsa-driver">CTAG Face Alsa Driver</h1>
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      FACE-Driver
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="FACE-Driver" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        FACE-Driver
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        CTAG Face Alsa Driver
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="CTAG Face Alsa Driver" class="md-nav__link md-nav__link--active">
+      CTAG Face Alsa Driver
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#adjustments" class="md-nav__link">
+    Adjustments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#information-on-overlays" class="md-nav__link">
+    Information on Overlays
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drivers-for-419-rt" class="md-nav__link">
+    Drivers for 4.19-rt
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drivers-for-54-rt" class="md-nav__link">
+    Drivers for 5.4-rt
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compilation-and-installation-of-the-kernel-module" class="md-nav__link">
+    Compilation and installation of the kernel module
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      AVB-ALSA
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="AVB-ALSA" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        AVB-ALSA
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../avb-alsa/" title="AVB Alsa driver" class="md-nav__link">
+      AVB Alsa driver
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#adjustments" class="md-nav__link">
+    Adjustments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#information-on-overlays" class="md-nav__link">
+    Information on Overlays
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drivers-for-419-rt" class="md-nav__link">
+    Drivers for 4.19-rt
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drivers-for-54-rt" class="md-nav__link">
+    Drivers for 5.4-rt
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compilation-and-installation-of-the-kernel-module" class="md-nav__link">
+    Compilation and installation of the kernel module
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="ctag-face-alsa-driver">CTAG Face Alsa Driver</h1>
+<p>The CTAG Face 2|4 is an audio card for Beaglebone devices, which is equipped with 2 input and 4 output channels. One of the goals for this GSoC project was to port the CTAG Face driver for usage on the BBAI and the BBB to linux kernel 4.19-rt.</p>
+<p>WARNING: To use the CTAG Face with the BBAI, stackable headers need to be used. This is due to the height of the passive cooling unit on the CPU.</p>
+<h2 id="adjustments">Adjustments</h2>
+<p>Here the adjustments, which needed to be made are shown. During the project, I realized, that the linux kernel 4.19-rt is still not running stable on BBAI (As of August, 22 2020). Because of that, I also tried to port the driver to kernel version 5.4-rt, this however failed, because it took too long to adjust for the API changes in ALSA-ASoC API from 4.19 to 5.4.
+For both versions, the codec driver of the AD1938 had to be adjusted. This is due to the changes in how overlays are handled on BeagleBoards since kernel version 4.4. Back in that time overlays were loaded using the bone capemanager. A script was handled, how the face was loaded back then. There the reset pin (P8.34) had to be set to HIGH and then to LOW. This is needed to properly start the codec. Because the capemanager is now deprecated the reset functionality is now implemented in the <code>sound/soc/codecs/ad193x.c</code> file. The probe function of the codec is now responsible to reset the codec at startup.</p>
+<h2 id="information-on-overlays">Information on Overlays</h2>
+<p>During the course of GSoC, another GSoC student at BeagleBoard.org Deepak Khatri worked on a compatibility layer for overlays. Therefore he ported the overlays I created for BBB and BBAI which can be found <a href="https://github.com/NiklasWan/bb.org-overlays/tree/dev_gsoc_face">here</a> to the new overlay repository. The current status is the compatibility update 3 on his repository, which can be found <a href="https://github.com/lorforlinux/BeagleBoard-DeviceTrees/tree/compatibility_Update3">here</a>. The documentation on how overlays are handled now can be found <a href="https://deepaklorkhatri.me/GSoC2020_BeagleBoard.org/">here</a>.
+Links to overlays:</p>
+<ul>
+<li>The implementation of the overlay BBAI (old way) can be found <a href="https://github.com/NiklasWan/bb.org-overlays/blob/dev_gsoc_face/src/arm/BBAI_BB-BONE-FACE-8CH-00A0.dts">here</a></li>
+<li>The implementation of the overlay BBB (old way) can be found <a href="https://github.com/NiklasWan/bb.org-overlays/blob/dev_gsoc_face/src/arm/BB-CTAG-SW-8CH-00A0.dts">here</a></li>
+<li>The implementation for both overlays (new way) can be found <a href="https://github.com/NiklasWan/BeagleBoard-DeviceTrees/blob/dev_face_fix/src/arm/overlays/BB-CTAG-SW-8CH-00A0.dts">here</a></li>
+</ul>
+<h2 id="drivers-for-419-rt">Drivers for 4.19-rt</h2>
+<p>The implementation of the driver code can be found <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt">here</a></p>
+<h2 id="drivers-for-54-rt">Drivers for 5.4-rt</h2>
+<p>The implementation for the driver code can be found <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_5.4-rt">here</a></p>
+<p>Known issues:
+- driver loads and <code>aplay -l</code> and <code>arecord -l</code> list the CTAG Face card, however it can not be controlled via <code>amixer</code> or <code>`alsamixer</code>. This is due to the spi-gpio bitbang driver being not loaded</p>
+<h2 id="compilation-and-installation-of-the-kernel-module">Compilation and installation of the kernel module</h2>
 <p>The CTAG Face Alsa Driver runs on 4.19-rt, for both BBB and BBAI. To get the Face running on your device, please follow all steps.</p>
-<p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt">here</a></p>
-<pre><code>git clone https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt
+<p>IMPORTANT NOTE: The uboot overlay process changed during the course of the project, both the BBAI and BBB version have been tested and are working. For installation on BBB the whole setup has to be done on the internal eMMC chip instead of an micro SD card.</p>
+<p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux.git">here</a></p>
+<pre><code>git clone https://github.com/NiklasWan/linux.git &amp;&amp; cd linux &amp;&amp; git chekout dev_gsoc_face_4.19-rt
 </code></pre>
 <p>2.) Load BB device configuration:</p>
 <pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig
 </code></pre>
 <p>3.) Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture - ALSA for SoC audio support:
-    Enable module build for SoC Audio Support for CTAG face-2-4 Audio Card (AD1938)
-4.) Build kernel:</p>
+    Enable module build for SoC Audio Support for CTAG face-2-4 Audio Card (AD1938)</p>
+<p>4.) Build kernel:</p>
 <pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8
 </code></pre>
-<p>5.) Download current Image for your device at: https://beagleboard.org/latest-images
-6.) Install image using Balena Etcher
-7.) Copy built linux image, linux header and linux libc to sd card:</p>
+<p>5.) Download current Image for your device at: <a href="https://beagleboard.org/latest-images">Latest images</a></p>
+<p>6.) Install image using Balena Etcher</p>
+<p>7.) Copy built linux image, linux header and linux libc to sd card:</p>
 <pre><code>sudo cp linux-* /media/dev/rootfs/home/debian
 </code></pre>
 <p>8.) Start BB from Sd Card and Install kernel:</p>
@@ -115,33 +525,34 @@ sudo dpkg -i linux-libc*
 
 sudo dpkg -i linux-image*
 </code></pre>
-<p>9.) Restart:
-    sudo restart
-10.) Clone overlay repo:</p>
-<pre><code>git clone https://github.com/NiklasWan/bb.org-overlays.git &amp;&amp; cd bb.org-overlays
+<p>9.) Restart:</p>
+<pre><code>sudo reboot
 </code></pre>
-<p>11.) Install dtc + dependencies:</p>
-<pre><code>sudo ./dtc-overlays.sh
+<p>10.) Install bootloader update:</p>
+<pre><code>sudo ./opt/scripts/tools/developers/update_bootloaders.sh
 </code></pre>
-<p>12.) Install overlays:</p>
-<pre><code>git checkout dev_gsoc_face &amp;&amp; sudo ./install.sh
+<p>11.) Update system:</p>
+<pre><code>sudo apt update &amp;&amp; sudo apt upgrade
+</code></pre>
+<p>12.) Clone overlay repo:</p>
+<pre><code>git clone https://github.com/NiklasWan/BeagleBoard-DeviceTrees.git &amp;&amp; cd BeagleBoard-DeviceTrees &amp;&amp; git checkout compatibility_Update3
+</code></pre>
+<p>13.) Install overlays:</p>
+<pre><code>sudo make install
 </code></pre>
 <p>13.) Edit Uboot uEnv.txt:</p>
 <pre><code>For BBAI:
   add the following lines to /boot/uEnv.txt:
-    enable-uboot-overlays=1
-    uboot_overlay_addr0=/lib/firmware/BBAI_BB-BONE-FACE-8CH-00A0.dtbo
+    enable_uboot_overlays=1
+    uboot_overlay_addr0=BB-CTAG-SW-8CH-00A0.dtbo
 For BBB:
-  comment out the following line:
-
-    #enable_uboot_cape_universal=1
   uncomment:
 
     disable_uboot_overlay_video=1
     disable_uboot_overlay_audio=1
   add:
 
-    uboot_overlay_addr0=/lib/firmware/BB-CTAG-SW-8CH-00A0.dtbo
+    uboot_overlay_addr0=BB-CTAG-SW-8CH-00A0.dtbo
 </code></pre>
 <p>14.) Clone https://github.com/ctag-fh-kiel/ctag-face-2-4.git:</p>
 <pre><code>git clone https://github.com/ctag-fh-kiel/ctag-face-2-4.git &amp; cd ctag-face-2-4
@@ -149,84 +560,86 @@ For BBB:
 <p>15.) Install alsa config:</p>
 <pre><code>cd alsa-configs &amp; sudo cp asound.conf.8ch ~/.asoundrc
 </code></pre>
-<p>16.) Reboot your board and use the audio card :-)</p></div>
-            </div>
-        </div>
+<p>16.) Reboot your board and use the audio card :-)</p>
+                
+              
+              
+                
 
-        <footer class="col-md-12">
-            <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
-        </footer>
-        <script>
-            var base_url = "..",
-                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
-        </script>
-        <script src="../js/base.js" defer></script>
-        <script src="../search/main.js" defer></script>
 
-        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-                <p>
-                    From here you can search these documents. Enter
-                    your search terms below.
-                </p>
-                <form>
-                    <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
-                    </div>
-                </form>
-                <div id="mkdocs-search-results"></div>
-            </div>
-            <div class="modal-footer">
-            </div>
+              
+            </article>
+          </div>
         </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href=".." title="Project Overview" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Project Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../avb-alsa/" title="AVB Alsa driver" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                AVB Alsa driver
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     </div>
-</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
-                  </tr>
-                  <tr>
-                    <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
-                  </tr>
-                  <tr>
-                    <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
-                  </tr>
-                  <tr>
-                    <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
     </div>
-</div>
-
-    </body>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.df0def68.min.js"></script>
+      <script src="../assets/javascripts/bundle.ba57d267.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: ["tabs"],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.5eca75d3.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
 </html>
