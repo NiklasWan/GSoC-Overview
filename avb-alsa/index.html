@@ -681,7 +681,7 @@ version 5.4-RT.</p>
 <p>The basic structure of the AVB kernel space and user space modules can be seen in the following component diagram.
 <img alt="ComponentDiagram" src="../img/component_diag.png" />
 The straight dashed red lines show the borders between User and Kernel Space. The components, which needed adjustments are marked with dashed red circles. For the user space modules just the avbtest application needed adjustments to allow playback of received audio data via the HDMI port of the BBAI.
-The kernel space module needed some adjustments, which are specifically described in <a href="##Adjustments">Adjustments</a>.</p>
+The kernel space module needed some adjustments, which are specifically described in <a href="#Adjustments">Adjustments</a>.</p>
 <h2 id="adjustments">Adjustments</h2>
 <p>Here, the most prominent changes are shown, which needed adjustments, for successfully porting the AVB ALSA driver to the 5.4-RT kernel on BBAI.</p>
 <h3 id="modularization-and-refactoring">Modularization and Refactoring</h3>
@@ -744,8 +744,9 @@ and choose module build "M" for Generic AVB driver</p>
 </code></pre>
 <h3 id="compilation-of-the-avbtest-app">Compilation of the avbtest app</h3>
 <p>To allow for compilation of the avbtest app on a non ARM system for an ARM system, we first need to install libasound2 for our Cross Compiler. The following installation routine applies to the gnueabihf compiler from the apt repository.</p>
-<p>1.) Check the required ALSA version on Beaglebone:
-    aplay --version</p>
+<p>1.) Check the required ALSA version on Beaglebone:</p>
+<pre><code>aplay --version
+</code></pre>
 <p>2.) Download the alsa library:</p>
 <pre><code>wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-&lt;version&gt;.tar.bz
 </code></pre>
@@ -769,7 +770,7 @@ and choose module build "M" for Generic AVB driver</p>
 <p>First we need to install a new pre built image to an SD card:</p>
 <p>1.) Download current Image for your device at: https://beagleboard.org/latest-images
 2.) Install image using Balena Etcher</p>
-<p>After that we can install the built kernel in step <a href="###Compilation%20of%20the%20kernel%20module">Compilation of the kernel module</a>:</p>
+<p>After that we can install the built kernel in step <a href="#Compilation%20of%20the%20kernel%20module">Compilation of the kernel module</a>:</p>
 <p>1.) Copy built linux image, linux header and linux libc to sd card:</p>
 <pre><code>sudo cp linux-* /media/dev/rootfs/home/debian
 </code></pre>
@@ -803,19 +804,27 @@ The following steps need to be followed after starting up the device every time 
 <p>1.) Use Case: Stream audio data from BBB to BBAI and save file to disk:</p>
 <p>Steps on receiver device:</p>
 <ul>
-<li>Start recording 
-    <code>sudo ./avbtest -r -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_saved&gt;.wav</code>
-Steps on playback device:</li>
-<li>Start playback 
-    <code>sudo ./avbtest -p -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_played_back&gt;.wav</code></li>
+<li>
+<p>Start recording </p>
+<p><code>sudo ./avbtest -r -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_saved&gt;.wav</code>
+Steps on playback device:
+- Start playback </p>
+<p><code>sudo ./avbtest -p -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_played_back&gt;.wav</code></p>
+</li>
 </ul>
 <p>2.) Use Case: Stream audio data from BBB to BBAI and playback via HDMI</p>
 <p>Steps on receiver device:
-- Start recording 
-    <code>sudo ./avbtest -y -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;dummy_name&gt;.wav</code></p>
+- Start recording </p>
+<pre><code>```
+sudo ./avbtest -y -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;dummy_name&gt;.wav
+```
+</code></pre>
 <p>Steps on playback device:
-- Start playback 
-    <code>sudo ./avbtest -x -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_played_back&gt;.wav</code></p>
+- Start playback </p>
+<pre><code>```
+sudo ./avbtest -x -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_played_back&gt;.wav
+```
+</code></pre>
 <h2 id="limitations">Limitations</h2>
 <p>Until now the implementation has the following limitations:</p>
 <ul>
