@@ -502,8 +502,8 @@ Links to overlays:</p>
 <h2 id="compilation-and-installation-of-the-kernel-module">Compilation and installation of the kernel module</h2>
 <p>The CTAG Face Alsa Driver runs on 4.19-rt, for both BBB and BBAI. To get the Face running on your device, please follow all steps.</p>
 <p>IMPORTANT NOTE: The uboot overlay process changed during the course of the project, both the BBAI and BBB version have been tested and are working. For installation on BBB the whole setup has to be done on the internal eMMC chip instead of an micro SD card.</p>
-<p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt">here</a></p>
-<pre><code>git clone https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt
+<p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux.git">here</a></p>
+<pre><code>git clone https://github.com/NiklasWan/linux.git &amp;&amp; cd linux &amp;&amp; git chekout dev_gsoc_face_4.19-rt
 </code></pre>
 <p>2.) Load BB device configuration:</p>
 <pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig
