@@ -21,6 +21,12 @@
     
       <link rel="stylesheet" href="assets/stylesheets/main.36ee6aaa.min.css">
       
+        <link rel="stylesheet" href="assets/stylesheets/palette.83bccb1f.min.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#ffc105">
       
     
     
@@ -40,7 +46,10 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -186,20 +195,6 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#student-niklas-wantrupp" class="md-nav__link">
-    Student: Niklas Wantrupp
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mentors" class="md-nav__link">
-    Mentors:
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#project-description" class="md-nav__link">
     Project Description
   </a>
@@ -291,20 +286,6 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#student-niklas-wantrupp" class="md-nav__link">
-    Student: Niklas Wantrupp
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mentors" class="md-nav__link">
-    Mentors:
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#project-description" class="md-nav__link">
     Project Description
   </a>
@@ -356,14 +337,12 @@
                 
                 
                 <h1 id="project-overview">Project Overview</h1>
-<h3 id="student-niklas-wantrupp">Student: Niklas Wantrupp</h3>
-<h3 id="mentors">Mentors:</h3>
-<ul>
-<li>henrix</li>
-<li>rma</li>
-<li>Drew Fustini</li>
-<li>Indumathi Duraipandian</li>
-</ul>
+<p><strong>Student: Niklas Wantrupp</strong></p>
+<p><strong>Mentors:</strong>
+- henrix
+- rma
+- Drew Fustini
+- Indumathi Duraipandian</p>
 <h2 id="project-description">Project Description</h2>
 <p>The BeagleBone AI is equipped with a high amount of processing power due to the Dual Core ARM Cortex-A15 chip as a main computing unit and its accompanying co-processors. This makes the AI a perfect fit for highly demanding applications regarding CPU consumption, like media applications which have extremely strong realtime constraints. Professional audio/video studios have to guarantee for small latencies when transmitting media signals between different devices. Different media channels in a transmitted stream need to be carefully synchronized to guarantee for e.g. lip synchronicity. To use the AI in such a scenario, the AVB protocol stack should be implemented in the Beagleboard Linux Kernel, which allows for synchronization of media streams within a local area network. Furthermore the CTAG Face audio drivers should be ported from BeagleBoard-X15 and HDMI audio out capabilities should be deployed, to allow the in- and output of audio data.</p>
 <h2 id="project-goals">Project Goals</h2>
@@ -473,7 +452,7 @@
       <script>
         app = initialize({
           base: ".",
-          features: [],
+          features: ["instant"],
           search: Object.assign({
             worker: "assets/javascripts/worker/search.5eca75d3.min.js"
           }, typeof search !== "undefined" && search)

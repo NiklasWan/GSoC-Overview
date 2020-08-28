@@ -21,6 +21,12 @@
     
       <link rel="stylesheet" href="../assets/stylesheets/main.36ee6aaa.min.css">
       
+        <link rel="stylesheet" href="../assets/stylesheets/palette.83bccb1f.min.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#ffc105">
       
     
     
@@ -40,7 +46,10 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -171,9 +180,70 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        FACE-Driver
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
     <a href="./" title="FACE-Driver" class="md-nav__link md-nav__link--active">
       FACE-Driver
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#adjustments" class="md-nav__link">
+    Adjustments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#information-on-overlays" class="md-nav__link">
+    Information on Overlays
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drivers-for-419-rt" class="md-nav__link">
+    Drivers for 4.19-rt
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drivers-for-54-rt" class="md-nav__link">
+    Drivers for 5.4-rt
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compilation-and-installation-of-the-kernel-module" class="md-nav__link">
+    Compilation and installation of the kernel module
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -207,6 +277,51 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#adjustments" class="md-nav__link">
+    Adjustments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#information-on-overlays" class="md-nav__link">
+    Information on Overlays
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drivers-for-419-rt" class="md-nav__link">
+    Drivers for 4.19-rt
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drivers-for-54-rt" class="md-nav__link">
+    Drivers for 5.4-rt
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compilation-and-installation-of-the-kernel-module" class="md-nav__link">
+    Compilation and installation of the kernel module
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -224,7 +339,7 @@
                 <h1 id="ctag-face-alsa-driver">CTAG Face Alsa Driver</h1>
 <p>The CTAG Face 2|4 is an audio card for Beaglebone devices, which is equipped with 2 input and 4 output channels. One of the goals for this GSoC project was to port the CTAG Face driver for usage on the BBAI and the BBB to linux kernel 4.19-rt.</p>
 <p>WARNING: To use the CTAG Face with the BBAI, stackable headers need to be used. This is due to the height of the passive cooling unit on the CPU.</p>
-<h1 id="adjustments">Adjustments</h1>
+<h2 id="adjustments">Adjustments</h2>
 <p>Here the adjustments, which needed to be made are shown. During the project, I realized, that the linux kernel 4.19-rt is still not running stable on BBAI (As of August, 22 2020). Because of that, I also tried to port the driver to kernel version 5.4-rt, this however failed, because it took too long to adjust for the API changes in ALSA-ASoC API from 4.19 to 5.4.
 For both versions, the codec driver of the AD1938 had to be adjusted. This is due to the changes in how overlays are handled on BeagleBoards since kernel version 4.4. Back in that time overlays were loaded using the bone capemanager. A script was handled, how the face was loaded back then. There the reset pin (P8.34) had to be set to HIGH and then to LOW. This is needed to properly start the codec. Because the capemanager is now deprecated the reset functionality is now implemented in the <code>sound/soc/codecs/ad193x.c</code> file. The probe function of the codec is now responsible to reset the codec at startup.</p>
 <h2 id="information-on-overlays">Information on Overlays</h2>
@@ -375,7 +490,7 @@ For BBB:
       <script>
         app = initialize({
           base: "..",
-          features: [],
+          features: ["instant"],
           search: Object.assign({
             worker: "../assets/javascripts/worker/search.5eca75d3.min.js"
           }, typeof search !== "undefined" && search)
