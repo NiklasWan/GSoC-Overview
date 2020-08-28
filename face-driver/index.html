@@ -501,7 +501,7 @@ Links to overlays:</p>
 - driver loads and <code>aplay -l</code> and <code>arecord -l</code> list the CTAG Face card, however it can not be controlled via <code>amixer</code> or <code>`alsamixer</code>. This is due to the spi-gpio bitbang driver being not loaded</p>
 <h2 id="compilation-and-installation-of-the-kernel-module">Compilation and installation of the kernel module</h2>
 <p>The CTAG Face Alsa Driver runs on 4.19-rt, for both BBB and BBAI. To get the Face running on your device, please follow all steps.</p>
-<p>IMPORTANT NOTE: The uboot overlay process changed during the course of the project just the BBAI version has been tested until now. For installation on BBB the whole setup has to be done on the internal eMMC chip.</p>
+<p>IMPORTANT NOTE: The uboot overlay process changed during the course of the project, both the BBAI and BBB version have been tested and are working. For installation on BBB the whole setup has to be done on the internal eMMC chip instead of an micro SD card.</p>
 <p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt">here</a></p>
 <pre><code>git clone https://github.com/NiklasWan/linux/tree/dev_gsoc_face_4.19-rt
 </code></pre>
@@ -543,9 +543,6 @@ sudo dpkg -i linux-image*
     enable_uboot_overlays=1
     uboot_overlay_addr0=BB-CTAG-SW-8CH-00A0.dtbo
 For BBB:
-  comment out the following line:
-
-    #enable_uboot_cape_universal=1
   uncomment:
 
     disable_uboot_overlay_video=1
