@@ -513,9 +513,9 @@ Links to overlays:</p>
 4.) Build kernel:</p>
 <pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8
 </code></pre>
-<p>5.) Download current Image for your device at: https://beagleboard.org/latest-images
-6.) Install image using Balena Etcher
-7.) Copy built linux image, linux header and linux libc to sd card:</p>
+<p>5.) Download current Image for your device at: https://beagleboard.org/latest-images</p>
+<p>6.) Install image using Balena Etcher</p>
+<p>7.) Copy built linux image, linux header and linux libc to sd card:</p>
 <pre><code>sudo cp linux-* /media/dev/rootfs/home/debian
 </code></pre>
 <p>8.) Start BB from Sd Card and Install kernel:</p>
@@ -525,13 +525,16 @@ sudo dpkg -i linux-libc*
 
 sudo dpkg -i linux-image*
 </code></pre>
-<p>9.) Restart:
-    sudo reboot
-10.) Install bootloader update:
-    sudo ./opt/scripts/tools/developers/update_bootloaders.sh
-11.) Update system:
-    sudo apt update &amp;&amp; sudo apt upgrade
-12.) Clone overlay repo:</p>
+<p>9.) Restart:</p>
+<pre><code>sudo reboot
+</code></pre>
+<p>10.) Install bootloader update:</p>
+<pre><code>sudo ./opt/scripts/tools/developers/update_bootloaders.sh
+</code></pre>
+<p>11.) Update system:</p>
+<pre><code>sudo apt update &amp;&amp; sudo apt upgrade
+</code></pre>
+<p>12.) Clone overlay repo:</p>
 <pre><code>git clone https://github.com/NiklasWan/BeagleBoard-DeviceTrees.git &amp;&amp; cd BeagleBoard-DeviceTrees &amp;&amp; git checkout compatibility_Update3
 </code></pre>
 <p>13.) Install overlays:</p>
