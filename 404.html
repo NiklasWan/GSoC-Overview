@@ -67,7 +67,7 @@
     <a href="/." title="GSoC 2020 Ip Media Streaming" class="md-header-nav__button md-logo" aria-label="GSoC 2020 Ip Media Streaming">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3m13 6h-2V9h2v6m4 4h-2V5h2v14z"/></svg>
 
     </a>
     <label class="md-header-nav__button md-icon" for="__drawer">
@@ -128,6 +128,30 @@
       
       
         
+          
+
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  <li class="md-tabs__item">
+    
+      <a href="/." class="md-tabs__link md-tabs__link--active">
+        Home
+      </a>
+    
+  </li>
+
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</nav>
+        
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
@@ -141,7 +165,7 @@
     <a href="/." title="GSoC 2020 Ip Media Streaming" class="md-nav__button md-logo" aria-label="GSoC 2020 Ip Media Streaming">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3m13 6h-2V9h2v6m4 4h-2V5h2v14z"/></svg>
 
     </a>
     GSoC 2020 Ip Media Streaming
@@ -233,7 +257,7 @@
       <script>
         app = initialize({
           base: "/",
-          features: ["instant"],
+          features: ["instant", "tabs"],
           search: Object.assign({
             worker: "/assets/javascripts/worker/search.5eca75d3.min.js"
           }, typeof search !== "undefined" && search)
