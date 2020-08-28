@@ -161,97 +161,73 @@ One point is, that in kernel version 5.4 the count of data to copy and the posit
 <p>If you do not want to compile the kernel, avbtest-application and the gptp daemon by hand, you can obtain a working image for both, the BBB and the BBAI from <a href="https://github.com/NiklasWan/linux/releases/tag/avb-0.1">here</a>. To install it just download the corresponding image for your platform and install onto an SD card using BalenaEtcher.</p>
 <h3 id="compilation-of-the-kernel-module">Compilation of the kernel module</h3>
 <p>The ALSA AVB Driver runs on 5.4-rt, for both BBB and BBAI. In the following all required steps to compile the driver including the Linux kernel are shown.</p>
-<ol>
-<li>
-<p>Clone kernel from <a href="https://github.com/NiklasWan/linux.git">here</a></p>
-<p>git clone https://github.com/NiklasWan/linux.git &amp;&amp; cd linux &amp;&amp; git checkout dev_avb_5.4-rt</p>
-</li>
-<li>
-<p>Load BB device configuration:</p>
-<p>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig</p>
-</li>
-<li>
-<p>Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture
+<p>1.) Clone kernel from <a href="https://github.com/NiklasWan/linux.git">here</a></p>
+<pre><code>git clone https://github.com/NiklasWan/linux.git &amp;&amp; cd linux &amp;&amp; git checkout dev_avb_5.4-rt
+</code></pre>
+<p>2.) Load BB device configuration:</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig
+</code></pre>
+<p>3.) Open menuconfig and Go to Device Drivers - Sound Card Support - Advanced Linux Sound Architecture
 and choose module build "M" for Generic AVB driver</p>
-</li>
-<li>
-<p>Build kernel:</p>
-<p>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8</p>
-</li>
-</ol>
+<p>4.) Build kernel:</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bindeb-pkg -j8
+</code></pre>
 <h3 id="compilation-of-the-gptp-daemon">Compilation of the gptp daemon</h3>
 <p>To compile the gptp daemon for the ARM platform simply issue the following commands:</p>
-<ol>
-<li>
-<p>Clone repository:</p>
-<p>git clone https://github.com/NiklasWan/gPTPd.git</p>
-</li>
-<li>
-<p>Compile gptpd:</p>
-<p>make CROSS_COMPILE=arm-linux-gnueabihf- bbb</p>
-</li>
-</ol>
+<p>1.) Clone repository:</p>
+<pre><code>git clone https://github.com/NiklasWan/gPTPd.git
+</code></pre>
+<p>2.) Compile gptpd:</p>
+<pre><code>make CROSS_COMPILE=arm-linux-gnueabihf- bbb
+</code></pre>
 <h3 id="compilation-of-the-avbtest-app">Compilation of the avbtest app</h3>
 <p>To allow for compilation of the avbtest app on a non ARM system for an ARM system, we first need to install libasound2 for our Cross Compiler. The following installation routine applies to the gnueabihf compiler from the apt repository.</p>
-<ol>
-<li>
-<p>Check the required ALSA version on Beaglebone:
+<p>1.) Check the required ALSA version on Beaglebone:
     aplay --version</p>
-</li>
-<li>
-<p>Download the alsa library:</p>
-<p>wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-<version>.tar.bz</p>
-</li>
-<li>
-<p>Unpack and remove archive:</p>
-<p>tar -xf alsa-lib-<version>.tar.bz2 &amp;&amp; rm alsa-lib-<version>.tar.bz2</p>
-</li>
-<li>
-<p>Configure Cross Compilation:</p>
-<p>CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux --prefix=/usr/arm-linux-gnueabihf</p>
-</li>
-<li>
-<p>Run make and make install as super user:</p>
-<p>sudo make &amp;&amp; sudo make install</p>
-</li>
-</ol>
+<p>2.) Download the alsa library:</p>
+<pre><code>wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-&lt;version&gt;.tar.bz
+</code></pre>
+<p>3.) Unpack and remove archive:</p>
+<pre><code>tar -xf alsa-lib-&lt;version&gt;.tar.bz2 &amp;&amp; rm alsa-lib-&lt;version&gt;.tar.bz2
+</code></pre>
+<p>4.) Configure Cross Compilation:</p>
+<pre><code>CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux --prefix=/usr/arm-linux-gnueabihf
+</code></pre>
+<p>5.) Run make and make install as super user:</p>
+<pre><code>sudo make &amp;&amp; sudo make install
+</code></pre>
 <p>After finishing the installation of the alsa developer library you can compile the avbtest app using the following commands:</p>
-<ol>
-<li>
-<p>Clone avbtest:</p>
-<p>git clone https://github.com/NiklasWan/avbtest.git</p>
-</li>
-<li>
-<p>Compile avbtest:</p>
-<p>make CROSS_COMPILE=arm-linux-gnueabihf- all</p>
-</li>
-</ol>
+<p>1.) Clone avbtest:</p>
+<pre><code>git clone https://github.com/NiklasWan/avbtest.git
+</code></pre>
+<p>2.) Compile avbtest:</p>
+<pre><code>make CROSS_COMPILE=arm-linux-gnueabihf- all
+</code></pre>
 <h3 id="installation-of-the-avb-stack">Installation of the AVB Stack</h3>
 <p>First we need to install a new pre built image to an SD card:</p>
-<ol>
-<li>Download current Image for your device at: https://beagleboard.org/latest-images</li>
-<li>Install image using Balena Etcher</li>
-</ol>
+<p>1.) Download current Image for your device at: https://beagleboard.org/latest-images
+2.) Install image using Balena Etcher</p>
 <p>After that we can install the built kernel in step <a href="###Compilation%20of%20the%20kernel%20module">Compilation of the kernel module</a>:</p>
-<ol>
-<li>
-<p>Copy built linux image, linux header and linux libc to sd card:</p>
-<p>sudo cp linux-* /media/dev/rootfs/home/debian
-2. Start BB from Sd Card and Install kernel:</p>
-<p>sudo dpkg -i linux-headers*</p>
-<p>sudo dpkg -i linux-libc*</p>
-<p>sudo dpkg -i linux-image*
-3. Restart:</p>
-<p>sudo restart</p>
-</li>
-</ol>
+<p>1.) Copy built linux image, linux header and linux libc to sd card:</p>
+<pre><code>sudo cp linux-* /media/dev/rootfs/home/debian
+</code></pre>
+<p>2.) Start BB from Sd Card and Install kernel:</p>
+<pre><code>sudo dpkg -i linux-headers*
+
+sudo dpkg -i linux-libc*
+
+sudo dpkg -i linux-image*
+</code></pre>
+<p>3.) Restart:</p>
+<pre><code>sudo restart
+</code></pre>
 <p>The last step is to copy both the gptp daemon and the avbtest app to the home directory of the SD card:</p>
-<ol>
-<li>Copy avbtest app:
-    sudo cp avbtest /media/dev/rootfs/home/debian</li>
-<li>Copy gptp daemon:
-    sudo cp gptpd /media/dev/rootfs/home/debian</li>
-</ol>
+<p>1.) Copy avbtest app:</p>
+<pre><code>sudo cp avbtest /media/dev/rootfs/home/debian
+</code></pre>
+<p>2.) Copy gptp daemon:</p>
+<pre><code>sudo cp gptpd /media/dev/rootfs/home/debian
+</code></pre>
 <h4 id="usage-of-the-avb-stack">Usage of the AVB Stack</h4>
 <p>All different variants require two BBB's or BBAI's being conneced via a cross ethernet cable.
 The following steps need to be followed after starting up the device every time for listener and receiver:</p>
@@ -262,23 +238,21 @@ The following steps need to be followed after starting up the device every time 
 <li>When using provided images <code>sudo insmod snd-avb.ko</code></li>
 </ul>
 <p>The avbtest app of indu has been modified and stripped down to just handle HDMI playback and USB output, because the porting of the CTAG Face drivers to kernel 5.4-rt was not successfull.</p>
-<ol>
-<li>
-<p>Use Cae: Stream audio data from BBB to BBAI and save file to disk:</p>
-<p>Steps on receiver device:
-- Start recording <code>sudo ./avbtest -r -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be saved&gt;.wav</code></p>
-<p>Steps on playback device:
-- Start playback <code>sudo ./avbtest -p -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be played back&gt;.wav</code></p>
-</li>
-<li>
-<p>Use Cae: Stream audio data from BBB to BBAI and playback via HDMI</p>
-<p>Steps on receiver device:
-- Start recording <code>sudo ./avbtest -y -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;dummy name&gt;.wav</code></p>
-<p>Steps on playback device:
-- Start playback <code>sudo ./avbtest -x -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be played back&gt;.wav</code></p>
+<p>1.) Use Cae: Stream audio data from BBB to BBAI and save file to disk:</p>
+<pre><code>Steps on receiver device:
+- Start recording ```sudo ./avbtest -r -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be saved&gt;.wav```
+
+Steps on playback device:
+- Start playback ```sudo ./avbtest -p -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be played back&gt;.wav```
+</code></pre>
+<p>2.) Use Cae: Stream audio data from BBB to BBAI and playback via HDMI</p>
+<pre><code>Steps on receiver device:
+- Start recording ```sudo ./avbtest -y -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;dummy name&gt;.wav```
+
+Steps on playback device:
+- Start playback ```sudo ./avbtest -x -c&lt;number of channels&gt; -l&lt;log level&gt; -s&lt;sampling_rate&gt; &lt;name of file to be played back&gt;.wav```
+</code></pre>
 <h2 id="limitations">Limitations</h2>
-</li>
-</ol>
 <p>Until now the implementation has the following limitations:</p>
 <ul>
 <li>Audio file has to be a multiple of the ALSA period size in length</li>
