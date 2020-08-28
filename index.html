@@ -10,7 +10,7 @@
       
       
       
-      <link rel="shortcut icon" href="assets/images/favicon.png">
+      <link rel="shortcut icon" href="material/volume-source">
       <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.9">
     
     
@@ -502,14 +502,32 @@
 <p>During the project I successfully ported the CTAG Face drivers by <a href="https://github.com/henrix">henrix</a> from kernel version 4.4 to 4.19-rt and started porting to 5.4-rt for both BBB and BBAI. The port to 5.4-rt however still needs some adjustments, look <a href="face-driver/#Drivers%20for%205.4-rt">here</a> to see a description.</p>
 <p>The second part of the project was to port the virtual ALSA driver of <a href="https://github.com/induarun9086">indu</a> from kernel 4.4 to 4.19-rt. During the course of the project I however realized, that 4.19-rt is running quite unstable on BBAI. Because of that I changed to kernel 5.4-rt for the implementation. The driver code was modularized and refactored and the AVDECC protocol part which indu allready implemented was also ported. However the implementation is still not working correctly with third party devices, like the proprietary Apple Mac implementation. All further limitations of the AVB implementation can be found <a href="avb-alsa/#Limitations">here</a></p>
 <h2 id="list-of-pull-requests">List of Pull Requests:</h2>
-<p><center>
-| Pull Request | Status |
-| --------- | ------- |
-| <a href="https://github.com/beagleboard/linux/pull/240">CTAG Face driver</a>   | merged |
-| <a href="https://github.com/beagleboard/bb.org-overlays/pull/184">CTAG Face overlays</a>   | merged |
-| <a href="https://github.com/lorforlinux/BeagleBoard-DeviceTrees/pull/1">CTAG Face overlays compatibility fix</a>   | merged |
-| <a href="https://github.com/beagleboard/linux/pull/246">Virtual ALSA driver</a>   | open |
-</center></p>
+<table>
+<thead>
+<tr>
+<th>Pull Request</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/beagleboard/linux/pull/240">CTAG Face driver</a></td>
+<td>merged</td>
+</tr>
+<tr>
+<td><a href="https://github.com/beagleboard/bb.org-overlays/pull/184">CTAG Face overlays</a></td>
+<td>merged</td>
+</tr>
+<tr>
+<td><a href="https://github.com/lorforlinux/BeagleBoard-DeviceTrees/pull/1">CTAG Face overlays compatibility fix</a></td>
+<td>merged</td>
+</tr>
+<tr>
+<td><a href="https://github.com/beagleboard/linux/pull/246">Virtual ALSA driver</a></td>
+<td>open</td>
+</tr>
+</tbody>
+</table>
 <h2 id="further-links">Further Links:</h2>
 <ul>
 <li><a href="https://www.youtube.com/watch?v=Pvb3sk3QNuI">Youtube Intro Video</a></li>
