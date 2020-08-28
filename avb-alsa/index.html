@@ -806,24 +806,21 @@ The following steps need to be followed after starting up the device every time 
 <ul>
 <li>
 <p>Start recording </p>
-<p><code>sudo ./avbtest -r -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_saved&gt;.wav</code>
-Steps on playback device:
-- Start playback </p>
-<p><code>sudo ./avbtest -p -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_played_back&gt;.wav</code></p>
+<p>sudo ./avbtest -r -c<number_of_channels> -l<log_level> -s<sampling_rate> <name_of_file_to_be_saved>.wav</p>
 </li>
 </ul>
+<p>Steps on playback device:
+- Start playback </p>
+<pre><code>sudo ./avbtest -p -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_played_back&gt;.wav
+</code></pre>
 <p>2.) Use Case: Stream audio data from BBB to BBAI and playback via HDMI</p>
 <p>Steps on receiver device:
 - Start recording </p>
-<pre><code>```
-sudo ./avbtest -y -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;dummy_name&gt;.wav
-```
+<pre><code>sudo ./avbtest -y -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;dummy_name&gt;.wav
 </code></pre>
 <p>Steps on playback device:
 - Start playback </p>
-<pre><code>```
-sudo ./avbtest -x -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_played_back&gt;.wav
-```
+<pre><code>sudo ./avbtest -x -c&lt;number_of_channels&gt; -l&lt;log_level&gt; -s&lt;sampling_rate&gt; &lt;name_of_file_to_be_played_back&gt;.wav
 </code></pre>
 <h2 id="limitations">Limitations</h2>
 <p>Until now the implementation has the following limitations:</p>
